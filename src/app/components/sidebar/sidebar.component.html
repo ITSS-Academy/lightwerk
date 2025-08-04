@@ -1,0 +1,30 @@
+<mat-nav-list>
+  @for (route of routes; track $index) {
+    <a mat-list-item [routerLink]="route.path" routerLinkActive #rla="routerLinkActive" [activated]="rla.isActive">
+      <mat-icon matListItemIcon>{{ route.icon }}</mat-icon>
+      @if (!collapsed) {
+        <span matListItemTitle> {{ route.label }} </span>
+      }
+    </a>
+  }
+
+  <!--  <a mat-list-item routerLink="/home"-->
+  <!--     routerLinkActive-->
+  <!--     #rla="routerLinkActive"-->
+  <!--     [activated]="rla.isActive">-->
+  <!--    <mat-icon matListItemIcon>home</mat-icon>-->
+  <!--    Home-->
+  <!--  </a>-->
+  <!--  <a mat-list-item routerLink="/history" routerLinkActive-->
+  <!--     #rla="routerLinkActive"-->
+  <!--     [activated]="rla.isActive">-->
+  <!--    <mat-icon matListItemIcon>history</mat-icon>-->
+  <!--    History-->
+  <!--  </a>-->
+  <!--  <a mat-list-item routerLink="/playlist" routerLinkActive-->
+  <!--     #rla1="routerLinkActive"-->
+  <!--     [activated]="rla.isActive">-->
+  <!--    <mat-icon matListItemIcon>playlist_play</mat-icon>-->
+  <!--    Playlist-->
+  <!--  </a>-->
+</mat-nav-list>
