@@ -6,11 +6,10 @@ import {MaterialAngularModule} from './modules/material-angular/material-angular
 import {MatDrawerMode} from '@angular/material/sidenav';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet, SidebarComponent, MaterialAngularModule, RouterLink, RouterLinkActive],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+    selector: 'app-root',
+    imports: [RouterOutlet, SidebarComponent, MaterialAngularModule, RouterLink, RouterLinkActive],
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.scss'
 })
 export class AppComponent {
   title = 'fe-tiktok';

@@ -3,11 +3,10 @@ import {MaterialAngularModule} from '../../modules/material-angular/material-ang
 import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 
 @Component({
-  selector: 'app-sidebar',
-  standalone: true,
-  imports: [MaterialAngularModule, RouterOutlet, RouterLink, RouterLinkActive],
-  templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.scss'
+    selector: 'app-sidebar',
+    imports: [MaterialAngularModule, RouterOutlet, RouterLink, RouterLinkActive],
+    templateUrl: './sidebar.component.html',
+    styleUrl: './sidebar.component.scss'
 })
 
 export class SidebarComponent {
