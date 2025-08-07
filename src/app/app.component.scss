@@ -2,12 +2,7 @@ mat-sidenav-container {
   height: calc(100vh - 64px);
 }
 
-mat-toolbar {
-  position: relative;
-  z-index: 2;
+mat-sidenav {
+  padding: 0 10px;
 }
 
-::ng-deep .mdc-list-item--with-leading-icon .mdc-list-item__start {
-  margin-inline-start: 19px !important;
-  margin-inline-end: var(--mat-list-list-item-leading-icon-end-space);
-}

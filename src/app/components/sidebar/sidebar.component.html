@@ -1,9 +1,13 @@
 <mat-nav-list>
   @for (route of routes; track $index) {
-    <a mat-list-item [routerLink]="route.path" routerLinkActive #rla="routerLinkActive" [activated]="rla.isActive">
+    <a
+      [ngClass]="{ 'collapsed': collapsed }"
+      mat-list-item [routerLink]="route.path" routerLinkActive #rla="routerLinkActive" [activated]="rla.isActive">
       <mat-icon matListItemIcon>{{ route.icon }}</mat-icon>
       @if (!collapsed) {
-        <span matListItemTitle> {{ route.label }} </span>
+        <span matListItemTitle
+              [style.display]="collapsed ? 'none' : ''"
+        > {{ route.label }} </span>
       }
     </a>
   }

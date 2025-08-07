@@ -6,10 +6,10 @@ import {MaterialAngularModule} from './modules/material-angular/material-angular
 import {MatDrawerMode} from '@angular/material/sidenav';
 
 @Component({
-    selector: 'app-root',
-    imports: [RouterOutlet, SidebarComponent, MaterialAngularModule, RouterLink, RouterLinkActive],
-    templateUrl: './app.component.html',
-    styleUrl: './app.component.scss'
+  selector: 'app-root',
+  imports: [RouterOutlet, SidebarComponent, MaterialAngularModule, RouterLink, RouterLinkActive],
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.scss'
 })
 export class AppComponent {
   title = 'fe-tiktok';
@@ -17,7 +17,7 @@ export class AppComponent {
   isSmallScreen: boolean = false;
   sidebarMode = signal<MatDrawerMode>('side');
 
-  sidebarWidth = computed(() => this.collapsed() ? '64px' : '240px');
+  sidebarWidth = computed(() => this.collapsed() ? 'fit-content' : '240px');
 
 
   constructor(private breakpointObserver: BreakpointObserver) {
@@ -32,6 +32,6 @@ export class AppComponent {
     if (this.isSmallScreen) {
       return '0';
     }
-    return this.collapsed() ? '64px' : '240px';
+    return this.collapsed() ? '100px' : '240px';
   }
 }

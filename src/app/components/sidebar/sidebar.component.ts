@@ -1,12 +1,13 @@
 import {Component, Input} from '@angular/core';
 import {MaterialAngularModule} from '../../modules/material-angular/material-angular.module';
 import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
+import {NgClass} from '@angular/common';
 
 @Component({
-    selector: 'app-sidebar',
-    imports: [MaterialAngularModule, RouterOutlet, RouterLink, RouterLinkActive],
-    templateUrl: './sidebar.component.html',
-    styleUrl: './sidebar.component.scss'
+  selector: 'app-sidebar',
+  imports: [MaterialAngularModule, RouterOutlet, RouterLink, RouterLinkActive, NgClass],
+  templateUrl: './sidebar.component.html',
+  styleUrl: './sidebar.component.scss'
 })
 
 export class SidebarComponent {
