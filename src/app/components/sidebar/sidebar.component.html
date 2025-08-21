@@ -1,3 +1,6 @@
+<div class="sidebar-logo" [ngClass]="{ 'collapsed': collapsed }">
+  <img src="logo.svg" alt="Logo"/>
+</div>
 <mat-nav-list>
   @for (route of routes; track $index) {
     <a

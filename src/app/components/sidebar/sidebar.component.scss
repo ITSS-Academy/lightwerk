@@ -26,3 +26,24 @@ mat-sidenav-container {
     display: none;
   }
 }
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 64px;
+  padding: 16px 0;
+  background: transparent;
+
+  img {
+    max-height: 32px;
+    max-width: 100%;
+    transition: max-width 0.2s, max-height 0.2s;
+  }
+
+  &.collapsed {
+    height: 40px;
+    padding: 4px 0;
+    
+  }
+}

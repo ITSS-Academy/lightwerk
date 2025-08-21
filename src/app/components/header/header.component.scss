@@ -1,5 +1,31 @@
 mat-toolbar {
+  padding: 16px;
   position: relative;
   z-index: 3;
-  border-bottom: 1px solid var(--md-sys-color-on-background);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
 }
+
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+
+  div {
+    display: flex;
+    align-items: center;
+  }
+
+  //last div
+  div:last-child {
+    gap: 8px
+  }
+}
+
+.create-btn {
+  background: var(--mat-sys-tertiary-container) !important;
+  color: var(--mat-sys-on-tertiary-container) !important;
+  box-shadow: none;
+  transition: background 0.2s;
+}
+

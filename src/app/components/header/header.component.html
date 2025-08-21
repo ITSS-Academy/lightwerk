@@ -1,7 +1,46 @@
-<mat-toolbar>
-  <button mat-icon-button (click)="collapsed.set(!collapsed());">
-    <mat-icon>
-      menu
-    </mat-icon>
-  </button>
+<mat-toolbar class="mat-elevation-z2">
+  <div class="header-container">
+    <div>
+      <button mat-icon-button (click)="this.toggleMenu();">
+        <mat-icon>
+          menu
+        </mat-icon>
+      </button>
+
+      <h1>{{ this.headerTitle }}</h1>
+    </div>
+
+    <div>
+      <button mat-flat-button class="create-btn" [matMenuTriggerFor]="createMenu">
+        <mat-icon>add</mat-icon>
+        Create
+      </button>
+      <mat-menu #createMenu="matMenu">
+        <button mat-menu-item>
+          <mat-icon>playlist_add</mat-icon>
+          Playlist
+        </button>
+        <button mat-menu-item>
+          <mat-icon>video_library</mat-icon>
+          Video
+        </button>
+      </mat-menu>
+
+
+      <button mat-icon-button [matMenuTriggerFor]="userMenu">
+        <img class="avatar" src="avatar.png" alt="">
+      </button>
+      <mat-menu #userMenu="matMenu">
+        <button mat-menu-item>
+          <mat-icon>logout</mat-icon>
+          Logout
+        </button>
+        <button mat-menu-item>
+          <mat-icon>account_circle</mat-icon>
+          Profile
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+
 </mat-toolbar>

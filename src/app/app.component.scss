@@ -1,8 +1,18 @@
 mat-sidenav-container {
-  height: calc(100vh - 64px);
+  height: 100vh;
 }
 
 mat-sidenav {
-  padding: 0 10px;
+  padding: 10px;
+  border-radius: 0;
+  border-right: 1px solid var(--mat-sys-outline-variant);
 }
 
+mat-sidenav-content {
+  padding: 0;
+}
+
+.content {
+  padding: 0 16px;
+
+}
