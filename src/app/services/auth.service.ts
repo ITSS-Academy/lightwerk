@@ -18,4 +18,14 @@ export class AuthService {
       console.error('Login error:', error);
     }
   }
+
+  /**
+   * Checks if the user is currently logged in (async, always up-to-date)
+   */
+  async isLoggedIn(): Promise<boolean> {
+    if (!supabase) return false;
+    const {data, error} = await supabase.auth.getSession();
+    console.log('AuthService.isLoggedIn', {data, error});
+    return !!data?.session && !error;
+  }
 }

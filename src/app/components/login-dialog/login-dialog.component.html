@@ -1,0 +1,25 @@
+<!--<mat-dialog-content>-->
+<!--  This is a dialog-->
+<!--</mat-dialog-content>-->
+<!--<mat-dialog-actions>-->
+<!--  <button mat-button mat-dialog-close>Okay</button>-->
+<!--</mat-dialog-actions>-->
+
+<h2 mat-dialog-title>Sign in to continue</h2>
+<mat-dialog-content>
+  @if (error) {
+    <div class="error">{{ error }}</div>
+  }
+  <button mat-flat-button color="primary" (click)="loginWithGoogle()" [disabled]="loading">
+    <mat-icon>login</mat-icon>
+    @if (loading) {
+      <span>Signing in...</span>
+    } @else {
+      <span>Sign in with Google</span>
+    }
+  </button>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()" [disabled]="loading">Cancel</button>
+</mat-dialog-actions>
+

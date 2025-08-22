@@ -16,10 +16,39 @@ export const routes: Routes = [
     }
   },
   {
-    path: 'playlist',
-    loadComponent: () => import('./pages/playlist/playlist.component').then(m => m.PlaylistComponent),
+    path: 'search',
+    loadComponent: () => import('./pages/search/search.component').then(m => m.SearchComponent),
+    data: {
+      headerTitle: 'Search',
+    }
+  },
+  {
+    path: 'following',
+    loadComponent: () => import('./pages/following/following.component').then(m => m.FollowingComponent),
+    data: {
+      headerTitle: 'Following',
+    }
+  },
+  {
+    path: 'exploring',
+    loadComponent: () => import('./pages/exploring/exploring.component').then(m => m.ExploringComponent),
+    data: {
+      headerTitle: 'Explore',
+    }
+  },
+
+  {
+    path: 'playlist/:playlistId',
+    loadComponent: () => import('./pages/playlist-detail/playlist-detail.component').then(m => m.PlaylistDetailComponent),
     data: {
       headerTitle: 'Playlist',
+    }
+  },
+  {
+    path: 'profile/:profileId',
+    loadChildren: () => import('./pages/profile/profile.routes').then(m => m.ProfileRoutes),
+    data: {
+      headerTitle: 'Profile',
     }
   },
   {

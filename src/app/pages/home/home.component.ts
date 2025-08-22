@@ -16,20 +16,20 @@ export class HomeComponent {
   constructor(private authService: AuthService) {
   }
 
-  async login() {
-    await this.authService.login();
-  }
-
-  async printIdToken() {
-    const {data, error} = await supabase.auth.getSession();
-    if (error) {
-      console.error('Error fetching session:', error);
-      return;
-    }
-    if (data.session) {
-      console.log('ID Token:', data.session.access_token);
-    } else {
-      console.log('No active session found.');
-    }
-  }
+  // async login() {
+  //   await this.authService.login();
+  // }
+  //
+  // async printIdToken() {
+  //   const {data, error} = await supabase.auth.getSession();
+  //   if (error) {
+  //     console.error('Error fetching session:', error);
+  //     return;
+  //   }
+  //   if (data.session) {
+  //     console.log('ID Token:', data.session.access_token);
+  //   } else {
+  //     console.log('No active session found.');
+  //   }
+  // }
 }

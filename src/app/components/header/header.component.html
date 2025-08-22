@@ -11,11 +11,14 @@
     </div>
 
     <div>
-      <button mat-flat-button class="create-btn" [matMenuTriggerFor]="createMenu">
+      <button mat-flat-button class="create-btn"
+              #createMenuTrigger="matMenuTrigger"
+              [matMenuTriggerFor]="canOpenCreateMenu ? createMenu : null"
+              (click)="openCreateMenu($event, createMenuTrigger)">
         <mat-icon>add</mat-icon>
         Create
       </button>
-      <mat-menu #createMenu="matMenu">
+      <mat-menu #createMenu="matMenu" (closed)="onCreateMenuClosed()">
         <button mat-menu-item>
           <mat-icon>playlist_add</mat-icon>
           Playlist
@@ -35,8 +38,10 @@
           <mat-icon>logout</mat-icon>
           Logout
         </button>
-        <button mat-menu-item>
-          <mat-icon>account_circle</mat-icon>
+        <button mat-menu-item [routerLink]="'/profile/1'">
+          <span class="avatar">
+            <mat-icon>account_circle</mat-icon>
+          </span>
           Profile
         </button>
       </mat-menu>

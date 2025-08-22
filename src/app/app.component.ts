@@ -13,7 +13,7 @@ import {HeaderComponent} from './components/header/header.component';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'fe-tiktok';
+  title = 'Relsvido';
   collapsed = signal(false);
   isSmallScreen: boolean = false;
   sidebarMode = signal<MatDrawerMode>('side');

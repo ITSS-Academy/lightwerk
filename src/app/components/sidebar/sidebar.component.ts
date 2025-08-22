@@ -14,29 +14,29 @@ export class SidebarComponent {
   @Input() collapsed!: boolean
 
   protected readonly RouterLink = RouterLink;
-  protected readonly routes = routes;
+  protected readonly sections = sections;
 }
 
-const routes: {
-  path: string;
-  icon: string;
-  label: string;
-}[] = [
+const sections = [
   {
-    path: '/home',
-    icon: 'home',
-    label: 'Home'
+    // header: 'Main',
+    routes: [
+      {path: '/home', icon: 'home', label: 'Home'},
+      {path: '/exploring', icon: 'explore', label: 'Explore'},
+      {
+        path: '/following', icon: 'subscriptions', label: 'Following'
+      },
+      {path: '/search', icon: 'search', label: 'Search'}
+    ]
   },
-  // history
   {
-    path: '/history',
-    icon: 'history',
-    label: 'History'
+    header: 'Library',
+    routes: [
+      {path: '/history', icon: 'history', label: 'History'},
+      {path: '/profile/1/liked-videos', icon: 'thumb_up', label: 'Liked Videos'},
+      {path: '/profile/1/playlists', icon: 'playlist_play', label: 'Playlist'}
+    ]
   },
-  // playlist
-  {
-    path: '/playlist',
-    icon: 'playlist_play',
-    label: 'Playlist'
-  }
-]
+
+
+];
