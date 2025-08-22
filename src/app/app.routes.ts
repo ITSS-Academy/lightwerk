@@ -24,7 +24,7 @@ export const routes: Routes = [
   },
   {
     path: 'following',
-    loadComponent: () => import('./pages/following/following.component').then(m => m.FollowingComponent),
+    loadChildren: () => import('./pages/following/following.routes').then(m => m.followingRoutes),
     data: {
       headerTitle: 'Following',
     }
@@ -37,6 +37,13 @@ export const routes: Routes = [
     }
   },
 
+  {
+    path: 'history',
+    loadComponent: () => import('./pages/history/history.component').then(m => m.HistoryComponent),
+    data: {
+      headerTitle: 'History',
+    }
+  },
   {
     path: 'playlist/:playlistId',
     loadComponent: () => import('./pages/playlist-detail/playlist-detail.component').then(m => m.PlaylistDetailComponent),

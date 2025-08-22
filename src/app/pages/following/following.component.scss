@@ -1,0 +1,9 @@
+button.active, .mat-icon-button.active {
+  background: var(--mat-sys-surface-container-high, #e0e0e0) !important;
+  color: var(--mat-sys-primary, #1976d2) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+button.active:hover, .mat-icon-button.active:hover {
+  background: var(--mat-sys-surface-container-highest, #d0d0d0) !important;
+}
