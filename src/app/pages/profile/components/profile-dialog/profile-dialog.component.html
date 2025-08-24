@@ -1,0 +1,91 @@
+<div class="dialog-header">
+  <h2 mat-dialog-title>Edit profile</h2>
+  <mat-icon (click)="onNoClick()">close</mat-icon>
+</div>
+
+<mat-dialog-content>
+  <form [formGroup]="form">
+    <div class="profile-edit">
+      <h3>Profile photo</h3>
+      <div class="profile-photo-container">
+        <div class="profile-photo">
+          @if (!profileImageUrl) {
+            <img
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAASFBMVEWVu9////+QuN6Uut2Rud6LtdyPuN3g6vWavuC80+rq8fjR4PDb5/P5+/22z+ilxePH2u3m7vfy9vuryOXM3e+jw+PD1+y30Oixt/DfAAAHf0lEQVR4nO2d6ZajOAyFwW2zr4GQ93/TxpVKpxJISravgujDd+bfzPThtmVttpUoOjg42Jg/W3/AwcGvHFZ6IJ/DSg/kc1jpgQNaK6WSxP6jlNZbfw4UrROjsiYfy6pK07SqyjFvzsokn9DJvw+1Mm1XneIlp2pqjdr7YiqVpyvi7qS5Ult/pD/aDO/lfYscDONCMlqpNvmaba5xyjk1MqHNpSbqs9SXvWlMzoWDPktxTli+hMlKTeeoz9IZno9hwXUBv5dx68+mos9e+mbqM34zMlipGnwFzrQ7CI5BAuN4EO9SdRskMI7Rhgq30ixQYByjvwiMoaYxrznxxEUQpgoWGMeV4LioG4BAsLfB7kMFERjHYkOGKkEKS6kSw/3ojQz3UUgrVQg3c6WSuYi4JYQuIg7YLrTgdiLQSg1QYBwLjIk6hyq8yMvATQ9V2KPMFGilUIFxLG4N9QWssJEmMcEFwyuokAizUuPSHaVQS/OmyHB/RVjQB9VNPxG2EdUIVzhiNiJqHyrKIZMbqazsG9CfeeYky9Vgk9IrGIWwaMGgUJan8T6qeMN5a1EPhLXy12khiwiyUoZwKCwgwvNueQqx5e8VTBGMslIOhfl/v4ayFHLsQ1GtGsG+FJXTcMTDAfRtEILPttfARHwU+BIfVeTD6kMGhcLqQwaFwupDsRXw0cWgAj1auyLsqFtPcIUTJljAuhj4kC8q4EccAXFrRc/gwwUoWOBOZvyuBb+mkOVoGJypMFfKUAOLqn+/QHdMUYdruHN8tKuRlZValNC7GDiUzyOS13QCb5tgy3xZBf6V//7WF7aAwpVOQCuFRkR50dCCTL631rIOMDUtcNsQeQta4+JFJ9JIhd5khwIzU6CRYl+UwLypTE9qQXW+JYb7K6AXF+KK3x9gikSonwG/sIRcZ+/lGmmEaZtKa5Q+AggYyFARMbwDDl/EFv1JYIJ3ouxdaAlN3dAJG36mQmBrWHIsvKFCXl7UOxAY6RBngx8awTGfxvjbaSnezVzxvrYg7Hr+G3z9qdTCd4nnVmSZ3MI0JyrxuY152YMf/Ydxv5sx7UrgLNG1o5EzeRm+mXvK7VJts7MVtCiXw6g9TMBaojW1zugZB5mirVQ/rAVxMz5uQdETTZWZHq/BqOj37lsVPf4vxWSkmqxK7MHFUxNCZe81VtmjnK82SJfgNMKsVJvsO+F+vsykou5Vnnrq9PN//N3nKTNh0z6Vae4tqNPzv9Xm3C2dTt+dlyrufxdFI8dYlWkf66U6W3ybVubcdGXaF0XRp2XXnFdmJKvssXguEYOUQ63UTnoul0V9s5ag2HneN9Y+3CxzhBoiMoB1eRaPqXIvptl9iWT4dgKzbxlft2Tq1k2jad/8WeMWfkeb4ZeM5SnOveXXuNl7T8T23YemIXQqOuIwcpUQZk6cVvc2FyojHk+Mz/Fu7Q/TxJkaxdJFc+FS3lbDWz+hzOBwqjp5LKOPlRq36111OayGBxs8hheu+BXpRyzV5wCtH5vMGJV8R8NEGZM1o8chDvjobV2g9+HSqa/KsevGsax674dgzkdTzlYa0NDGwN0WZ3nS7Ab3qIWt9cWuU10crRQyCTkUzknKLE+23WGYvn8D/rjJDyd/6mSlQpaQ8SJ/gn/s6wfbE2GOsQJ+MAlkmKvni8M8Ppd9CB9v6Q/TYEwpfsbC4msYntz7Q79Y5GClgoyUyUw5xur5w3BtA/heBAF54gLdSsFvRENheGPKMYEmBPhGFJOT3qAWGGQrZRheEgZo9MkdhhE7YVToH00SFQ0t+Ii4taIFxO8m70OOoXphgB+egOcJIAC/MxVT3t8huhqqlTLMYwsFfGWaY2pgKFCF4jIaCy2rIVopyxTdUKCvhUXV9zegD4iElU5XaAUU0UrF5WwWaN6mt1azCtBKRbpSYkuRZqUiXSl04Legfv5PQL+186VQXlZqARbBArNSCykzpe1DaX22G8BwsbWUF8D0CQ0WtNybZKUCrgmtA7s8JOzI4g6sZyqysrBQqguSlcJ/nxIFLCAqGReFlsAOoETWThZKyCdZqdSAjwv5EhttV1BWKucu1DOE03yKlWpZdxR+gvoBQXmnMjdApzNikzZY2ia0h2Eh9DFI+1CuQlDbW2ziDUu9hfahLIReFMVK962QgsAT7hugk26Wn2/EAPKl+87aSAh5SLIE9hpRbGIK67W5TkT6FAPweE1l8g6B+wx7Zci0stpRlePMBgJaqVyKxyny9dkha7i9XTPRtL3IYoo4p2Rok20qspg+MAREG33ZZk9WF+0uz2/yh527szIXiZO++/QsnllkMoyfMdhiHNRGo4bUvJZTxdkRr9NpXruQyB48zUzPixk1Y4+XWfdjE81LJ2Kq2RwrrcwUJbNO7aQQesz7EFamHvIyaDnrvpwGjRQHn19605m6XlA5pWWO1caK1Wmi1s6gK94vaV3Y+XRtZHaj7Sd6dkNJYozO2qHJu7EsqypN06oqy7HLL02bzcJMMjsTRm18U3Yf0Nbn2uFCV76m7rHqOjjYEx/ahwcHARxWeiCfw0oP5HNY6YF8/vwF/Glw72fQD9MAAAAASUVORK5CYII="
+              alt="username">
+          }
+          @if (profileImageUrl) {
+            <img [src]="profileImageUrl" alt="username">
+
+          }
+        </div>
+        <div class="photo-edit-icon" (click)="onEditPhotoClick()">
+          <mat-icon>edit</mat-icon>
+        </div>
+        <input
+          type="file"
+          id="profile-photo-input"
+          accept="image/*"
+          style="display: none;"
+          (change)="onFileSelected($event)">
+        @if (form.get('profileImage')?.invalid && form.get('profileImage')?.touched) {
+          <div class="error">
+            Profile image is required.
+          </div>
+        }
+
+      </div>
+    </div>
+
+    <div class="username-edit">
+      <div class="username-edit-title">
+        <h3>Username</h3>
+      </div>
+      <div class="username-edit-detail">
+        <mat-form-field appearance="outline">
+          <input matInput placeholder="Username" formControlName="username"/>
+        </mat-form-field>
+        @if (form.get('username')?.invalid && form.get('username')?.touched) {
+          <div class="error">
+            @if (form.get('username')?.errors?.['required']) {
+              <span>Username is required.</span>
+
+            }
+            @if (form.get('username')?.errors?.['pattern']) {
+              <span>Only letters, numbers, and periods allowed.</span>
+
+            }
+          </div>
+        }
+
+        <p>www.reel.com.vn/{{ form.get('username')?.value ? "@" + form.get('username')?.value : '' }}</p>
+        <p>Usernames can only contain letters, numbers, and periods.
+          Changing your usernames will change your profile link.</p>
+      </div>
+    </div>
+
+    <div class="bio-edit">
+      <div class="bio-edit-title">
+        <h3>Bio</h3>
+      </div>
+      <div class="bio-edit-detail">
+        <mat-form-field appearance="outline">
+          <textarea matInput placeholder="Bio" formControlName="bio" maxlength="80"
+                    (input)="updateBioCount()"></textarea>
+        </mat-form-field>
+        @if (form.get('bio')?.errors?.['maxlength'] && form.get('bio')?.touched) {
+          <div class="error">
+            Bio cannot exceed 80 characters.
+          </div>
+        }
+
+        <p>{{ bioCount }}/80</p>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button (click)="onSave()">Save</button>
+</mat-dialog-actions>
