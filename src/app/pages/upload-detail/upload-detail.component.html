@@ -1,0 +1,44 @@
+<div class="container">
+  <div class="left-container">
+    <h2>Informations</h2>
+    <form>
+      <input type="text" placeholder="Title" class="text">
+
+      <textarea placeholder="Description (optional)" maxlength="80"></textarea>
+      <span>0/80 characters</span>
+
+      <mat-form-field appearance="outline" class="custom-select">
+        <mat-label>Category</mat-label>
+        <mat-select>
+          <mat-option value="education">Education</mat-option>
+          <mat-option value="entertainment">Entertainment</mat-option>
+          <mat-option value="music">Music</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="privacy">
+        <span>Privacy</span>
+        <label><input type="radio" name="privacy" checked> Public</label>
+        <label><input type="radio" name="privacy"> Private</label>
+      </div>
+
+      <button type="submit" class="btn-upload">
+        <mat-icon>cloud_upload</mat-icon> Upload
+      </button>
+    </form>
+  </div>
+
+
+  <div class="right-container">
+    <div class="thumbnail-header">
+      <h2>Thumbnail</h2>
+      <button class="btn-thumbnail">
+        <mat-icon>image</mat-icon> Upload
+      </button>
+    </div>
+    <div class="thumbnail-preview">
+      <img src="https://i.ytimg.com/vi/5qap5aO4i9A/maxresdefault.jpg" alt="thumbnail">
+      <button class="btn-choose">Choose your thumbnail</button>
+    </div>
+  </div>
+</div>
