@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
+import {MatIconModule} from '@angular/material/icon';
 
 @Component({
   selector: 'app-create-video',
-  imports: [],
+  imports: [
+    MatIconModule,
+  ],
   templateUrl: './create-video.component.html',
   styleUrl: './create-video.component.scss'
 })
