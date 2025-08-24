@@ -9,6 +9,13 @@ export const routes: Routes = [
     }
   },
   {
+    path: 'upload',
+    loadComponent: () => import('./pages/upload/upload.component').then(m => m.UploadComponent),
+    data: {
+      headerTitle: 'Upload',
+    }
+  },
+  {
     path: 'history',
     loadComponent: () => import('./pages/history/history.component').then(m => m.HistoryComponent),
     data: {

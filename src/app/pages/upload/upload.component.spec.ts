@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CreateVideoComponent } from './create-video.component';
+import { UploadComponent } from './upload.component';
 
-describe('CreateVideoComponent', () => {
-  let component: CreateVideoComponent;
-  let fixture: ComponentFixture<CreateVideoComponent>;
+describe('UploadComponent', () => {
+  let component: UploadComponent;
+  let fixture: ComponentFixture<UploadComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CreateVideoComponent]
+      imports: [UploadComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(CreateVideoComponent);
+    fixture = TestBed.createComponent(UploadComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
