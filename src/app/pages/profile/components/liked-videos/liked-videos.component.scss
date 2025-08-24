@@ -1,0 +1,13 @@
+
+
+.video-container {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;   /* centers content horizontally */
+}
+
+.video {
+  display: grid;
+  grid-template-columns: repeat(4, auto); /* 4 images per row */
+  gap: 30px; /* spacing between images */
+}

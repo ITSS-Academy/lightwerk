@@ -1,0 +1,14 @@
+.video-card {
+  width: 210px;
+  height: 270px;
+}
+
+.video-details {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+mat-card-content {
+  display: flex;
+  flex-direction: column
+}
