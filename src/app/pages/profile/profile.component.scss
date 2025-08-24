@@ -1,3 +1,87 @@
 .example-tab-icon {
   margin-right: 8px;
 }
+
+.profile-container {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.profile-image {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.user-image {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-information {
+  display: inline-block;
+  vertical-align: top;
+  max-width: 400px;
+}
+
+.profile-information h2 {
+  margin: 0 0 10px 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #24292e;
+}
+
+
+
+.stats {
+  margin: 10px 0;
+}
+
+.stats h3 {
+  display: inline-block;
+  margin: 0 15px 0 0;
+  font-size: 14px;
+  font-weight: 400;
+  color: #656d76;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.stats h3:hover {
+  color: #0969da;
+  cursor: pointer;
+}
+
+.bio {
+  margin: 10px 0 0 0;
+  font-size: 14px;
+  color: #656d76;
+  line-height: 1.5;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Container styling for better layout */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  margin: 20px;
+  background-color: #ffffff;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .profile-image {
+    display: block;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+
+  .profile-information {
+    display: block;
+    text-align: center;
+  }
+
+  .user-image {
+    height: 30%;
+  }
+}

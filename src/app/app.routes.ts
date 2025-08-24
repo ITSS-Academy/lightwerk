@@ -2,17 +2,20 @@ import {Routes} from '@angular/router';
 
 export const routes: Routes = [
   {
+    path: 'upload-detail',
+    loadComponent: () => import('./pages/upload-detail/upload-detail.component').then(m => m.UploadDetailComponent),
+    data: {title: 'Upload-Detail'}
+  },
+  {
+    path: 'upload',
+    loadComponent: () => import('./pages/create-video/create-video.component').then(m => m.CreateVideoComponent),
+    data: {title: 'Upload'}
+  },
+  {
     path: 'home',
     loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent),
     data: {
       headerTitle: 'Home',
-    }
-  },
-  {
-    path: 'upload',
-    loadComponent: () => import('./pages/upload/upload.component').then(m => m.UploadComponent),
-    data: {
-      headerTitle: 'Upload',
     }
   },
   {
