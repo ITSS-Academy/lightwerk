@@ -1,1 +1,17 @@
-<p>video works!</p>
+<div class="sort-container">
+  <mat-button-toggle-group name="Sort" aria-label="sort">
+    <mat-button-toggle value="latest">Latest</mat-button-toggle>
+    <mat-button-toggle value="popular">Popular</mat-button-toggle>
+    <mat-button-toggle value="oldest">Oldest</mat-button-toggle>
+  </mat-button-toggle-group>
+</div>
+
+
+<div class="video-container">
+  <div class="video-grid">
+    <app-video-card></app-video-card>
+    <app-video-card></app-video-card>
+    <app-video-card></app-video-card>
+    <app-video-card></app-video-card>
+  </div>
+</div>
