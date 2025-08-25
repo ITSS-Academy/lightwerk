@@ -1,1 +1,30 @@
-<p>following-user works!</p>
+<div class="cach-header"></div>
+
+<div class="user-list">
+  @for (item of [].constructor(50); track $index) {
+    <mat-card class="example-card" appearance="outlined">
+      <mat-card-header>
+        <mat-card-title-group>
+          <!-- Avatar -->
+          <img mat-card-avatar class="avatar"
+               src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLopLv7WRVQPCqtnPIelxkZ53MtVNhxEhfZw&s"
+               alt="avatar">
+
+          <!-- Info -->
+          <div class="info">
+            <div class="title-row">
+              <span class="username">User {{ $index + 1 }}</span>
+              <span class="nickname">Nick{{ $index + 1 }}</span>
+            </div>
+            <span class="followers">{{ ($index + 1) * 10 }} Followed</span>
+          </div>
+
+          <!-- Button -->
+          <button mat-button class="following-btn" (click)="toggleFollow($index)">
+            {{ followStates[$index] ? '✓ Following' : '+ Follow' }}
+          </button>
+        </mat-card-title-group>
+      </mat-card-header>
+    </mat-card>
+  }
+</div>
