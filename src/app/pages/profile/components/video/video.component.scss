@@ -1,0 +1,17 @@
+.video-container {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;   /* centers content horizontally */
+}
+
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 210px); /* 4 images per row */
+  gap: 30px; /* spacing between images */
+}
+
+.mat-tab-group {
+  margin-bottom: 48px;
+}
+
+
