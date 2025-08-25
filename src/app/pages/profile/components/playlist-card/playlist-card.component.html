@@ -1,0 +1,20 @@
+<mat-card class="playlist-card" appearance="outlined">
+  <img mat-card-image src="{{playlist.image}}" alt="Photo of a Shiba Inu">
+  <div class="playlist-visible">
+    @if (playlist.isPrivate) {
+      <mat-icon>lock</mat-icon>
+    }
+  </div>
+  <mat-card-content>
+    <div class="playlist-details">
+      <span class="title">{{ playlist.name }}</span>
+      @if (playlist.videoCount == 1) {
+        <span>{{ playlist.videoCount }} Video</span>
+      } @else {
+        <span>{{ playlist.videoCount }} Videos</span>
+      }
+
+    </div>
+
+  </mat-card-content>
+</mat-card>

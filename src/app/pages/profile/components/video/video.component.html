@@ -1,5 +1,5 @@
 <div class="sort-container">
-  <mat-button-toggle-group name="Sort" aria-label="sort">
+  <mat-button-toggle-group name="Sort" aria-label="sort" [value]="sortValue">
     <mat-button-toggle value="latest">Latest</mat-button-toggle>
     <mat-button-toggle value="popular">Popular</mat-button-toggle>
     <mat-button-toggle value="oldest">Oldest</mat-button-toggle>
@@ -9,9 +9,8 @@
 
 <div class="video-container">
   <div class="video-grid">
-    <app-video-card></app-video-card>
-    <app-video-card></app-video-card>
-    <app-video-card></app-video-card>
-    <app-video-card></app-video-card>
+    @for (item of videoList; track $index) {
+      <app-video-card [video]="item"></app-video-card>
+    }
   </div>
 </div>

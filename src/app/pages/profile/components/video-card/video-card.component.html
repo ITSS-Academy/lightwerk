@@ -1,12 +1,11 @@
 <mat-card class="video-card" appearance="outlined">
   <img mat-card-image
-       src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Ph%C3%A9nix_%C3%A0_neuf_t%C3%AAtes.png/250px-Ph%C3%A9nix_%C3%A0_neuf_t%C3%AAtes.png"
+       src="{{video.image}}"
        alt="Video Placeholder Image">
   <mat-card-content>
-    <span>Title</span>
+    <span class="title">{{ video.title }}</span>
     <div class="video-details">
-      <span>Channel</span>
-      <span>{{ getDate() }}</span>
+      <span class="date">{{ video.date | date }}</span>
     </div>
   </mat-card-content>
 </mat-card>
