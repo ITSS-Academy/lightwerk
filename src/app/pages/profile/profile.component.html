@@ -1,6 +1,19 @@
 <!--em sẽ code ơ đây -->
-{{ this.selectedIndex }}
 
+<div class="profile-container">
+  <div class="profile-image">
+    <img class="user-image" [src]="profileImageUrl" alt="User's image">
+  </div>
+  <div class="profile-information">
+    <h2>{{ username }}</h2>
+    <button mat-flat-button (click)="openDialog()">Edit profile</button>
+    <div class="stats">
+      <h3>0 followers</h3>
+      <h3>0 following</h3>
+    </div>
+    <p class="bio">{{ bio }}</p>
+  </div>
+</div>
 <!-- Đừng đụng vô cái ở dưới anh làm xong rồi nha-->
 <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" [selectedIndex]="selectedIndex"
                (selectedIndexChange)="onTabChange($event)">
@@ -34,7 +47,7 @@
       <mat-icon class="example-tab-icon">thumb_up</mat-icon>
       Liked Videos
     </ng-template>
-    @if (selectedIndex == 3) {
+    @if (selectedIndex == 2) {
       <ng-container>
         <app-liked-videos></app-liked-videos>
       </ng-container>

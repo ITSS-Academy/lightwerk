@@ -1,0 +1,169 @@
+.container {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+}
+
+
+
+.middle-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2%;
+  padding: 2% 0;
+}
+
+
+.left-middle-container {
+  .clip {
+    aspect-ratio: 9/16;
+    height: 100vh;
+    width: 100%;
+    padding: 4% 0;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 3%;
+    }
+  }
+}
+
+
+.right-middle-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  height: 100%;
+}
+
+.function-of-the-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.button-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatar-wrapper {
+  position: relative;
+  width: clamp(40px, 60px, 80px);
+  height: clamp(40px, 60px, 80px);
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #fff;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.add-btn {
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: clamp(18px, 28px, 38px);
+  height: clamp(18px, 28px, 38px);
+  border-radius: 50%;
+  background-color: #fe2c55;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(6px, 16px, 26px);
+  font-weight: bold;
+  cursor: pointer;
+}
+
+
+.button-love,
+.button-comment,
+.button-save,
+.button-share {
+  width: clamp(30px, 50px, 70px);
+  height: clamp(30px, 50px, 70px);
+  border-radius: 50%;
+  background: #2f2f2f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.button-love:hover,
+.button-comment:hover,
+.button-save:hover,
+.button-share:hover {
+  background: #1f1f1f;
+}
+
+mat-icon {
+  font-size: clamp(18px, 28px, 38px);;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+.favorite:active {
+  color: #fe2c55;
+}
+
+.button-item span {
+  color: black;
+  font-size: clamp(10px, 14px, 18px);
+}
+
+
+.right-container {
+  width: 15%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  padding-right: 1%;
+  gap: 1%;
+
+   .button-up, .button-down {
+     width: clamp(30px, 50px, 70px);
+     height: clamp(30px, 50px, 70px);
+     border-radius: 50%;
+     background: #1f1f1f;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     cursor: pointer;
+}
+  .button-down:hover{
+    background: #2f2f2f;
+    transition: background 0.2s ease;
+  }
+
+  .button-up:hover{
+    background: #2f2f2f;
+    transition: background 0.2s ease;
+  }
+}

@@ -2,6 +2,16 @@ import {Routes} from '@angular/router';
 
 export const routes: Routes = [
   {
+    path: 'upload-detail/:videoId',
+    loadComponent: () => import('./pages/upload-detail/upload-detail.component').then(m => m.UploadDetailComponent),
+    data: {headerTitle: 'Upload'}
+  },
+  {
+    path: 'upload',
+    loadComponent: () => import('./pages/create-video/create-video.component').then(m => m.CreateVideoComponent),
+    data: {headerTitle: 'Upload'}
+  },
+  {
     path: 'home',
     loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent),
     data: {
@@ -57,6 +67,10 @@ export const routes: Routes = [
     data: {
       headerTitle: 'Profile',
     }
+  },
+  {
+    path: 'auth/callback',
+    loadComponent: () => import('./pages/auth-callback/auth-callback.component').then(m => m.AuthCallbackComponent),
   },
   {
     path: '**',
