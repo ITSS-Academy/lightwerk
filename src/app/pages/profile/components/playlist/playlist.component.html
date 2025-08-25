@@ -1,11 +1,13 @@
-<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="end">
-  <mat-tab label="Posts"></mat-tab>
-  <mat-tab label="Collections"></mat-tab>
-</mat-tab-group>
+<div class="button">
+  <button mat-flat-button (click)="openDialog()">
+    <mat-icon>add_circle</mat-icon>
+    Create a new playlist
+  </button>
+</div>
 
 
-<div class ="video-container">
-  <div class="video">
+<div class="video-container">
+  <div class="video-grid">
     <app-video-card></app-video-card>
     <app-video-card></app-video-card>
     <app-video-card></app-video-card>

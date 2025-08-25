@@ -1,13 +1,13 @@
-import { Component } from '@angular/core';
-import {MatTab, MatTabGroup} from '@angular/material/tabs';
+import {Component} from '@angular/core';
 import {VideoCardComponent} from '../video-card/video-card.component';
+import {MatButtonToggle, MatButtonToggleGroup} from '@angular/material/button-toggle';
 
 @Component({
   selector: 'app-video',
   imports: [
-    MatTabGroup,
-    MatTab,
-    VideoCardComponent
+    VideoCardComponent,
+    MatButtonToggleGroup,
+    MatButtonToggle
   ],
   templateUrl: './video.component.html',
   styleUrl: './video.component.scss'

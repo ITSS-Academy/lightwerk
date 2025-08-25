@@ -1,17 +1,21 @@
-import { Component } from '@angular/core';
-import {MatTab, MatTabGroup} from "@angular/material/tabs";
+import {Component} from '@angular/core';
 import {VideoCardComponent} from '../video-card/video-card.component';
+import {MatButton} from '@angular/material/button';
+import {MatIcon} from '@angular/material/icon';
 
 @Component({
-    selector: 'app-playlist',
+  selector: 'app-playlist',
   imports: [
-    MatTab,
-    MatTabGroup,
-    VideoCardComponent
+    VideoCardComponent,
+    MatButton,
+    MatIcon,
+
   ],
-    templateUrl: './playlist.component.html',
-    styleUrl: './playlist.component.scss'
+  templateUrl: './playlist.component.html',
+  styleUrl: './playlist.component.scss'
 })
 export class PlaylistComponent {
+  openDialog() {
 
+  }
 }

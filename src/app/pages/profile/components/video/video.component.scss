@@ -1,17 +1,27 @@
 .video-container {
   margin-top: 10px;
   display: flex;
-  justify-content: center;   /* centers content horizontally */
+  justify-content: center; /* centers content horizontally */
 }
 
 .video-grid {
   display: grid;
-  grid-template-columns: repeat(4, 210px); /* 4 images per row */
-  gap: 30px; /* spacing between images */
+  grid-template-columns: repeat(4, 240px); /* 4 images per row */
+  gap: 3rem; /* spacing between images */
 }
 
-.mat-tab-group {
-  margin-bottom: 48px;
+.sort-container {
+  display: flex;
+  justify-content: flex-end;
 }
+
+mat-button-toggle-group {
+
+  border-radius: 3px;
+  background-color: transparent;
+  margin-top: 6px;
+}
+
+
 
 

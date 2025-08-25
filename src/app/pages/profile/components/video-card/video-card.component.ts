@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {MatCard, MatCardContent, MatCardImage} from '@angular/material/card';
 
 @Component({
@@ -12,5 +12,15 @@ import {MatCard, MatCardContent, MatCardImage} from '@angular/material/card';
   styleUrl: './video-card.component.scss'
 })
 export class VideoCardComponent {
+  constructor() {
+
+
+  }
+
+  getDate() {
+    let currentDate = new Date();
+    return `${currentDate.getFullYear()}/${currentDate.getMonth()}/${currentDate.getDate()}`;
+  }
+
 
 }
