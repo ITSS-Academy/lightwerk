@@ -1,0 +1,75 @@
+.container {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  overflow: auto;
+}
+
+.video-layout {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+
+  img {
+    height: 100%;
+    object-fit: contain;
+    width: auto;
+    //aspect-ratio: 16 / 9;
+    border-radius: 8px;
+    //max-height: 100%;
+  }
+
+}
+
+
+.left-container {
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  //background-color: black;
+  height: 100%;
+  //aspect-ratio: 9 / 16;
+  width: fit-content;
+}
+
+.right-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+
+}
+
+
+.task-icon {
+  display: flex;
+  flex-direction: column;
+}
+
+.icon-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
