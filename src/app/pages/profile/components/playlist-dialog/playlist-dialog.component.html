@@ -1,15 +1,32 @@
-<h2 mat-dialog-title>New playlist</h2>
+<div class="dialog-header">
+  <h2 mat-dialog-title>New playlist</h2>
+  <mat-icon (click)="onNoClick()">close</mat-icon>
+</div>
 <mat-dialog-content>
-  <mat-form-field class="example-full-width">
-    <mat-label>Name</mat-label>
-    <input type="email" matInput [formGroup]="form" placeholder="Name">
-    @if (form.hasError('name') && !form.hasError('required')) {
-      <mat-error>Please enter a valid email address</mat-error>
-    }
-    @if (form.hasError('required')) {
-      <mat-error>Email is <strong>required</strong></mat-error>
-    }
-  </mat-form-field>
+  <form [formGroup]="form">
+    <div class="dialog-header-name">
+      <mat-form-field appearance="outline">
+        <input matInput placeholder="Name" formControlName="name"/>
+      </mat-form-field>
+      @if (form.get("name")?.invalid && form.get("name")?.touched) {
+        <div class="error">
+          <span style="color: red; font-size: 0.7rem">Name is required</span>
+        </div>
+      }
+    </div>
+    <div class="dialog-header-desc">
+      <mat-form-field appearance="outline">
+        <input matInput placeholder="Description" formControlName="description"/>
+      </mat-form-field>
+    </div>
+    <div class="dialog-header-visibility">
+      <mat-radio-group formControlName="isPrivate" aria-label="Select an option">
+        <mat-radio-button value=true>Private</mat-radio-button>
+        <mat-radio-button value=false>Public</mat-radio-button>
+      </mat-radio-group>
+    </div>
+  </form>
+
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button (click)="onSave()">Ok</button>

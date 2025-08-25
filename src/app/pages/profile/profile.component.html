@@ -6,7 +6,10 @@
   </div>
   <div class="profile-information">
     <h2>{{ username }}</h2>
-    <button mat-flat-button (click)="openDialog()">Edit profile</button>
+    <button mat-flat-button (click)="openDialog()">
+      <mat-icon>edit</mat-icon>
+      Edit profile
+    </button>
     <div class="stats">
       <h3>0 followers</h3>
       <h3>0 following</h3>

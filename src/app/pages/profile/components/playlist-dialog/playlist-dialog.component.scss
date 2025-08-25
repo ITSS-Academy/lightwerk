@@ -1,0 +1,18 @@
+.dialog-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.error {
+  padding-bottom: 12px;
+}
+
+mat-icon {
+  margin-right: 8px;
+}
+
+mat-icon :hover {
+  cursor: pointer;
+}
