@@ -1,0 +1,17 @@
+.video-card {
+  aspect-ratio: 4 / 3;
+}
+
+.video-details {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+mat-card-content {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
