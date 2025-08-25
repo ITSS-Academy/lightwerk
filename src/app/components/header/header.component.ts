@@ -53,7 +53,7 @@ export class HeaderComponent {
     event.preventDefault();
     event.stopPropagation();
     if (!(await this.authService.isLoggedIn())) {
-      this.dialog.open(LoginDialogComponent, {width: '350px'});
+      this.dialog.open(LoginDialogComponent, );
       return;
     }
     this.canOpenCreateMenu = true;

@@ -1,10 +1,239 @@
-.error {
-  color: #d32f2f;
-  margin-bottom: 12px;
+//.error {
+//  color: #d32f2f;
+//  margin-bottom: 12px;
+//}
+//
+//button[mat-flat-button] {
+//  margin-top: 16px;
+//  width: 100%;
+//}
+
+//::ng-deep .mat-mdc-dialog-surface {
+//  border-radius: 16px ;
+//  overflow: hidden ;
+//  padding: 0 ;
+//  max-width: 360px;
+//  width: 100%;
+//  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+//
+//}
+//
+///* Title header */
+//h2[mat-dialog-title] {
+//  background: #eafaf0;
+//  margin: 0;
+//  padding: 16px;
+//  border-bottom: 1px solid #ddd;
+//  font-size: 18px;
+//  font-weight: bold;
+//  color: #20b66f;
+//  text-align: center;
+//
+//}
+//
+///* Content */
+//mat-dialog-content {
+//  padding: 16px;
+//  overflow: hidden ;
+//  max-height: none ;
+//  display: flex;
+//  flex-direction: column;
+//  gap: 12px;
+//  margin-top: 15px;
+//  margin-bottom: 15px;
+//
+//}
+//
+///* Error message */
+//.error {
+//  color: #d32f2f;
+//  font-size: 13px;
+//  margin-bottom: 8px;
+//}
+//
+///* Login button */
+//button[mat-flat-button] {
+//  border-radius: 999px;
+//  padding: 10px;
+//  font-size: 14px;
+//  font-weight: 500;
+//  text-transform: none;
+//  width: 100%;
+//
+//  display: flex;
+//  align-items: center;
+//  justify-content: center;
+//  gap: 6px;
+//
+//
+//
+//  mat-icon {
+//    font-size: 18px;
+//  }
+//}
+//
+///* Footer */
+//mat-dialog-actions {
+//  justify-content: center;
+//  padding: 12px;
+//  background: #f6fdf9;
+//  border-top: 1px solid #eee;
+//}
+//
+//button[mat-button] {
+//  font-size: 13px;
+//  color: #20b66f;
+//  text-transform: none;
+//
+//  &:hover {
+//    text-decoration: underline;
+//  }
+//}
+
+::ng-deep .mat-mdc-dialog-container .mdc-dialog__surface {
+
+  background: #ffffff;
+  padding: 5px 15px;
+  width: 484px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+
+
 }
 
+/* Logo + Text LightWerk */
+h2[mat-dialog-title] {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 48px;
+  font-weight: 700;
+  margin: 0 0 24px 0;
+  background: linear-gradient(90deg, #a7f3d0, #34d399);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+h2[mat-dialog-title] img {
+  height: 200px;
+  margin-right: 16px;
+  width: 100%;
+  object-fit: fill;
+}
+
+/* Subtitle slogan */
+mat-dialog-content {
+  font-size: 26px;
+  font-weight: 700;
+  color: #537782;
+  margin: -10px 0 10px;
+  text-align: left;
+}
+
+
 button[mat-flat-button] {
-  margin-top: 16px;
+  margin-top: 150px;
+  height: 70px;
+  padding: 0;
+  background-color: #a7f3d0;
+  border-radius: 16px;
+  color: #1e293b;
+  width: 100%;
+  cursor: pointer;
+  font-weight: 650;
+  font-size: 18px;
+  white-space: nowrap;
+
+}
+
+.google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 12px;
   width: 100%;
 }
 
+.google-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.google-logo {
+  height: 24px;
+  width: 24px;
+  object-fit: contain;
+  display: block;
+}
+
+.google-text {
+  line-height: 1;
+}
+
+.hint {
+  font-size: 15px;
+  font-weight: 30;
+  color: #537782;
+  margin: -10;
+  opacity: 70%;
+
+}
+
+
+
+/* dòng chữ phụ dưới nút */
+mat-dialog-actions {
+  margin-top: 16px;
+  justify-content: flex-start;
+
+}
+
+mat-dialog-actions button {
+  font-size: 14px;
+  color: #94a3b8;
+  text-transform: none;
+  cursor: default;
+}
+
+.dialog-content {
+  margin: -10px 0 20px;
+  text-align: left;
+
+  .subtitle {
+    font-size: 26px;
+    font-weight: 500;
+    color: #537782;
+    margin: -10;
+    opacity: 60%;
+  }
+}
+
+.dialog-header {
+  position: relative; /* để nút close bám theo */
+  display: inline-block; /* giữ nguyên kích thước theo ảnh */
+}
+
+.header-img {
+  display: block;
+  width: 100%;
+  border-radius: 8px;
+}
+
+.close-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--mat-sys-on-primary);
+  border-radius: 50%;
+  z-index: 10;
+
+  mat-icon {
+    font-size: 20px;
+    color: #475569;
+  }
+
+  &:hover {
+    background: var(--mat-sys-on-primary);
+  }
+}
