@@ -8,9 +8,8 @@
 
 <div class="video-container">
   <div class="video-grid">
-    <app-video-card></app-video-card>
-    <app-video-card></app-video-card>
-    <app-video-card></app-video-card>
-    <app-video-card></app-video-card>
+    @for (item of playlistCollection; track item.id) {
+      <app-playlist-card [playlist]="item"></app-playlist-card>
+    }
   </div>
 </div>
