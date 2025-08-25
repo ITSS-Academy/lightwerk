@@ -1,0 +1,106 @@
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.upload-container {
+  width: 80%;
+  height: 80%;
+  padding: 2%;
+  border: 1px solid #d1d5db;
+  border-radius: 1%;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.upload-box {
+  border: 2px dashed #cbd5e1;
+  border-radius: 1%;
+  width: 100%;
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #065f46;
+  background-color: #f9fafb;
+  cursor: pointer;
+}
+
+.upload-box:hover {
+  background-color: #f3f4f6;
+}
+
+.upload-box p {
+  margin: 1% 0;
+  font-size: 1.2vw;
+}
+
+.btn-select {
+  background-color: #065f46;
+  color: white;
+  padding: 1% 3%;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 2%;
+  font-size: 1vw;
+}
+
+.btn-select:hover {
+  background-color: #047857;
+}
+
+.info {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2%;
+  font-size: 1vw;
+  color: #374151;
+}
+
+.info div {
+  width: 23%;
+}
+
+.info strong {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.info i {
+  font-size: 1.2vw;
+  color: #111827;
+}
+
+.footer-bar {
+  background-color: #d1fae5;
+  color: #065f46;
+  padding: 2%;
+  margin-top: 2%;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1vw;
+}
+
+.footer-bar button {
+  background-color: #065f46;
+  color: white;
+  padding: 1% 3%;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1vw;
+}
+
+.footer-bar button:hover {
+  background-color: #047857;
+}

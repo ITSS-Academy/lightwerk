@@ -1,0 +1,24 @@
+.video-container {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center; /* centers content horizontally */
+}
+
+.video-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* 4:3 aspect ratio for cards */
+  gap: 3rem; /* spacing between images */
+}
+
+.sort-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+mat-button-toggle-group {
+
+  border-radius: 3px;
+  background-color: transparent;
+  margin-top: 6px;
+}
