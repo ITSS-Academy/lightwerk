@@ -10,6 +10,7 @@ import {LikedVideosComponent} from './components/liked-videos/liked-videos.compo
 import {MatButton} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
 import {ProfileDialogComponent} from './components/profile-dialog/profile-dialog.component';
+import {FollowDialogComponent} from './components/follow-dialog/follow-dialog.component';
 
 @Component({
   selector: 'app-profile',
@@ -59,6 +60,16 @@ export class ProfileComponent implements OnInit, OnDestroy {
         if (result.username !== undefined) this.username = result.username;
         if (result.profileImageUrl !== undefined) this.profileImageUrl = result.profileImageUrl;
       }
+    });
+  }
+
+  readonly dialogUser = inject(MatDialog);
+
+  openDialogUser() {
+    const dialogRef = this.dialog.open(FollowDialogComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
     });
   }
 
