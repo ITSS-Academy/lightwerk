@@ -1,33 +1,48 @@
 <div class="container">
-<div class="upload-container">
-  <div class="upload-box">
-    <p><strong>Select video to upload</strong></p>
-    <p>Or drag and drop it here</p>
-    <button class="btn-select">Select Video</button>
-  </div>
+  <div class="upload-container">
+    <div class="upload-box">
+      <p><strong>Select video to upload</strong></p>
+      <p>Or drag and drop it here</p>
+      <button mat-flat-button color="primary" (click)="fileInput.click()">
+        Select Video
+      </button>
 
-  <div class="info">
-    <div>
-      <strong><mat-icon>videocam</mat-icon> Dung lượng và thời lượng</strong>
-      Dung lượng tối đa: 30GB, thời lượng video: 60 phút
-    </div>
-    <div>
-      <strong><mat-icon>drive_folder_upload</mat-icon> Định dạng tập tin</strong>
-      Đề xuất: *.mp4. Có hỗ trợ các định dạng chính khác.
-    </div>
-    <div>
-      <strong><mat-icon>high_quality</mat-icon> Độ phân giải video</strong>
-      Độ phân giải cao khuyến nghị: 1080p, 1440p, 4K
-    </div>
-    <div>
-      <strong><mat-icon>aspect_ratio</mat-icon> Tỷ lệ khung hình</strong>
-      Đề xuất: 16:9 cho chế độ ngang, 9:16 cho chế độ dọc
-    </div>
-  </div>
+      <input
+        type="file"
+        #fileInput
+        style="display: none"
+        accept="video/*"
+        multiple
+        (change)="onFilesSelected($event)"
+      >
 
-  <div class="footer-bar">
-    <span>Create high quality videos on CapCut Online. Automatically shorten your videos and enable videos from scripts with AI-powered features</span>
-    <button>Try now</button>
+    </div>
+
+    <div class="info">
+      <div>
+        <strong><mat-icon>videocam</mat-icon> Dung lượng và thời lượng</strong>
+        Dung lượng tối đa: 30GB, thời lượng video: 60 phút
+      </div>
+      <div>
+        <strong><mat-icon>drive_folder_upload</mat-icon> Định dạng tập tin</strong>
+        Đề xuất: *.mp4. Có hỗ trợ các định dạng chính khác.
+      </div>
+      <div>
+        <strong><mat-icon>high_quality</mat-icon> Độ phân giải video</strong>
+        Độ phân giải cao khuyến nghị: 1080p, 1440p, 4K
+      </div>
+      <div>
+        <strong><mat-icon>aspect_ratio</mat-icon> Tỷ lệ khung hình</strong>
+        Đề xuất: 16:9 cho chế độ ngang, 9:16 cho chế độ dọc
+      </div>
+    </div>
+
+    <div class="footer-bar">
+      <span>
+        Create high quality videos on CapCut Online. Automatically shorten your
+        videos and enable videos from scripts with AI-powered features
+      </span>
+      <button mat-flat-button color="accent">Try now</button>
+    </div>
   </div>
-</div>
 </div>
