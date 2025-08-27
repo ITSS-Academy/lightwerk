@@ -2,6 +2,7 @@
   height: 100vh;
   width: 100%;
   display: flex;
+
 }
 
 
@@ -17,6 +18,7 @@
 
 
 .left-middle-container {
+  position: relative;
   .clip {
     aspect-ratio: 9/16;
     height: 100vh;
@@ -26,7 +28,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-
+    position: sticky;
 
     img {
       width: 100%;
@@ -138,15 +140,15 @@ mat-icon {
   padding-right: 1%;
   gap: 1%;
 
-   .button-up, .button-down {
-     width: clamp(30px, 50px, 70px);
-     height: clamp(30px, 50px, 70px);
-     border-radius: 50%;
-     display: flex;
-     justify-content: center;
-     align-items: center;
-     cursor: pointer;
-}
+  .button-up, .button-down {
+    width: clamp(30px, 50px, 70px);
+    height: clamp(30px, 50px, 70px);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
   .button-down:hover{
     transition: background 0.2s ease;
   }
