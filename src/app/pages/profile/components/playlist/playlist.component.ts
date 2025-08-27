@@ -13,6 +13,7 @@ interface PlayListModel {
   name: string;
   videoCount: number;
   isPrivate: boolean;
+  date: Date;
 }
 
 @Component({
@@ -36,7 +37,8 @@ export class PlaylistComponent {
       image: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Flag_of_the_People%27s_Republic_of_China.svg/250px-Flag_of_the_People%27s_Republic_of_China.svg.png",
       name: "Fun Chinese Facts",
       videoCount: 2,
-      isPrivate: false
+      isPrivate: true,
+      date: new Date()
     },
 
     {
@@ -44,7 +46,8 @@ export class PlaylistComponent {
       image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/HSK-logo.jpg/500px-HSK-logo.jpg",
       name: "HSK tips",
       videoCount: 3,
-      isPrivate: false
+      isPrivate: false,
+      date: new Date()
     },
 
     {
@@ -52,14 +55,16 @@ export class PlaylistComponent {
       image: "https://www.engineer4free.com/uploads/1/0/2/9/10296972/3295580_orig.jpg",
       name: "What is a Linear Algebra ?",
       videoCount: 1,
-      isPrivate: false
+      isPrivate: false,
+      date: new Date()
     },
     {
       id: "4",
       image: "https://d28hgpri8am2if.cloudfront.net/book_images/onix/cvr9781626860605/the-art-of-war-9781626860605_lg.jpg",
       name: "The Art Of War (Series)",
       videoCount: 3,
-      isPrivate: false
+      isPrivate: false,
+      date: new Date()
     }
   ];
 
