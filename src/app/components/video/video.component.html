@@ -1,0 +1,33 @@
+<!--<div style="display: flex; gap: 30px;">-->
+<!--  &lt;!&ndash; Bảng điều khiển &ndash;&gt;-->
+<!--  <div style="padding: 10px; border: 1px solid #ccc; box-shadow: 2px 2px 10px rgba(0,0,0,0.2);">-->
+<!--    <div>-->
+<!--      <label>Volume</label>-->
+<!--      <input type="range" [(ngModel)]="volume" min="0" max="1" step="0.01" (input)="onVolumeChange()" />-->
+<!--      <span>{{ volume * 100  }}</span>-->
+<!--    </div>-->
+
+<!--    <div>-->
+<!--      <label>Playback Rate</label>-->
+<!--      <input type="range" [(ngModel)]="playbackRate" min="0.25" max="2" step="0.05" (input)="onRateChange()" />-->
+<!--      <span>{{ playbackRate }}</span>-->
+<!--    </div>-->
+
+<!--    <div>-->
+<!--      <label><input type="checkbox" [(ngModel)]="showControls" (change)="onControlsChange()" /> Controls</label>-->
+<!--      <label><input type="checkbox" [(ngModel)]="isFluid" (change)="onFluidChange()" /> Fluid</label>-->
+<!--      <label><input type="checkbox" [(ngModel)]="isMuted" (change)="onMuteChange()" /> Mute</label>-->
+<!--      <label><input type="checkbox" [(ngModel)]="isLoop" (change)="onLoopChange()" /> Loop</label>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+  <video
+  #target
+  id="my-video"
+  class="video-js vjs-lime centered"
+  controls
+  playsinline
+  preload="auto"
+  data-setup="{}"
+> </video>
