@@ -13,7 +13,12 @@
         <div class="user-search-detail-stats">
 
           <span class="username">{{ item.username }}</span>
-          <span class="username-detail">{{ item.followers }} followers</span>
+          @if (item.followers == 1) {
+            <span class="username-detail">{{ item.followers }} follower</span>
+          } @else {
+            <span class="username-detail">{{ item.followers }} followers</span>
+          }
+
           <span class="username-detail">{{ item.bio }}</span>
         </div>
       </div>

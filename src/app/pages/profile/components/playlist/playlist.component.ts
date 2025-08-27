@@ -44,7 +44,7 @@ export class PlaylistComponent {
       image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/HSK-logo.jpg/500px-HSK-logo.jpg",
       name: "HSK tips",
       videoCount: 3,
-      isPrivate: true
+      isPrivate: false
     },
 
     {
@@ -52,7 +52,7 @@ export class PlaylistComponent {
       image: "https://www.engineer4free.com/uploads/1/0/2/9/10296972/3295580_orig.jpg",
       name: "What is a Linear Algebra ?",
       videoCount: 1,
-      isPrivate: true
+      isPrivate: false
     },
     {
       id: "4",
