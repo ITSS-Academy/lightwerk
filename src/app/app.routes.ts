@@ -4,12 +4,12 @@ export const routes: Routes = [
   {
     path: 'upload-detail',
     loadComponent: () => import('./pages/upload-detail/upload-detail.component').then(m => m.UploadDetailComponent),
-    data: { title: 'Upload-Detail' }
+    data: {title: 'Upload-Detail'}
   },
   {
     path: 'upload',
     loadComponent: () => import('./pages/create-video/create-video.component').then(m => m.CreateVideoComponent),
-    data: { title: 'Upload' }
+    data: {title: 'Upload'}
   },
   {
     path: 'home',
@@ -27,7 +27,7 @@ export const routes: Routes = [
   },
   {
     path: 'search',
-    loadComponent: () => import('./pages/search/search.component').then(m => m.SearchComponent),
+    loadChildren: () => import('./pages/search/search.routes').then(m => m.searchRoutes),
     data: {
       headerTitle: 'Search',
     }

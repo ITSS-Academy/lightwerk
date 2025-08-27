@@ -11,8 +11,8 @@
       Edit profile
     </button>
     <div class="stats">
-      <h3 (click)="openDialogUser()">0 followers</h3>
-      <h3 (click)="openDialogUser()">0 following</h3>
+      <h3 (click)="openDialogUser('followers')"> {{ followers.length }} followers</h3>
+      <h3 (click)="openDialogUser('following')"> {{ following.length }} following</h3>
     </div>
     <p class="bio">{{ bio }}</p>
   </div>

@@ -1,5 +1,5 @@
-<mat-card class="playlist-card" appearance="outlined">
-  <img mat-card-image src="{{playlist.image}}" alt="Photo of a Shiba Inu">
+<mat-card class="playlist-card" appearance="outlined" (click)="navigateToPlaylistDetail(playlist.id)">
+  <img mat-card-image src="{{playlist.image}}" alt="{{playlist.name}}">
   <div class="playlist-visible">
     @if (playlist.isPrivate) {
       <mat-icon>lock</mat-icon>

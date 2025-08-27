@@ -1,0 +1,26 @@
+<div class="search-header">
+  <mat-icon [routerLink]="['/search']">chevron_left</mat-icon>
+  <span>Search</span>
+</div>
+
+<div class="user-search">
+  @for (item of userList; track item.id) {
+
+    <div class="user-search-detail">
+      <div class="user-search-detail-container">
+        <img src="{{item.avatar}}"
+             alt="User profile">
+        <div class="user-search-detail-stats">
+
+          <span class="username">{{ item.username }}</span>
+          <span class="username-detail">{{ item.followers }} followers</span>
+          <span class="username-detail">{{ item.bio }}</span>
+        </div>
+      </div>
+
+      <div class="button">
+        <button mat-flat-button>Follow</button>
+      </div>
+    </div>
+  }
+</div>

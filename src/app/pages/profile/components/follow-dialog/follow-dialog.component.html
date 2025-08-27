@@ -1,7 +1,7 @@
 <mat-dialog-content class="follow-container">
-  <mat-tab-group animationDuration="0ms">
-    <mat-tab label="Following">
-      @for (item of Users; track item.id) {
+  <mat-tab-group animationDuration="0ms" [selectedIndex]="selectedIndex">
+    <mat-tab label="Followers">
+      @for (item of followers; track item.id) {
         <div class="user-container">
           <div class="user-detail">
             <img class="user-avatar" src="{{item.imageUrl}}" alt="User Avatar">
@@ -13,8 +13,8 @@
         </div>
       }
     </mat-tab>
-    <mat-tab label="Followers">
-      @for (item of Users; track item.id) {
+    <mat-tab label="Following">
+      @for (item of following; track item.id) {
         <div class="user-container">
           <div class="user-detail">
             <img class="user-avatar" src="{{item.imageUrl}}" alt="User Avatar">

@@ -6,6 +6,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {PlaylistDialogComponent} from '../playlist-dialog/playlist-dialog.component';
 import {PlaylistCardComponent} from '../playlist-card/playlist-card.component';
 
+
 interface PlayListModel {
   id: string;
   image: string;
@@ -17,7 +18,6 @@ interface PlayListModel {
 @Component({
   selector: 'app-playlist',
   imports: [
-    VideoCardComponent,
     MatButton,
     MatIcon,
     PlaylistCardComponent,
@@ -28,6 +28,7 @@ interface PlayListModel {
 })
 
 export class PlaylistComponent {
+
 
   playlistCollection: PlayListModel[] = [
     {
@@ -49,7 +50,7 @@ export class PlaylistComponent {
     {
       id: "3",
       image: "https://www.engineer4free.com/uploads/1/0/2/9/10296972/3295580_orig.jpg",
-      name: "WTF is a Linear Algebra ?",
+      name: "What is a Linear Algebra ?",
       videoCount: 1,
       isPrivate: true
     },
@@ -84,6 +85,8 @@ export class PlaylistComponent {
       }
     })
   }
+
+
 }
 
 
