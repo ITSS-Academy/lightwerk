@@ -12,10 +12,11 @@ import {AuthState} from '../../ngrx/states/auth.state';
 import {Store} from '@ngrx/store';
 import {VideoModel} from '../../models/video.model';
 import {MatIconModule} from '@angular/material/icon';
+import {VideoComponent} from '../../components/video/video.component';
 
 @Component({
   selector: 'app-history',
-  imports: [MatProgressSpinnerModule, MatIconModule, MatTableModule, MatSortModule, MatPaginatorModule, DatePipe, DecimalPipe],
+  imports: [MatProgressSpinnerModule, MatIconModule, MatTableModule, MatSortModule, MatPaginatorModule, DatePipe, DecimalPipe, VideoComponent],
   templateUrl: './history.component.html',
   styleUrl: './history.component.scss'
 })
