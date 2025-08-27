@@ -2,14 +2,14 @@ import {Routes} from '@angular/router';
 
 export const routes: Routes = [
   {
-    path: 'upload-detail',
+    path: 'upload-detail/:videoId',
     loadComponent: () => import('./pages/upload-detail/upload-detail.component').then(m => m.UploadDetailComponent),
-    data: { title: 'Upload-Detail' }
+    data: {headerTitle: 'Upload'}
   },
   {
     path: 'upload',
     loadComponent: () => import('./pages/create-video/create-video.component').then(m => m.CreateVideoComponent),
-    data: { title: 'Upload' }
+    data: {headerTitle: 'Upload'}
   },
   {
     path: 'home',
@@ -67,6 +67,10 @@ export const routes: Routes = [
     data: {
       headerTitle: 'Profile',
     }
+  },
+  {
+    path: 'auth/callback',
+    loadComponent: () => import('./pages/auth-callback/auth-callback.component').then(m => m.AuthCallbackComponent),
   },
   {
     path: '**',

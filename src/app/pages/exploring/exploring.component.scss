@@ -1,0 +1,90 @@
+/* Grid container */
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 24px;
+  padding: 20px;
+  background: var(--mat-sys-background);
+  max-width: 1200px;
+  margin: 0 auto;
+  justify-content: center;
+
+}
+
+/* Video card */
+.video-card {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+
+}
+
+/* Thumbnail */
+.thumbnail {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--mat-sys-background);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .like-overlay {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 12px;
+
+    color: var(--mat-sys-on-primary);
+    font-size: 13px;
+    font-weight: 500;
+
+    .heart {
+      font-size: 15px;
+      color: var(--mat-sys-on-primary);
+    }
+  }
+}
+
+/* Info */
+.video-info {
+  margin-top: 8px;
+}
+
+.video-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+  color: #111;
+}
+
+.video-meta {
+  font-size: 12px;
+  color: #555;
+  margin-top: 2px;
+}
+
+.username {
+  font-weight: 500;
+}
+
+.box {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  mat-chip.selected {
+    background-color: #4caf50; /* màu xanh lá khi chọn */
+    color: white; /* chữ màu trắng */
+  }
+
+}
+

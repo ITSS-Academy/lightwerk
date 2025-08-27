@@ -2,12 +2,16 @@ import {Component} from '@angular/core';
 import {MatDialogRef, MatDialogModule} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
-import {AuthService} from '../../services/auth.service';
+import {MatDivider} from '@angular/material/divider';
+import {AuthService} from '../../services/auth/auth.service';
+import {Store} from '@ngrx/store';
+import {AuthState} from '../../ngrx/states/auth.state';
+import {login, storeAuth} from '../../ngrx/actions/auth.actions';
 
 @Component({
   selector: 'app-login-dialog',
   standalone: true,
-  imports: [MatDialogModule, MatButtonModule, MatIconModule],
+  imports: [MatDialogModule, MatButtonModule, MatIconModule, MatDivider],
   templateUrl: './login-dialog.component.html',
   styleUrls: ['./login-dialog.component.scss']
 })
@@ -17,7 +21,9 @@ export class LoginDialogComponent {
 
   constructor(
     private dialogRef: MatDialogRef<LoginDialogComponent>,
-    private authService: AuthService
+    private store: Store<{
+      auth: AuthState
+    }>
   ) {
   }
 
@@ -25,7 +31,7 @@ export class LoginDialogComponent {
     this.loading = true;
     this.error = null;
     try {
-      await this.authService.login();
+      this.store.dispatch(login());
       this.dialogRef.close(true);
     } catch (e: any) {
       this.error = 'Login failed. Please try again.';

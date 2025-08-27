@@ -23,7 +23,7 @@
           <mat-icon>playlist_add</mat-icon>
           Playlist
         </button>
-        <button mat-menu-item>
+        <button mat-menu-item [routerLink]="'/upload'">
           <mat-icon>video_library</mat-icon>
           Video
         </button>
@@ -34,7 +34,7 @@
         <img class="avatar" src="avatar.png" alt="">
       </button>
       <mat-menu #userMenu="matMenu">
-        <button mat-menu-item>
+        <button (click)="logOut()" mat-menu-item>
           <mat-icon>logout</mat-icon>
           Logout
         </button>

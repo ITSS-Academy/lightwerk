@@ -1,10 +1,11 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, Inject} from '@angular/core';
 import {MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
 import {MatButton} from '@angular/material/button';
 import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {MatIcon} from '@angular/material/icon';
 import {ProfileComponent} from '../../profile.component';
 import {FormsModule, ReactiveFormsModule, FormGroup, FormControl, Validators} from '@angular/forms';
+import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-profile-dialog',
@@ -29,17 +30,19 @@ export class ProfileDialogComponent {
   selectedFile: File | null = null;
   readonly dialogRef = inject(MatDialogRef<ProfileComponent>);
 
-  constructor() {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
     this.form = new FormGroup({
-      username: new FormControl('', [
+      username: new FormControl(data?.username || '', [
         Validators.required,
         Validators.pattern(/^[a-zA-Z0-9.]+$/)
       ]),
-      bio: new FormControl('', [
+      bio: new FormControl(data?.bio || '', [
         Validators.maxLength(80)
       ]),
       profileImage: new FormControl(null, [Validators.required])
     });
+    this.profileImageUrl = data?.profileImageUrl || '';
+    this.bioCount = this.form.get('bio')?.value?.length || 0;
   }
 
   onNoClick(): void {
@@ -83,22 +86,6 @@ export class ProfileDialogComponent {
     reader.readAsDataURL(file);
   }
 
-  removeProfilePhoto(): void {
-    this.profileImageUrl = '';
-    this.selectedFile = null;
-    this.form.get('profileImage')?.setValue(null);
-    this.form.get('profileImage')?.updateValueAndValidity();
-    console.log('Profile photo removed locally');
-  }
-
-  getCurrentProfileData(): any {
-    return {
-      profileImage: this.selectedFile,
-      profileImageUrl: this.profileImageUrl,
-      username: this.form.get('username')?.value,
-      bio: this.form.get('bio')?.value
-    };
-  }
 
   updateBioCount(): void {
     this.bioCount = this.form.get('bio')?.value?.length || 0;
@@ -106,7 +93,11 @@ export class ProfileDialogComponent {
 
   onSave() {
     if (!this.form.invalid) {
-      this.dialogRef.close(this.form.value);
+      this.dialogRef.close({
+        bio: this.form.get('bio')?.value,
+        username: this.form.get('username')?.value,
+        profileImageUrl: this.profileImageUrl
+      });
     }
   }
 }

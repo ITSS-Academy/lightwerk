@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
+import {ActivatedRoute} from '@angular/router';
 import {MatButton} from '@angular/material/button';
 import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
 import {map, Observable, startWith} from 'rxjs';
@@ -32,6 +33,11 @@ export class UploadDetailComponent implements OnInit{
   myControl = new FormControl('', { nonNullable: true, validators: [Validators.required] });
   options: string[] = ['Education', 'Entertainment', 'Music'];
   filteredOptions$!: Observable<string[]>;
+
+  constructor(private activatedRoute: ActivatedRoute) {
+    const videoId = this.activatedRoute.snapshot.paramMap.get('videoId');
+    console.log('Video ID:', videoId);
+  }
 
   ngOnInit() {
     this.filteredOptions$ = this.myControl.valueChanges.pipe(
