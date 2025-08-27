@@ -44,3 +44,7 @@ img {
   align-items: flex-end;
   gap: 1rem;
 }
+
+.playlist-card :hover {
+  cursor: pointer;
+}
