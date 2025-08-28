@@ -1,9 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {MatButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {ActivatedRoute} from '@angular/router';
 import {NgStyle} from '@angular/common';
 import {MatChip} from '@angular/material/chips';
+import {MatDialog} from '@angular/material/dialog';
+import {AddDialogComponent} from './components/add-dialog/add-dialog.component';
 
 interface PlaylistModel {
   id: string;
@@ -21,13 +23,13 @@ interface PlaylistModel {
     MatButton,
     MatIcon,
     NgStyle,
-    MatChip
   ],
   templateUrl: './playlist-detail.component.html',
   styleUrl: './playlist-detail.component.scss'
 })
 export class PlaylistDetailComponent implements OnInit {
   playlistDetail!: PlaylistModel;
+  readonly dialog = inject(MatDialog);
 
   constructor(private activatedRoute: ActivatedRoute) {
     let {playlistId} = this.activatedRoute.snapshot.params;
@@ -92,6 +94,14 @@ export class PlaylistDetailComponent implements OnInit {
       thumbnail: "https://d28hgpri8am2if.cloudfront.net/book_images/onix/cvr9781626860605/the-art-of-war-9781626860605_lg.jpg"
     },
   ];
+  openDialog(): void {
+    const dialogRef = this.dialog.open(AddDialogComponent, {
+      data: {  }
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  }
 
 }

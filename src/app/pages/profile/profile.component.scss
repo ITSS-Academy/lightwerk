@@ -62,27 +62,5 @@
   text-overflow: ellipsis;
 }
 
-/* Container styling for better layout */
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  margin: 20px;
-  background-color: #ffffff;
-}
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .profile-image {
-    display: block;
-    margin-bottom: 15px;
-    text-align: center;
-  }
 
-  .profile-information {
-    display: block;
-    text-align: center;
-  }
-
-  .user-image {
-    height: 30%;
-  }
-}
