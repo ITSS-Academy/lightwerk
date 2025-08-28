@@ -12,6 +12,7 @@ import {VideoModel} from '../../models/video.model';
 import {AsyncPipe} from '@angular/common';
 import {MatButtonModule} from '@angular/material/button';
 import {Router} from '@angular/router';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-create-video',
@@ -22,6 +23,7 @@ import {Router} from '@angular/router';
     MatButton,
     FormsModule,
     AsyncPipe,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './create-video.component.html',
   styleUrl: './create-video.component.scss'

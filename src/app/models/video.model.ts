@@ -13,5 +13,19 @@ export interface VideoModel {
   isPublic: boolean;
   status: 'editing' | 'processing' | 'success'
   createdAt: string;
+  category?: {
+    id: string;
+    name: string;
+  }
 }
 
+export interface UploadVideoModel {
+
+  id: string;
+  title: string;
+  description: string;
+  categoryId: string;
+  isPublic: boolean;
+  thumbnail: File | null
+
+}
