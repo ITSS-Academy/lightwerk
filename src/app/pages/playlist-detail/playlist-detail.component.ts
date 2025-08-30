@@ -38,9 +38,7 @@ export class PlaylistDetailComponent implements OnInit {
     const newId = parseInt(playlistId) - 1
     console.log(newId)
     this.playlistDetail = this.playlistCollection[newId]
-
   }
-
 
   ngOnInit() {
     const {playlistId} = this.activatedRoute.snapshot.params;
@@ -102,6 +100,21 @@ export class PlaylistDetailComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });
+  }
+
+  makePublic() {
+    // TODO: Implement make public functionality
+    console.log('Make public clicked');
+  }
+
+  deletePlaylist() {
+    // TODO: Implement delete playlist functionality
+    console.log('Delete playlist clicked');
+  }
+
+  changeName() {
+    // TODO: Implement change name functionality
+    console.log('Change name clicked');
   }
 
 }
