@@ -21,15 +21,9 @@
     </div>
 
     <div class="button">
-      <button mat-button (click)="openDialog()">Add video</button>
-      <button mat-button class="dropbtn">
-        <mat-icon>more_horiz</mat-icon>
-      </button>
-      <div class="dropdown-content">
-        <button (click)="makePublic()">Make public</button>
-        <button (click)="deletePlaylist()">Delete playlist</button>
-        <button (click)="changeName()">Change name</button>
-      </div>
+      <button mat-button (click)="openDialogmakePublic()">Make public</button>
+      <button mat-button (click)="openDialogDeletePlaylist()">Delete Playlist</button>
+      <button mat-button (click)="openDialogChangeName()">Change Name</button>
     </div>
   </div>
 </div>

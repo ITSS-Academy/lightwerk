@@ -1,0 +1,23 @@
+h2 {
+  font-size: 1.5em;
+  text-align: center;
+}
+
+.makePublic {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 6rem;
+}
+
+p {
+  font-size: 1.2em;
+}
+
+mat-icon  {
+  font-size: 1,5rem;
+  color: #43b53f;
+}
