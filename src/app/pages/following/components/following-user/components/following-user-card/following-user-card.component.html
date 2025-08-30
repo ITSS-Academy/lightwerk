@@ -1,0 +1,25 @@
+<mat-card class="example-card" appearance="outlined">
+  <mat-card-header>
+    <mat-card-title-group>
+      <!-- Avatar -->
+      <img mat-card-avatar class="avatar"
+           src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLopLv7WRVQPCqtnPIelxkZ53MtVNhxEhfZw&s"
+           alt="avatar">
+
+      <!-- Info -->
+      <div class="info">
+        <div class="title-row">
+          <span class="username">{{ user.username }}</span>
+          <span class="name">{{ user.name }}</span>
+        </div>
+        <span class="followers">{{ user.quantityFollowed }} Followed</span>
+      </div>
+
+      <!-- Button -->
+      <button mat-button class="following-btn"
+              (click)="toggleFollow(user)">
+        {{ user.isFollowing ? 'Following' : '+ Follow' }}
+      </button>
+    </mat-card-title-group>
+  </mat-card-header>
+</mat-card>

@@ -1,75 +1,200 @@
-.container {
+//.container {
+//  position: relative;
+//  display: flex;
+//  flex-direction: row;
+//  width: 100%;
+//  height: 100%;
+//  justify-content: center;
+//  align-items: center;
+//  overflow: auto;
+//}
+//
+//.video-layout {
+//  height: 100%;
+//  width: 100%;
+//  display: flex;
+//  align-items: center;
+//  justify-content: center;
+//  padding: 10px;
+//
+//  img {
+//    height: 100%;
+//    object-fit: contain;
+//    width: auto;
+//    //aspect-ratio: 16 / 9;
+//    border-radius: 8px;
+//    //max-height: 100%;
+//  }
+//
+//}
+//
+//
+//.left-container {
+//
+//  display: flex;
+//  align-items: center;
+//  justify-content: center;
+//  //background-color: black;
+//  height: 100%;
+//  //aspect-ratio: 9 / 16;
+//  width: fit-content;
+//}
+//
+//.right-container {
+//  height: 100%;
+//  display: flex;
+//  flex-direction: column;
+//  align-items: flex-start;
+//  justify-content: center;
+//
+//}
+//
+//
+//.task-icon {
+//  display: flex;
+//  flex-direction: column;
+//}
+//
+//.icon-btn {
+//  width: 50px;
+//  height: 50px;
+//  border-radius: 50%;
+//  border: none;
+//
+//  display: flex;
+//  align-items: center;
+//  justify-content: center;
+//  cursor: pointer;
+//  transition: transform 0.2s;
+//}
+//
+//.main {
+//  display: flex;
+//  justify-content: center;
+//  align-items: center;
+//}
+/* Toàn bộ feed: cuộn theo chiều dọc, chỉ hiển thị 1 video/ảnh full màn hình */
+.feed-container {
+  height: calc(100vh - 64px);
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scrollbar-width: none;
+}
+
+.feed-container::-webkit-scrollbar {
+  display: none;
+}
+
+.video-wrapper {
+  height: calc(100vh - 64px); /* toàn màn hình trừ header */
+  scroll-snap-align: start;
+  display: flex;
+  justify-content: center; /* căn giữa ngang */
+  align-items: center; /* căn giữa dọc */
   position: relative;
-  display: flex;
-  flex-direction: row;
+}
+
+.image-wrapper {
+  height: 100%;
+  aspect-ratio: 9 / 16;
+  background: #000;
+  position: relative;
+  overflow: hidden;
+}
+
+.image-wrapper img {
   width: 100%;
   height: 100%;
-  justify-content: center;
-  align-items: center;
-  overflow: auto;
+  object-fit: contain; /* đảm bảo vừa khung */
+  background: #000;
 }
 
-.video-layout {
-  height: 100%;
+.content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative; /* để action-bar bám theo */
   width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
-
-  img {
-    height: 100%;
-    object-fit: contain;
-    width: auto;
-    //aspect-ratio: 16 / 9;
-    border-radius: 8px;
-    //max-height: 100%;
-  }
-
+  height: 100%;
 }
 
-
-.left-container {
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  //background-color: black;
-  height: 100%;
-  //aspect-ratio: 9 / 16;
-  width: fit-content;
-}
-
-.right-container {
-  height: 100%;
+.action-bar {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(calc(210px + 12px), -50%);
+  /* 210px = nửa chiều rộng ảnh (420/2), +12px để cách mép một chút */
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-
+  align-items: center;
+  gap: 12px;
 }
 
-
-.task-icon {
-  display: flex;
-  flex-direction: column;
-}
-
-.icon-btn {
-  width: 50px;
-  height: 50px;
+.action-bar .avatar {
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  border: none;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: transform 0.2s;
+  object-fit: cover;
+  border: 2px solid #fff; /* để nổi bật trên nền đen */
 }
 
-.main {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.image-wrapper {
+  height: 100%;
+  aspect-ratio: 9 / 16;
+  background: #000;
+  position: relative;
+  overflow: hidden;
+  max-width: 420px;
+  margin: 0 auto;
 }
+
+.image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+}
+
+
+/* Caption */
+.caption {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 16px;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.caption .author {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+
+.caption .text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.35;
+  max-height: calc(1.35em * 3);
+  overflow: hidden;
+}
+
+/* Action bar */
+
+
+.action-bar button {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+
+.count {
+  font-size: 12px;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+  text-align: center;
+}
+
+

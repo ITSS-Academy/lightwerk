@@ -65,7 +65,7 @@
   font-size: 14px;
   line-height: 1.6;
   text-align: justify;
-  margin-bottom: 20px;
+  padding: 2%;
 }
 
 
@@ -103,6 +103,8 @@
   height: 40%;
   width: 100%;
   padding-left: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
 .frame-avatar {
@@ -112,6 +114,8 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  padding-top: 2%;
+  padding-bottom: 2%;
 }
 
 .avatar {
@@ -125,14 +129,17 @@
 }
 
 .actions-bar {
+  position: sticky;
+  top: 0;
+  background-color: var(--mat-sys-surface);
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 20px;
   height: 40px;
   padding: 0 16px;
-
   border-top: 1px solid #ddd;
+  border-bottom: 2px solid var(--mat-sys-tertiary);
 }
 
 .action {
@@ -166,17 +173,16 @@
 
 }
 
-.comment-header {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  font-weight: bold;
-  padding: 10px 0;
-  border-bottom: 2px solid var(--mat-sys-tertiary);
-
-  font-size: 16px;
-}
+//.comment-header {
+//  display: flex;
+//  justify-content: center;
+//  align-items: center;
+//  gap: 8px;
+//  font-weight: bold;
+//  border-bottom: 2px solid var(--mat-sys-tertiary);
+//
+//
+//}
 
 .comment {
   display: flex;
@@ -257,6 +263,8 @@
 .heart.active {
   color: #93000a;
 }
+
+
 
 
 

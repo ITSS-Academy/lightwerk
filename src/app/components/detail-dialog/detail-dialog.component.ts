@@ -89,6 +89,76 @@ export class DetailDialogComponent {
       avatar: "https://i.pravatar.cc/40?img=5",
       text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
       date: "July 28, 2022"
+    },
+    {
+      id: 11,
+      name: "Mạnh Mèo",
+      avatar: "https://i.pravatar.cc/40?img=1",
+      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
+      date: "July 28, 2022"
+    },
+    {
+      id: 12,
+      name: "Anh Bi",
+      avatar: "https://i.pravatar.cc/40?img=2",
+      text: "Simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
+      date: "July 28, 2022"
+    },
+    {
+      id: 13,
+      name: "Bé My",
+      avatar: "https://i.pravatar.cc/40?img=3",
+      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
+      date: "July 29, 2022"
+    },
+    {
+      id: 14,
+      name: "Chị Đen",
+      avatar: "https://i.pravatar.cc/40?img=4",
+      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
+      date: "July 30, 2022"
+    },
+    {
+      id: 15,
+      name: "Anh Lu Lu",
+      avatar: "https://i.pravatar.cc/40?img=5",
+      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
+      date: "July 28, 2022"
+    },
+    {
+      id: 16,
+      name: "Mạnh Mèo",
+      avatar: "https://i.pravatar.cc/40?img=1",
+      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
+      date: "July 28, 2022"
+    },
+    {
+      id: 17,
+      name: "Anh Bi",
+      avatar: "https://i.pravatar.cc/40?img=2",
+      text: "Simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
+      date: "July 28, 2022"
+    },
+    {
+      id: 18,
+      name: "Bé My",
+      avatar: "https://i.pravatar.cc/40?img=3",
+      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
+      date: "July 29, 2022"
+    },
+    {
+      id: 19,
+      name: "Chị Đen",
+      avatar: "https://i.pravatar.cc/40?img=4",
+      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
+      date: "July 30, 2022"
+    },
+    {
+      id: 20,
+      name: "Anh Lu Lu",
+      avatar: "https://i.pravatar.cc/40?img=5",
+      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
+      date: "July 28, 2022"
     }
   ];
 
