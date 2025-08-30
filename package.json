@@ -20,10 +20,17 @@
     "@angular/platform-browser": "^19.2.14",
     "@angular/platform-browser-dynamic": "^19.2.14",
     "@angular/router": "^19.2.14",
+    "@ngrx/effects": "^19.2.1",
     "@ngrx/store": "^19.2.1",
     "@supabase/supabase-js": "^2.55.0",
+    "hls.js": "^1.6.11",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
+    "uuid": "^11.1.0",
+    "videojs-contrib-quality-levels": "^4.1.0",
+    "videojs-hls-quality-selector": "^2.0.0",
+    "videojs-hotkeys": "^0.2.30",
+    "videojs-http-source-selector": "^1.1.6",
     "zone.js": "~0.15.1"
   },
   "devDependencies": {
@@ -38,6 +45,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "video.js": "^8.23.4"
   }
 }

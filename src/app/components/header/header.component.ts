@@ -6,7 +6,8 @@ import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {MatMenu, MatMenuItem, MatMenuTrigger, MatMenuModule} from '@angular/material/menu';
 import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 import {LoginDialogComponent} from '../login-dialog/login-dialog.component';
-import {AuthService} from '../../services/auth.service';
+import {AuthService} from '../../services/auth/auth.service';
+import supabase from '../../utils/supabase';
 
 @Component({
   selector: 'app-header',
@@ -53,7 +54,7 @@ export class HeaderComponent {
     event.preventDefault();
     event.stopPropagation();
     if (!(await this.authService.isLoggedIn())) {
-      this.dialog.open(LoginDialogComponent, {width: '350px'});
+      this.dialog.open(LoginDialogComponent, );
       return;
     }
     this.canOpenCreateMenu = true;
@@ -64,5 +65,15 @@ export class HeaderComponent {
 
   onCreateMenuClosed() {
     this.canOpenCreateMenu = false;
+  }
+
+  logOut() {
+    supabase.auth.signOut().then(({error}) => {
+      if (error) {
+        console.error('Logout error:', error);
+      } else {
+        this.router.navigate(['/']);
+      }
+    });
   }
 }

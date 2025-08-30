@@ -5,21 +5,55 @@
 <!--  <button mat-button mat-dialog-close>Okay</button>-->
 <!--</mat-dialog-actions>-->
 
-<h2 mat-dialog-title>Sign in to continue</h2>
-<mat-dialog-content>
-  @if (error) {
-    <div class="error">{{ error }}</div>
+
+
+
+<h2>
+  <div class="dialog-header">
+  <img src="image.png" alt="header" class="header-img" />
+  <button mat-icon-button class="close-btn" (click)="close()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+</h2>
+
+
+<mat-dialog-content class="dialog-content">
+  <p class="subtitle">Light up your feed, werk your vibe.</p>
+
+
+  <p class="hint">Sign in for more content</p>
+
+
+  <mat-divider></mat-divider>
+
+  @if (error){
+    <div  class="error">{{ error }}</div>
   }
+
   <button mat-flat-button color="primary" (click)="loginWithGoogle()" [disabled]="loading">
-    <mat-icon>login</mat-icon>
     @if (loading) {
       <span>Signing in...</span>
     } @else {
-      <span>Sign in with Google</span>
+      <div class="google-btn">
+        <div class="google-icon-wrap">
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/2048px-Google_%22G%22_logo.svg.png"
+            alt="Google"
+            class="google-logo"
+          />
+        </div>
+        <div class="google-text">Login with Google</div>
+      </div>
     }
   </button>
+
+
+
+
 </mat-dialog-content>
-<mat-dialog-actions align="end">
-  <button mat-button (click)="close()" [disabled]="loading">Cancel</button>
-</mat-dialog-actions>
+
+
+
 
