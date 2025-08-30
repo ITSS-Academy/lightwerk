@@ -1,0 +1,121 @@
+.playlist-container {
+  position: relative;
+  overflow: hidden;
+  padding-top: 30px;
+  padding-left: 30px;
+  min-height: 150px;
+  margin-top: 12px;
+  width: 100%;
+  border-radius: 1rem;
+}
+
+.playlist-background-blur {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(16px) brightness(0.8);
+  transform: scale(1.08) translateY(-10px) skewY(-2deg);
+  pointer-events: none;
+}
+
+.playlist-background-gradient {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.85) 100%);
+  pointer-events: none;
+}
+
+img {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.playlist-detail {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.playlist-detail-stats {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.button {
+  position: relative;
+  width: 40%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  overflow: visible; // Ensure dropdown is not clipped
+}
+
+.button > button[mat-button] {
+  color: white;
+}
+
+.name {
+  color: white;
+  font-weight: 500;
+  font-size: 1.2rem;
+}
+
+.stats {
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+}
+
+.dropbtn {
+  background: transparent;
+  border: none;
+  color: white;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 5%; // Align dropdown to the right edge of parent
+  background: #f8f8f8;
+  min-width: 160px;
+  z-index: 10;
+  border-radius: 0.5rem;
+  flex-direction: column;
+  padding: 0.5rem 0;
+}
+
+.button:hover .dropdown-content,
+.dropbtn:focus + .dropdown-content {
+  display: flex;
+}
+
+.dropdown-content button {
+  background: none;
+  color: #1f1f1f;
+  border: none;
+  text-align: left;
+  padding: 0.7rem 1.2rem;
+  width: 100%;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.dropdown-content button:hover {
+  background: #c9c8c8;
+}
