@@ -36,15 +36,18 @@
       </div>
 
 
-    <div class="footer-bar">
+      <div class="footer-bar">
       <span>
         Create high quality videos on CapCut Online. Automatically shorten your
         videos and enable videos from scripts with AI-powered features
       </span>
-      <button mat-flat-button color="accent">Try now</button>
+        <button mat-flat-button color="accent">Try now</button>
+      </div>
     </div>
   </div>
-</div>
-
-
+} @else {
+  <div class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Uploading and processing your video. Please wait...</p>
+  </div>
 }

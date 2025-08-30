@@ -1,10 +1,6 @@
-<mat-card class="playlist-card" appearance="outlined">
-  <img mat-card-image src="{{playlist.image}}" alt="Photo of a Shiba Inu">
-  <div class="playlist-visible">
-    @if (playlist.isPrivate) {
-      <mat-icon>lock</mat-icon>
-    }
-  </div>
+<mat-card class="playlist-card" appearance="outlined" (click)="navigateToPlaylistDetail(playlist.id)">
+  <img mat-card-image src="{{playlist.image}}" alt="{{playlist.name}}">
+
   <mat-card-content>
     <div class="playlist-details">
       <span class="title">{{ playlist.name }}</span>
@@ -14,6 +10,14 @@
         <span>{{ playlist.videoCount }} Videos</span>
       }
 
+    </div>
+    <div class="playlist-visible">
+      @if (playlist.isPrivate) {
+        <mat-icon>lock</mat-icon>
+      } @else if (!playlist.isPrivate) {
+        <mat-icon>language</mat-icon>
+      }
+      <span class="date">{{ playlist.date | date }}</span>
     </div>
 
   </mat-card-content>

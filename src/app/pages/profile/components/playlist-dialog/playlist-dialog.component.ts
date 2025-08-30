@@ -10,6 +10,8 @@ import {
 import {MatButton} from '@angular/material/button';
 import {PlaylistComponent} from '../playlist/playlist.component';
 import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
+import {MatIcon} from '@angular/material/icon';
+import {MatRadioButton, MatRadioGroup} from '@angular/material/radio';
 
 @Component({
   selector: 'app-playlist-dialog',
@@ -23,6 +25,9 @@ import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/inpu
     MatInput,
     MatError,
     MatLabel,
+    MatIcon,
+    MatRadioGroup,
+    MatRadioButton,
   ],
   templateUrl: './playlist-dialog.component.html',
   styleUrl: './playlist-dialog.component.scss'
@@ -38,7 +43,9 @@ export class PlaylistDialogComponent {
       name: new FormControl(data?.name || '', [
         Validators.required,
         Validators.pattern(/^[a-zA-Z0-9.]+$/)]),
-      isPrivate: new FormControl(data?.isPrivate)
+      description: new FormControl(data?.name || ''),
+
+      isPrivate: new FormControl('true')
     });
     this.nameCount = this.form.get('nameCount')?.value?.length || 0;
   }

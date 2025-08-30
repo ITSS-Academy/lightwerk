@@ -1,5 +1,5 @@
 import {createAction, props} from '@ngrx/store';
-import {VideoModel} from '../../models/video.model';
+import {UploadVideoModel, VideoModel} from '../../models/video.model';
 
 export const uploadVideo = createAction('[Video] Upload Video', props<{
   file: File,
@@ -11,3 +11,21 @@ export const uploadVideoFailure = createAction('[Video] Upload Video Failure', p
   error: any,
 }>());
 export const clearVideoState = createAction('[Video] Clear Video State');
+
+export const getVideoInfo = createAction('[Video] Get Video Info', props<{
+  videoId: string
+}>());
+export const getVideoInfoSuccess = createAction('[Video] Get Video Info Success', props<
+  { video: VideoModel }>());
+export const getVideoInfoFailure = createAction('[Video] Get Video Info Failure', props<{
+  error: any,
+}>());
+
+export const createVideoInfo = createAction('[Video] Create Video Info', props<{
+  video: UploadVideoModel
+}>());
+export const createVideoInfoSuccess = createAction('[Video] Create Video Info Success', props<
+  { video: VideoModel }>());
+export const createVideoInfoFailure = createAction('[Video] Create Video Info Failure', props<{
+  error: any,
+}>());

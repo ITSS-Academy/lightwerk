@@ -42,6 +42,7 @@ export class AppComponent {
     const {data} = supabase.auth.onAuthStateChange((event, session) => {
       console.log(event, session)
       if (event === 'SIGNED_IN') {
+        console.log(session?.user)
         this.store.dispatch(storeAuth({auth: session as AuthModel}));
 
       } else if (event === 'SIGNED_OUT') {
