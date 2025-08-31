@@ -1,0 +1,16 @@
+<div class="video-card" [attr.data-id]="video.id">
+  <div class="thumbnail">
+    <img [src]="video.thumbnail" alt="video thumbnail" />
+    <div class="like-overlay">
+      <span class="heart">❤</span>
+      <span class="count">{{ video.likes }}</span>
+    </div>
+  </div>
+  <div class="video-info">
+    <h4 class="video-title">{{ video.title }}</h4>
+    <p class="video-meta">
+      <span class="username">{{ video.username }}</span> •
+      <span class="date">{{ video.date }}</span>
+    </p>
+  </div>
+</div>
