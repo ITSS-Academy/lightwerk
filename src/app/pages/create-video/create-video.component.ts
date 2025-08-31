@@ -32,6 +32,7 @@ export class CreateVideoComponent implements OnInit, OnDestroy {
   isCreateSuccess$: Observable<boolean>
   video$: Observable<VideoModel>
   id!: string
+  isDragOver = false;
 
   constructor(
     private snackBar: MatSnackBar,
@@ -68,18 +69,41 @@ export class CreateVideoComponent implements OnInit, OnDestroy {
   }
 
 
+
   onFileChange(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      if (file.type === 'video/mp4' || file.name.toLowerCase().endsWith('.mp4')) {
-        console.log('Selected file:', file);
-        // Further logic for valid mp4 file
-        this.store.dispatch(uploadVideo({file: file}))
-      } else {
-        this.snackBar.open('Please select a valid mp4 file.', 'Close', {duration: 3000});
-        input.value = '';
-      }
+      this.handleFile(input.files[0]);
+      input.value = '';
+    }
+  }
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    this.isDragOver = true;
+  }
+
+  onDragLeave(event: DragEvent) {
+    event.preventDefault();
+    this.isDragOver = false;
+  }
+
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    this.isDragOver = false;
+
+    if (event.dataTransfer && event.dataTransfer.files.length > 0) {
+      const file = event.dataTransfer.files[0];
+      this.handleFile(file);
+      event.dataTransfer.clearData();
+    }
+  }
+
+  handleFile(file: File) {
+    if (file.type === 'video/mp4' || file.name.toLowerCase().endsWith('.mp4')) {
+      this.store.dispatch(uploadVideo({ file }));
+    } else {
+      this.snackBar.open('Please select a valid mp4 file.', 'Close', { duration: 3000 });
     }
   }
 }
