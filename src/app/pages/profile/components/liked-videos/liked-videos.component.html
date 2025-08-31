@@ -1,8 +1,7 @@
 <div class="video-container">
   <div class="video-grid">
-    <!--    <app-video-card></app-video-card>-->
-    <!--    <app-video-card></app-video-card>-->
-    <!--    <app-video-card></app-video-card>-->
-    <!--    <app-video-card></app-video-card>-->
+    @for (item of LikedVideoList; track item.id) {
+      <app-liked-video-card [likedVideoCard]="item"></app-liked-video-card>
+    }
   </div>
 </div>

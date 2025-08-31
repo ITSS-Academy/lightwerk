@@ -5,4 +5,12 @@ export interface VideoState {
   isCreating: boolean,
   isCreateError: any,
   isCreateSuccess: boolean,
+
+  isGetting: boolean,
+  isGetSuccess: boolean,
+  isGetError: any,
+
+  isCreatingInfo: boolean,
+  isCreateInfoError: any,
+  isCreateInfoSuccess: boolean,
 }

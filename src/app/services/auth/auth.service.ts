@@ -38,4 +38,6 @@ export class AuthService {
     console.log('AuthService.isLoggedIn', {data, error});
     return !!data?.session && !error;
   }
+
+
 }

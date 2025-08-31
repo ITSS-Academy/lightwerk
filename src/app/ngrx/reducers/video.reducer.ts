@@ -7,7 +7,15 @@ const initialState: VideoState = {
   videoDetail: {} as VideoModel,
   isCreating: false,
   isCreateError: null,
-  isCreateSuccess: false
+  isCreateSuccess: false,
+
+  isGetError: null,
+  isGetting: false,
+  isGetSuccess: false,
+
+  isCreatingInfo: false,
+  isCreateInfoError: null,
+  isCreateInfoSuccess: false,
 }
 
 export const videoReducer = createReducer(
@@ -40,5 +48,56 @@ export const videoReducer = createReducer(
   }),
   on(VideoActions.clearVideoState, (state) => {
     return initialState
+  }),
+  on(VideoActions.getVideoInfo, (state, {videoId, type}) => {
+    console.log(type);
+    return {
+      ...state,
+      isGetting: true,
+      isGetError: null,
+      isGetSuccess: false,
+    }
+  }),
+  on(VideoActions.getVideoInfoSuccess, (state, {video}) => {
+    return {
+      ...state,
+      videoDetail: video,
+      isGetting: false,
+      isGetError: null,
+      isGetSuccess: true,
+    }
+  }),
+  on(VideoActions.getVideoInfoFailure, (state, {error}) => {
+    return {
+      ...state,
+      isGetting: false,
+      isGetError: error,
+      isGetSuccess: false,
+    }
+  }),
+  on(VideoActions.createVideoInfo, (state, {video, type}) => {
+    console.log(type);
+    return {
+      ...state,
+      isCreatingInfo: true,
+      isCreateInfoError: null,
+      isCreateInfoSuccess: false,
+    }
+  }), on(VideoActions.createVideoInfoSuccess, (state, {video}) => {
+    return {
+      ...state,
+      videoDetail: video,
+      isCreatingInfo: false,
+      isCreateInfoError: null,
+      isCreateInfoSuccess: true,
+    }
+  }),
+  on(VideoActions.createVideoInfoFailure, (state, {error}) => {
+    return {
+      ...state,
+      isCreatingInfo: false,
+      isCreateInfoError: error,
+      isCreateInfoSuccess: false,
+    }
   })
 );

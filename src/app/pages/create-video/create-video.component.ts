@@ -12,6 +12,7 @@ import {VideoModel} from '../../models/video.model';
 import {AsyncPipe} from '@angular/common';
 import {MatButtonModule} from '@angular/material/button';
 import {Router} from '@angular/router';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-create-video',
@@ -22,6 +23,7 @@ import {Router} from '@angular/router';
     MatButton,
     FormsModule,
     AsyncPipe,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './create-video.component.html',
   styleUrl: './create-video.component.scss'
@@ -69,12 +71,18 @@ export class CreateVideoComponent implements OnInit, OnDestroy {
   }
 
 
-
   onFileChange(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
-      this.handleFile(input.files[0]);
-      input.value = '';
+      const file = input.files[0];
+      if (file.type === 'video/mp4' || file.name.toLowerCase().endsWith('.mp4')) {
+        console.log('Selected file:', file);
+        // Further logic for valid mp4 file
+        this.store.dispatch(uploadVideo({file: file}))
+      } else {
+        this.snackBar.open('Please select a valid mp4 file.', 'Close', {duration: 3000});
+        input.value = '';
+      }
     }
   }
 
@@ -94,16 +102,8 @@ export class CreateVideoComponent implements OnInit, OnDestroy {
 
     if (event.dataTransfer && event.dataTransfer.files.length > 0) {
       const file = event.dataTransfer.files[0];
-      this.handleFile(file);
+      this.onFileChange(event);
       event.dataTransfer.clearData();
-    }
-  }
-
-  handleFile(file: File) {
-    if (file.type === 'video/mp4' || file.name.toLowerCase().endsWith('.mp4')) {
-      this.store.dispatch(uploadVideo({ file }));
-    } else {
-      this.snackBar.open('Please select a valid mp4 file.', 'Close', { duration: 3000 });
     }
   }
 }

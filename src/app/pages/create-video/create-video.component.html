@@ -17,7 +17,6 @@
         </button>
       </div>
 
-
       <div class="info">
         <div>
           <strong>
@@ -51,12 +50,10 @@
 
 
       <div class="footer-bar">
-        <span>
-          Create high quality videos on CapCut Online. Automatically shorten your
-          videos and enable videos from scripts with AI-powered features
-        </span>
-
-
+      <span>
+        Create high quality videos on CapCut Online. Automatically shorten your
+        videos and enable videos from scripts with AI-powered features
+      </span>
         <a mat-flat-button color="primary"
            href="https://www.capcut.com/vi-vn/tools/desktop-video-editor"
            target="_blank" rel="noopener noreferrer"
@@ -65,5 +62,10 @@
         </a>
       </div>
     </div>
+  </div>
+} @else {
+  <div class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Uploading and processing your video. Please wait...</p>
   </div>
 }
