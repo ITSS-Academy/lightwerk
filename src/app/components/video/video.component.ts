@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild, Renderer2} from '@angular/core';
 import Player from 'video.js/dist/types/player';
 import videojs from 'video.js';
 import {FormsModule} from '@angular/forms';
@@ -17,7 +17,7 @@ import "videojs-hotkeys";
 export class VideoComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('target', {static: true}) target!: ElementRef;
   @Input() videoSrc!: string;
-
+  @Input() aspectRatio!: string
   player!: Player;
   videoVisible = false;
   private previousScrollTop: number = 0;
@@ -36,7 +36,7 @@ export class VideoComponent implements OnInit, OnDestroy, AfterViewInit {
       preload: 'auto',
       responsive: true,
       fluid: true,
-      aspectRatio: '4:3',
+      aspectRatio: this.aspectRatio,
       playbackRates: [0.5, 1, 1.25, 1.5, 2],
       sources: [
         {
@@ -81,6 +81,7 @@ export class VideoComponent implements OnInit, OnDestroy, AfterViewInit {
       this.player.dispose();
     }
   }
+
 
   adjustControlButtons(isFullscreen: boolean) {
     const containerEl: any = this.player.el()

@@ -1,69 +1,129 @@
-<div class="container">
-  <div class="middle-container">
-    <div class="left-middle-container">
-      <div class="clip">
-        <img
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKcoMLJm-27p7TGy6EZdZguVb24jZiNvCQQg&s"
-          alt="avatar"
-        >
+<div class="page-container">
+  <!-- Card bên trái -->
+  <div class="card">
+    <div class="card-header">
+      <div class="avatar-wrapper">
+        <div class="avatar">
+          <img
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKcoMLJm-27p7TGy6EZdZguVb24jZiNvCQQg&s"
+            alt="avatar"
+          >
+        </div>
+        <span class="username">username</span>
+      </div>
+      <div class="follow-btn">
+        <button mat-flat-button color="primary">Follow</button>
       </div>
     </div>
 
-    <div class="right-middle-container">
-      <div class="function-of-the-button">
-        <div class="avatar-wrapper">
-          <div class="avatar">
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKcoMLJm-27p7TGy6EZdZguVb24jZiNvCQQg&s"
-              alt="avatar"
-            >
-          </div>
+    <div class="card-media">
+      <div class="horizontal-video">-->
+        <app-video
+          aspectRatio="16:9"
+          videoSrc="https://zkeqdgfyxlmcrmfehjde.supabase.co/storage/v1/object/public/videos/40a7c276-7f22-438c-8d42-6cd4119d18db/master.m3u8">
+        </app-video>
+      </div>
 
-          <button mat-fab color="primary" class="add-btn">
-            <mat-icon>add</mat-icon>
-          </button>
+
+      <!--      @for (i of videos; track $index) {-->
+      <!--        @if (i.aspectRatio == '16:9') {-->
+
+      <!--          <div class="horizontal-video">-->
+      <!--            <app-video-->
+      <!--              aspectRatio="9:16"-->
+      <!--              videoSrc="https://zkeqdgfyxlmcrmfehjde.supabase.co/storage/v1/object/public/videos/40a7c276-7f22-438c-8d42-6cd4119d18db/master.m3u8">-->
+      <!--            </app-video>-->
+      <!--          </div>-->
+
+
+      <!--        } @else {-->
+      <!--          <div class="vertical-video">-->
+      <!--            <app-video-->
+      <!--              aspectRatio="9:16"-->
+      <!--              videoSrc="https://zkeqdgfyxlmcrmfehjde.supabase.co/storage/v1/object/public/videos/40a7c276-7f22-438c-8d42-6cd4119d18db/master.m3u8">-->
+      <!--            </app-video>-->
+      <!--          </div>-->
+      <!--        }-->
+
+      <!--      }-->
+    </div>
+
+    <div class="card-footer">
+      <div class="video-title-wrapper">
+        <div class="video-title" [ngClass]="{ 'collapsed': !isExpanded }">
+          Simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy
+          text ever since the 1500s
         </div>
-
-
+        <button class="toggle-btn" (click)="isExpanded = !isExpanded">
+          {{ isExpanded ? 'Thu gọn' : 'Xem thêm' }}
+        </button>
+      </div>
+      <div class="function-of-the-button">
         <div class="button-item">
-          <button mat-mini-fab color="accent" class="action-btn">
+          <button mat-icon-button color="warn">
             <mat-icon>favorite</mat-icon>
           </button>
           <span>0</span>
         </div>
 
         <div class="button-item">
-          <button mat-mini-fab color="accent" class="action-btn">
+          <button mat-icon-button color="accent" (click)="toggleComments()">
             <mat-icon>comment</mat-icon>
           </button>
           <span>0</span>
         </div>
 
         <div class="button-item">
-          <button mat-mini-fab color="accent" class="action-btn">
+          <button mat-icon-button>
             <mat-icon>bookmark</mat-icon>
           </button>
-          <span>0</span>
         </div>
 
         <div class="button-item">
-          <button mat-mini-fab color="accent" class="action-btn">
+          <button mat-icon-button>
             <mat-icon>share</mat-icon>
           </button>
-          <span>0</span>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Comment Sidebar -->
+  @if (showCommentExpanded) {
+    <div class="comment-sidebar">
+      <div class="comment-header">
+        <mat-icon>chat_bubble_outline</mat-icon>
+        <span>Comments</span>
+        <button mat-icon-button (click)="toggleComments()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
 
-  <div class="right-container">
-    <button mat-mini-fab color="accent" class="button-up action-btn">
-      <mat-icon>keyboard_arrow_up</mat-icon>
-    </button>
-    <button mat-mini-fab color="accent" class="button-down action-btn">
-      <mat-icon>keyboard_arrow_down</mat-icon>
-    </button>
-  </div>
+      <div class="comment-list">
+        @for (c of comments; track c.id) {
+          <div class="comment">
+            <div class="avatar">
+              <img [src]="c.avatar" alt="avatar"/>
+            </div>
+            <div class="comment-content">
+              <p><strong>{{ c.name }}</strong> {{ c.text }}</p>
+              <span class="date">{{ c.date }}</span>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="frame-comment">
+        <mat-form-field appearance="outline">
+          <mat-label>Thêm bình luận</mat-label>
+          <input matInput placeholder="Viết gì đó..."/>
+          <button mat-icon-button matSuffix>
+            <mat-icon>send</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+    </div>
+  }
 </div>
+
 

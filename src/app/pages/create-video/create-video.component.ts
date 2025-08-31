@@ -34,6 +34,7 @@ export class CreateVideoComponent implements OnInit, OnDestroy {
   isCreateSuccess$: Observable<boolean>
   video$: Observable<VideoModel>
   id!: string
+  isDragOver = false;
 
   constructor(
     private snackBar: MatSnackBar,
@@ -82,6 +83,27 @@ export class CreateVideoComponent implements OnInit, OnDestroy {
         this.snackBar.open('Please select a valid mp4 file.', 'Close', {duration: 3000});
         input.value = '';
       }
+    }
+  }
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    this.isDragOver = true;
+  }
+
+  onDragLeave(event: DragEvent) {
+    event.preventDefault();
+    this.isDragOver = false;
+  }
+
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    this.isDragOver = false;
+
+    if (event.dataTransfer && event.dataTransfer.files.length > 0) {
+      const file = event.dataTransfer.files[0];
+      this.onFileChange(event);
+      event.dataTransfer.clearData();
     }
   }
 }
