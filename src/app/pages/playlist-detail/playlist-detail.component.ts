@@ -7,6 +7,8 @@ import {MatDialog} from '@angular/material/dialog';
 import {MakePublicDialogComponent} from './components/make-public-dialog/make-public-dialog.component';
 import {DeletePlaylistDialogComponent} from './components/delete-playlist-dialog/delete-playlist-dialog.component';
 import {ChangeNameDialogComponent} from './components/change-name-dialog/change-name-dialog.component';
+import {LikedVideoCardComponent} from '../profile/components/liked-video-card/liked-video-card.component';
+import {VideoCardComponent} from './components/video-card/video-card.component';
 
 interface PlaylistModel {
   id: string;
@@ -18,11 +20,21 @@ interface PlaylistModel {
   thumbnail: string;
 }
 
+interface VideoCard {
+  id: string;
+  title: string;
+  image: string;
+  date: Date;
+}
+
 @Component({
   selector: 'app-playlist-detail',
   imports: [
     MatButton,
     NgStyle,
+    LikedVideoCardComponent,
+    MatIcon,
+    VideoCardComponent,
   ],
   templateUrl: './playlist-detail.component.html',
   styleUrl: './playlist-detail.component.scss'
@@ -117,5 +129,33 @@ export class PlaylistDetailComponent implements OnInit {
       data: { playlistId: this.playlistDetail.id, currentName: this.playlistDetail.name }
     })
   }
+
+  VideoList: VideoCard[] = [
+    {
+      id: "1",
+      title: "Chinese Tones",
+      image: "https://blog-cdn.italki.com/wp-content/uploads/sites/2/2022/09/30084900/chinese-tones.jpg",
+      date: new Date(),
+    },
+    {
+      id: "2",
+      title: "Chinese Characters Origin",
+      image: "https://openbooks.lib.msu.edu/app/uploads/sites/66/2021/06/character-strokes.jpg",
+      date: new Date(),
+    },
+    {
+      id: "3",
+      title: "Chinese Grammar (part 1)",
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRy1oMNizUhInauwSnVB6IYg70Wyr9Bxjwvwg&s",
+      date: new Date(),
+    },
+    {
+      id: "4",
+      title: "Respecting the elders in China",
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxUGk2gZmRDLNy4Alh8H25L5-Y8d2Maw-53g&s",
+      date: new Date(),
+    },
+
+  ];
 
 }

@@ -27,3 +27,12 @@
     </div>
   </div>
 </div>
+
+<div class="video-container">
+  <div class="video-grid">
+    @for (item of VideoList; track item.id) {
+      <app-video-card [video]="item"></app-video-card>
+    }
+  </div>
+</div>
+

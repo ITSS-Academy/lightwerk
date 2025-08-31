@@ -79,4 +79,17 @@ img {
   font-size: 0.8rem;
 }
 
+.video-container {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center; /* centers content horizontally */
+}
+
+.video-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 3rem; /* spacing between images */
+  overflow-y: hidden;
+}
 
