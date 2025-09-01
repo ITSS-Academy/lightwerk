@@ -4,6 +4,7 @@ import {MatButton} from "@angular/material/button";
 import {MatCard, MatCardContent, MatCardImage} from "@angular/material/card";
 import {MatIconModule} from '@angular/material/icon';
 import {RouterLink} from '@angular/router';
+import {MatFormField, MatInput} from '@angular/material/input';
 
 interface VideoModel {
   id: string;
@@ -23,7 +24,9 @@ interface VideoModel {
     MatCardContent,
     MatCardImage,
     MatIconModule,
-    RouterLink
+    RouterLink,
+    MatFormField,
+    MatInput
   ],
   templateUrl: './search-page.component.html',
   styleUrl: './search-page.component.scss'
