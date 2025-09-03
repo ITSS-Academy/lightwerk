@@ -2,6 +2,7 @@ import {VideoState} from '../states/video.state';
 import {VideoModel} from '../../models/video.model';
 import {createReducer, on} from '@ngrx/store';
 import * as VideoActions from '../actions/video.actions';
+import {state} from '@angular/animations';
 
 const initialState: VideoState = {
   videoDetail: {} as VideoModel,
@@ -16,6 +17,11 @@ const initialState: VideoState = {
   isCreatingInfo: false,
   isCreateInfoError: null,
   isCreateInfoSuccess: false,
+
+  latestVideos: [],
+  isGettingLatest: false,
+  isGetLatestSuccess: false,
+  isGetLatestError: null,
 }
 
 export const videoReducer = createReducer(
@@ -99,5 +105,34 @@ export const videoReducer = createReducer(
       isCreateInfoError: error,
       isCreateInfoSuccess: false,
     }
+  }),
+
+  on(VideoActions.getLatestVideos, (state, {page, type}) => {
+    console.log(type);
+    return {
+      ...state,
+      isGettingLatest: true,
+      isGetLatestError: null,
+      isGetLatestSuccess: false,
+    }
+  }),
+  on(VideoActions.getLatestVideosSuccess, (state, {videos}) => {
+    return {
+      ...state,
+      latestVideos: videos,
+      isGettingLatest: false,
+      isGetLatestError: null,
+      isGetLatestSuccess: true,
+    }
+  }),
+  on(VideoActions.getLatestVideosFailure, (state, {error}) => {
+    return {
+      ...state,
+      isGettingLatest: false,
+      isGetLatestError: error,
+      isGetLatestSuccess: false,
+    }
   })
 );
+
+

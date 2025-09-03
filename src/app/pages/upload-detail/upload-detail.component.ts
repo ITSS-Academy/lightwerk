@@ -40,8 +40,8 @@ import {convertToSupabaseUrl} from '../../utils/img-converter';
 export class UploadDetailComponent implements OnInit, OnDestroy {
 
   uploadForm = new FormGroup({
-    title: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-    description: new FormControl('', [Validators.maxLength(80)]),
+    title: new FormControl('', [Validators.required, Validators.maxLength(100)]),
+    description: new FormControl('', [Validators.maxLength(500)]),
     category: new FormControl('', [Validators.required]),
     thumbnail: new FormControl<File | null>(null),
     privacy: new FormControl('public', [Validators.required]),

@@ -1,7 +1,5 @@
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {inject} from '@angular/core';
-
-;
 import * as categoryActions from '../actions/category.actions';
 import {catchError, exhaustMap, map, of} from 'rxjs';
 import {CategoryService} from '../../services/category/category.service';

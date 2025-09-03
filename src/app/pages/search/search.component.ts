@@ -10,13 +10,9 @@ import {RouterOutlet} from '@angular/router';
 @Component({
   selector: 'app-search',
   imports: [
-    MatIcon,
+  
     FormsModule,
-    MatButton,
-    DatePipe,
-    MatCard,
-    MatCardContent,
-    MatCardImage,
+
     RouterOutlet,
 
   ],

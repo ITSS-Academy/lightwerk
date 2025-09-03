@@ -16,6 +16,11 @@ export interface VideoModel {
   category?: {
     id: string;
     name: string;
+  },
+  profile?: {
+    id: string;
+    username: string;
+    avatarPath: string | null;
   }
 }
 

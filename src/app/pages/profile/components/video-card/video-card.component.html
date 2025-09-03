@@ -1,4 +1,4 @@
-<mat-card class="video-card" appearance="outlined">
+<mat-card class="video-card" appearance="outlined" (click)="openDialog()">
   <img mat-card-image
        src="{{convertToSupabaseUrl(video!.thumbnailPath, 'thumbnail')}}"
        alt="Video Placeholder Image">
