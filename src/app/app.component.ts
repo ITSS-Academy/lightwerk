@@ -1,6 +1,6 @@
 import {Component, computed, signal} from '@angular/core';
 import {BreakpointObserver} from '@angular/cdk/layout';
-import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
+import {ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 import {SidebarComponent} from './components/sidebar/sidebar.component';
 import {MaterialAngularModule} from './modules/material-angular/material-angular.module';
 import {MatDrawerMode} from '@angular/material/sidenav';
@@ -11,11 +11,11 @@ import {AuthState} from './ngrx/states/auth.state';
 import {Observable} from 'rxjs';
 import {logout, storeAuth} from './ngrx/actions/auth.actions';
 import {AuthModel} from './models/auth.model';
-import {AsyncPipe} from '@angular/common';
+import {AsyncPipe, NgClass} from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, SidebarComponent, MaterialAngularModule, RouterLink, RouterLinkActive, HeaderComponent, AsyncPipe],
+  imports: [RouterOutlet, SidebarComponent, MaterialAngularModule, RouterLink, RouterLinkActive, HeaderComponent, AsyncPipe, NgClass],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -29,8 +29,16 @@ export class AppComponent {
   sidebarWidth = computed(() => this.collapsed() ? 'fit-content' : '240px');
 
   isLoggingIn$: Observable<boolean>
+  headerTitle: string = '';
 
-  constructor(private breakpointObserver: BreakpointObserver, private store: Store<{ auth: AuthState }>) {
+  constructor(private breakpointObserver: BreakpointObserver, private store: Store<{ auth: AuthState }>,
+              private router: Router, private activatedRoute: ActivatedRoute,) {
+    this.router.events.subscribe(() => {
+      const child = this.activatedRoute.firstChild;
+      // You can use the headerTitle for something if needed
+      this.headerTitle = child?.snapshot.data['headerTitle'];
+    });
+
     this.breakpointObserver.observe(['(max-width: 599px)']).subscribe(result => {
       this.collapsed.set(result.matches);
       this.sidebarMode.set(result.matches ? 'over' : 'side');

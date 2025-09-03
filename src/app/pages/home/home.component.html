@@ -1,94 +1,87 @@
-<div class="page-container">
-  <!-- Card bên trái -->
-  <div class="card">
-    <div class="card-header">
-      <div class="avatar-wrapper">
-        <div class="avatar">
-          <img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKcoMLJm-27p7TGy6EZdZguVb24jZiNvCQQg&s"
-            alt="avatar"
-          >
+<div style="display: flex; width: 100%; height: 100%">
+  <div class="page-container" #pageContainer>
+    <!-- Render a list of cards with different aspect ratios -->
+    <div>
+      @for (card of cards; track $index) {
+        <div class="card-container">
+          <div class="card-wrapper">
+
+            <div class="card-header">
+              <div class="avatar-wrapper">
+                <div class="avatar">
+                  <img
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKcoMLJm-27p7TGy6EZdZguVb24jZiNvCQQg&s"
+                    alt="avatar"
+                  >
+                </div>
+                <span class="username">username</span>
+              </div>
+              <div class="follow-btn">
+                <button mat-flat-button color="primary">Follow</button>
+              </div>
+            </div>
+
+            <div class="card" [ngStyle]="getCardBoxStyle(card)">
+              <div class="card-media">
+                <app-video
+                  aspectRatio="9:16"
+                  videoSrc="{{convertToSupabaseUrl('7ca2213a-5f11-4bc9-acf0-5f5ab5ccd336/master.m3u8','video')}}"></app-video>
+              </div>
+            </div>
+
+            <div class="card-footer">
+
+              <div class="function-of-the-button">
+                <div class="button-item">
+                  <button mat-button class="action" [class.active]="true">
+                    @if (false) {
+                      <mat-icon>favorite</mat-icon>
+                    } @else {
+                      <mat-icon>favorite_border</mat-icon>
+                    }
+
+                    <span>10N</span>
+                  </button>
+                </div>
+
+                <div class="button-item">
+                  <button mat-button class="action" [class.active]="true"
+                          (click)="toggleComments()">
+                    @if (false) {
+                      <mat-icon>comment</mat-icon>
+                    } @else {
+                      <mat-icon
+                        fontSet="material-symbols-outlined"
+                      >comment
+                      </mat-icon>
+                    }
+
+                    <span>10N</span>
+                  </button>
+                </div>
+
+                <div class="button-item">
+                  <button mat-button class="action" [class.active]="true">
+                    @if (false) {
+                      <mat-icon>bookmark</mat-icon>
+                    } @else {
+                      <mat-icon>bookmark_border</mat-icon>
+                    }
+
+                    <span>10N</span>
+                  </button>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
         </div>
-        <span class="username">username</span>
-      </div>
-      <div class="follow-btn">
-        <button mat-flat-button color="primary">Follow</button>
-      </div>
-    </div>
 
-    <div class="card-media">
-      <div class="horizontal-video">-->
-        <app-video
-          aspectRatio="16:9"
-          videoSrc="https://zkeqdgfyxlmcrmfehjde.supabase.co/storage/v1/object/public/videos/40a7c276-7f22-438c-8d42-6cd4119d18db/master.m3u8">
-        </app-video>
-      </div>
-
-
-      <!--      @for (i of videos; track $index) {-->
-      <!--        @if (i.aspectRatio == '16:9') {-->
-
-      <!--          <div class="horizontal-video">-->
-      <!--            <app-video-->
-      <!--              aspectRatio="9:16"-->
-      <!--              videoSrc="https://zkeqdgfyxlmcrmfehjde.supabase.co/storage/v1/object/public/videos/40a7c276-7f22-438c-8d42-6cd4119d18db/master.m3u8">-->
-      <!--            </app-video>-->
-      <!--          </div>-->
-
-
-      <!--        } @else {-->
-      <!--          <div class="vertical-video">-->
-      <!--            <app-video-->
-      <!--              aspectRatio="9:16"-->
-      <!--              videoSrc="https://zkeqdgfyxlmcrmfehjde.supabase.co/storage/v1/object/public/videos/40a7c276-7f22-438c-8d42-6cd4119d18db/master.m3u8">-->
-      <!--            </app-video>-->
-      <!--          </div>-->
-      <!--        }-->
-
-      <!--      }-->
-    </div>
-
-    <div class="card-footer">
-      <div class="video-title-wrapper">
-        <div class="video-title" [ngClass]="{ 'collapsed': !isExpanded }">
-          Simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy
-          text ever since the 1500s
-        </div>
-        <button class="toggle-btn" (click)="isExpanded = !isExpanded">
-          {{ isExpanded ? 'Thu gọn' : 'Xem thêm' }}
-        </button>
-      </div>
-      <div class="function-of-the-button">
-        <div class="button-item">
-          <button mat-icon-button color="warn">
-            <mat-icon>favorite</mat-icon>
-          </button>
-          <span>0</span>
-        </div>
-
-        <div class="button-item">
-          <button mat-icon-button color="accent" (click)="toggleComments()">
-            <mat-icon>comment</mat-icon>
-          </button>
-          <span>0</span>
-        </div>
-
-        <div class="button-item">
-          <button mat-icon-button>
-            <mat-icon>bookmark</mat-icon>
-          </button>
-        </div>
-
-        <div class="button-item">
-          <button mat-icon-button>
-            <mat-icon>share</mat-icon>
-          </button>
-        </div>
-      </div>
+      }
     </div>
   </div>
 
-  <!-- Comment Sidebar -->
   @if (showCommentExpanded) {
     <div class="comment-sidebar">
       <div class="comment-header">
@@ -124,6 +117,6 @@
       </div>
     </div>
   }
+
+
 </div>
-
-

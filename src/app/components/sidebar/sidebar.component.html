@@ -12,10 +12,16 @@
 
           @for (route of section.routes; track route) {
             <a
+              (click)="removeFocus($event)"
               [ngClass]="{ 'collapsed': collapsed }"
               mat-list-item [routerLink]="route.path" routerLinkActive #rla="routerLinkActive"
               [activated]="rla.isActive">
-              <mat-icon matListItemIcon>{{ route.icon }}</mat-icon>
+              <mat-icon
+                matListItemIcon
+                [fontSet]="rla.isActive ? '' : 'material-symbols-outlined'"
+              >
+                {{ route.icon }}
+              </mat-icon>
               @if (!collapsed) {
                 <span matListItemTitle
                       [style.display]="collapsed ? 'none' : ''"
@@ -29,10 +35,16 @@
         @if (!collapsed) {
           @for (route of section.routes; track route) {
             <a
+              (click)="removeFocus($event)"
               [ngClass]="{ 'collapsed': collapsed }"
               mat-list-item [routerLink]="route.path" routerLinkActive #rla="routerLinkActive"
               [activated]="rla.isActive">
-              <mat-icon matListItemIcon>{{ route.icon }}</mat-icon>
+              <mat-icon
+                matListItemIcon
+                [fontSet]="rla.isActive ? '' : 'material-symbols-outlined'"
+              >
+                {{ route.icon }}
+              </mat-icon>
               @if (!collapsed) {
                 <span matListItemTitle
                       [style.display]="collapsed ? 'none' : ''"

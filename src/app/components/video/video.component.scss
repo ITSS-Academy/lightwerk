@@ -1,6 +1,6 @@
 //$color-primary: #95c01f !default;
 //$color-secondary: #2315FF !default;
-$border-radius: 20px !default;
+$border-radius: 0 !default;
 
 @keyframes rotate {
   to {
@@ -124,4 +124,38 @@ $border-radius: 20px !default;
 .centered {
   scroll-snap-align: start none;
   scroll-snap-stop: always;
+}
+
+.video-title.collapsed {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+
+}
+
+.video-title {
+  font-size: clamp(0.8rem, 1.5vw, 0.95rem);
+  color: white;
+  line-height: 1.4;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.toggle-btn {
+  color: white;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  margin-top: 4px;
+  padding: 0;
+}
+
+.expanded {
+  background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 0%, /* trên trong suốt */
+      rgba(0, 0, 0, 0.6) 50%, /* giữa tối */
+      rgba(0, 0, 0, 0.1) 100% /* dưới trong suốt */
+  );
 }

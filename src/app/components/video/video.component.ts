@@ -3,13 +3,16 @@ import Player from 'video.js/dist/types/player';
 import videojs from 'video.js';
 import {FormsModule} from '@angular/forms';
 import "videojs-hotkeys";
+import {NgClass, NgStyle} from '@angular/common';
 
 
 @Component({
   selector: 'app-video',
   standalone: true,
   imports: [
-    FormsModule
+    FormsModule,
+    NgClass,
+    NgStyle
   ],
   templateUrl: './video.component.html',
   styleUrl: './video.component.scss'
@@ -21,6 +24,7 @@ export class VideoComponent implements OnInit, OnDestroy, AfterViewInit {
   player!: Player;
   videoVisible = false;
   private previousScrollTop: number = 0;
+  isExpanded = false;
 
 
   items: Array<{
@@ -122,6 +126,10 @@ export class VideoComponent implements OnInit, OnDestroy, AfterViewInit {
 
   playVideo() {
 
+  }
+
+  toggleExpand() {
+    this.isExpanded = !this.isExpanded;
   }
 
 }

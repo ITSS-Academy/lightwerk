@@ -1,11 +1,12 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, ViewChild, ElementRef, AfterViewInit, HostListener, ChangeDetectorRef} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {AuthService} from '../../services/auth/auth.service';
 import supabase from '../../utils/supabase';
 import {MatIconModule} from '@angular/material/icon';
 import {VideoComponent} from '../../components/video/video.component';
-import {NgClass, NgStyle} from '@angular/common';
+import {NgClass, NgStyle, SlicePipe} from '@angular/common';
 import {MatFormField, MatInput, MatLabel, MatSuffix} from '@angular/material/input';
+import {convertToSupabaseUrl} from '../../utils/img-converter';
 
 @Component({
   selector: 'app-home',
@@ -17,20 +18,75 @@ import {MatFormField, MatInput, MatLabel, MatSuffix} from '@angular/material/inp
     MatInput,
     MatLabel,
     MatSuffix,
-    NgClass
+    NgClass,
+    NgStyle,
+    SlicePipe
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent {
-  @Input() video!: { videoSrc: string, title: string, aspectRatio: string };
+export class HomeComponent implements AfterViewInit {
   isExpanded = false;
   showCommentExpanded = false;
 
-  constructor(private authService: AuthService) {
+  @ViewChild('pageContainer', {static: true}) pageContainerRef!: ElementRef;
+  viewportWidth = 0;
+  viewportHeight = 0;
+
+  constructor(private cdr: ChangeDetectorRef) {
+  }
+
+  ngAfterViewInit() {
+    this.updateContainerSize();
+    this.cdr.detectChanges();
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    this.updateContainerSize();
+  }
+
+  updateContainerSize() {
+    if (this.pageContainerRef && this.pageContainerRef.nativeElement) {
+      const rect = this.pageContainerRef.nativeElement.getBoundingClientRect();
+      this.viewportWidth = rect.width;
+      this.viewportHeight = rect.height;
+    }
+  }
+
+  getCardBoxStyle(card: { aspectRatio: string }) {
+    if (!this.viewportWidth || !this.viewportHeight) return {};
+    const [w, h] = card.aspectRatio.split(':').map(Number);
+    if (!w || !h) return {};
+    const videoRatio = w / h;
+    const viewportRatio = this.viewportWidth / this.viewportHeight;
+    let width, height;
+    if (videoRatio > viewportRatio) {
+      width = this.viewportWidth - (100 + 32 + 16);
+      height = width / videoRatio;
+    } else {
+      height = this.viewportHeight - ((100 + 32 + 16));
+      width = height * videoRatio;
+    }
+    width = Math.max(0, width);
+    height = Math.max(0, height);
+
+    return {
+      width: width + 'px',
+      height: height + 'px',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      position: 'relative',
+      overflow: 'hidden',
+    };
   }
 
 
+  cards = [
+    {videoSrc: 'video1.mp4', title: 'Video 1', aspectRatio: '9:16'},
+  ];
   comments = [
     {
       id: 1,
@@ -104,24 +160,23 @@ export class HomeComponent {
     }
   ];
 
-  // videos = [
-  //   {
-  //     videoSrc: 'asdfas',
-  //     aspectRatio: '16:9',
-  //     profile: {}
-  //   },
-  //   {
-  //     videoSrc: 'asdfas',
-  //     aspectRatio: '9:16',
-  //     profile: {}
-  //   }
-  // ]
+  videos = [
+    {
+      videoSrc: 'asdfas',
+      aspectRatio: '16:9',
+      profile: {}
+    },
+    {
+      videoSrc: 'asdfas',
+      aspectRatio: '9:16',
+      profile: {}
+    }
+  ]
 
-  toggleExpand() {
-    this.isExpanded = !this.isExpanded;
-  }
 
   toggleComments() {
     this.showCommentExpanded = !this.showCommentExpanded;
   }
+
+  protected readonly convertToSupabaseUrl = convertToSupabaseUrl;
 }
