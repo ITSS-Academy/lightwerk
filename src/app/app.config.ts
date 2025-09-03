@@ -12,6 +12,8 @@ import {videoReducer} from './ngrx/reducers/video.reducer';
 import * as VideoEffects from './ngrx/effects/video.effects';
 import {categoryReducer} from './ngrx/reducers/category.reducer';
 import * as CategoryEffects from './ngrx/effects/category.effects';
+import {likeVideoReducer} from './ngrx/reducers/like-video.reducer';
+import * as LikeVideoEffects from './ngrx/effects/like-video.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({eventCoalescing: true}), provideRouter(routes), provideAnimationsAsync(),
@@ -19,10 +21,11 @@ export const appConfig: ApplicationConfig = {
       {
         auth: authReducer,
         video: videoReducer,
-        category: categoryReducer
+        category: categoryReducer,
+        likeVideo: likeVideoReducer
       },
     ),
-    provideEffects(AuthEffects, VideoEffects, CategoryEffects),
+    provideEffects(AuthEffects, VideoEffects, CategoryEffects, LikeVideoEffects),
     provideHttpClient()]
 };
 
