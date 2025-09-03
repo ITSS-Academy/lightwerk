@@ -1,7 +1,9 @@
 <div style="display: flex; width: 100%; height: 100%">
   <div class="page-container" #pageContainer>
     <!-- Render a list of cards with different aspect ratios -->
-    <div>
+    <div
+      style="height: 100%; overflow: auto; scroll-behavior: smooth;"
+    >
       @for (card of cards; track $index) {
         <div class="card-container">
           <div class="card-wrapper">
@@ -10,7 +12,7 @@
               <div class="avatar-wrapper">
                 <div class="avatar">
                   <img
-                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKcoMLJm-27p7TGy6EZdZguVb24jZiNvCQQg&s"
+                    src="{{card!.profile!.avatarPath}}"
                     alt="avatar"
                   >
                 </div>
@@ -25,7 +27,7 @@
               <div class="card-media">
                 <app-video
                   aspectRatio="9:16"
-                  videoSrc="{{convertToSupabaseUrl('7ca2213a-5f11-4bc9-acf0-5f5ab5ccd336/master.m3u8','video')}}"></app-video>
+                  videoSrc="{{convertToSupabaseUrl(`${card.id}/master.m3u8`,'video')}}"></app-video>
               </div>
             </div>
 

@@ -13,4 +13,9 @@ export interface VideoState {
   isCreatingInfo: boolean,
   isCreateInfoError: any,
   isCreateInfoSuccess: boolean,
+
+  latestVideos: VideoModel[],
+  isGettingLatest: boolean,
+  isGetLatestSuccess: boolean,
+  isGetLatestError: any,
 }
