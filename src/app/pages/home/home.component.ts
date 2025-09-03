@@ -13,13 +13,13 @@ import {AuthService} from '../../services/auth/auth.service';
 import supabase from '../../utils/supabase';
 import {MatIconModule} from '@angular/material/icon';
 import {VideoComponent} from '../../components/video/video.component';
-import {NgClass, NgStyle, SlicePipe} from '@angular/common';
+import {AsyncPipe, NgClass, NgStyle, SlicePipe} from '@angular/common';
 import {MatFormField, MatInput, MatLabel, MatSuffix} from '@angular/material/input';
 import {convertToSupabaseUrl} from '../../utils/img-converter';
 import {Store} from '@ngrx/store';
 import {VideoState} from '../../ngrx/states/video.state';
 import * as VideoActions from '../../ngrx/actions/video.actions';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {VideoModel} from '../../models/video.model';
 
 @Component({
@@ -34,7 +34,8 @@ import {VideoModel} from '../../models/video.model';
     MatSuffix,
     NgClass,
     NgStyle,
-    SlicePipe
+    SlicePipe,
+    AsyncPipe
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
@@ -42,8 +43,11 @@ import {VideoModel} from '../../models/video.model';
 export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
   isExpanded = false;
   showCommentExpanded = false;
+  isFavoriteActive = false
+  isSavetagActive = false
 
   subscriptions: Subscription[] = []
+  isGettingLatestVideos$: Observable<boolean>
 
   @ViewChild('pageContainer', {static: true}) pageContainerRef!: ElementRef;
   viewportWidth = 0;
@@ -52,6 +56,8 @@ export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
   constructor(private cdr: ChangeDetectorRef, private store: Store<{
     video: VideoState
   }>) {
+    this.isGettingLatestVideos$ = this.store.select(state => state.video.isGettingLatest)
+
     this.store.dispatch(VideoActions.getLatestVideos({
       page: 0
     }))
@@ -97,10 +103,10 @@ export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
     const viewportRatio = this.viewportWidth / this.viewportHeight;
     let width, height;
     if (videoRatio > viewportRatio) {
-      width = this.viewportWidth - (100 + 32 + 16);
+      width = this.viewportWidth;
       height = width / videoRatio;
     } else {
-      height = this.viewportHeight - ((100 + 32 + 16));
+      height = this.viewportHeight;
       width = height * videoRatio;
     }
     width = Math.max(0, width);

@@ -1,0 +1,21 @@
+<mat-card class="custom-card" appearance="outlined">
+  <div class="thumbnail">
+    <img
+      src="{{video.thumbnail}}"
+      alt="video thumbnail">
+    <div class="like-overlay">
+      <span class="heart">❤</span>
+      <span class="count">{{ video.favourite }}</span>
+    </div>
+
+  </div>
+
+  <mat-card-content>
+    <h3>User {{ video.name }}</h3>
+    <p class="card-title"> Title{{ video.title }} </p>
+    <p>{{ video.uploadDate }}</p>
+    <div class="card-footer">
+
+    </div>
+  </mat-card-content>
+</mat-card>

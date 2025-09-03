@@ -1,33 +1,122 @@
-<div class="container">
+<div style="display: flex; width: 100%; height: 100%">
+  <div class="page-container" #pageContainer>
+    <!-- Render a list of cards with different aspect ratios -->
+    <div>
+      @for (card of cards; track $index) {
+        <div class="card-container">
+          <div class="card-wrapper">
 
-  <div style="display: flex; width: 100%; flex:1; height: 100% " class="main">
-    <div class="left-container">
-      <div class="video-layout">
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2uTdKzWI0Qn5LbEtKDd2DusxiMvAi8W0vKQ&s" alt="">
-      </div>
-    </div>
+            <div class="card-header">
+              <div class="avatar-wrapper">
+                <div class="avatar">
+                  <img
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKcoMLJm-27p7TGy6EZdZguVb24jZiNvCQQg&s"
+                    alt="avatar"
+                  >
+                </div>
+                <span class="username">username</span>
+              </div>
+              <div class="follow-btn">
+                <button mat-flat-button color="primary">Follow</button>
+              </div>
+            </div>
 
-    <div class="right-container">
-      <div class="task-icon">
-        <button class="icon-btn">
-          <mat-icon>favorite</mat-icon>
-        </button>
-        <button class="icon-btn">
-          <mat-icon>chat</mat-icon>
-        </button>
-        <button class="icon-btn">
-          <mat-icon>share</mat-icon>
-        </button>
-        <button class="icon-btn">
-          <mat-icon>bookmark</mat-icon>
-        </button>
-        <button class="icon-btn">
-          <mat-icon>person</mat-icon>
-        </button>
-      </div>
+            <div class="card" [ngStyle]="getCardBoxStyle(card)">
+              <div class="card-media">
+                <app-video
+                  aspectRatio="9:16"
+                  videoSrc="{{convertToSupabaseUrl('7ca2213a-5f11-4bc9-acf0-5f5ab5ccd336/master.m3u8','video')}}"></app-video>
+              </div>
+            </div>
 
+            <div class="card-footer">
+
+              <div class="function-of-the-button">
+                <div class="button-item">
+                  <button mat-button class="action" [class.active]="true">
+                    @if (false) {
+                      <mat-icon>favorite</mat-icon>
+                    } @else {
+                      <mat-icon>favorite_border</mat-icon>
+                    }
+
+                    <span>10N</span>
+                  </button>
+                </div>
+
+                <div class="button-item">
+                  <button mat-button class="action" [class.active]="true"
+                          (click)="toggleComments()">
+                    @if (false) {
+                      <mat-icon>comment</mat-icon>
+                    } @else {
+                      <mat-icon
+                        fontSet="material-symbols-outlined"
+                      >comment
+                      </mat-icon>
+                    }
+
+                    <span>10N</span>
+                  </button>
+                </div>
+
+                <div class="button-item">
+                  <button mat-button class="action" [class.active]="true">
+                    @if (false) {
+                      <mat-icon>bookmark</mat-icon>
+                    } @else {
+                      <mat-icon>bookmark_border</mat-icon>
+                    }
+
+                    <span>10N</span>
+                  </button>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      }
     </div>
   </div>
 
-</div>
+  @if (showCommentExpanded) {
+    <div class="comment-sidebar">
+      <div class="comment-header">
+        <mat-icon>chat_bubble_outline</mat-icon>
+        <span>Comments</span>
+        <button mat-icon-button (click)="toggleComments()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
 
+      <div class="comment-list">
+        @for (c of comments; track c.id) {
+          <div class="comment">
+            <div class="avatar">
+              <img [src]="c.avatar" alt="avatar"/>
+            </div>
+            <div class="comment-content">
+              <p><strong>{{ c.name }}</strong> {{ c.text }}</p>
+              <span class="date">{{ c.date }}</span>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="frame-comment">
+        <mat-form-field appearance="outline">
+          <mat-label>Thêm bình luận</mat-label>
+          <input matInput placeholder="Viết gì đó..."/>
+          <button mat-icon-button matSuffix>
+            <mat-icon>send</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+    </div>
+  }
+
+
+</div>
