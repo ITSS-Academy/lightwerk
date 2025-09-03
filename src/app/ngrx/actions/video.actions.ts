@@ -29,3 +29,13 @@ export const createVideoInfoSuccess = createAction('[Video] Create Video Info Su
 export const createVideoInfoFailure = createAction('[Video] Create Video Info Failure', props<{
   error: any,
 }>());
+
+//get latest videos
+export const getLatestVideos = createAction('[Video] Get Latest Videos', props<{
+  page: number,
+}>());
+export const getLatestVideosSuccess = createAction('[Video] Get Latest Videos Success', props<
+  { videos: VideoModel[] }>());
+export const getLatestVideosFailure = createAction('[Video] Get Latest Videos Failure', props<{
+  error: any,
+}>());

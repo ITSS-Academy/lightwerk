@@ -1,4 +1,13 @@
-import {Component, Input, ViewChild, ElementRef, AfterViewInit, HostListener, ChangeDetectorRef} from '@angular/core';
+import {
+  Component,
+  Input,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+  HostListener,
+  ChangeDetectorRef,
+  OnInit, OnDestroy
+} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {AuthService} from '../../services/auth/auth.service';
 import supabase from '../../utils/supabase';
@@ -7,6 +16,11 @@ import {VideoComponent} from '../../components/video/video.component';
 import {NgClass, NgStyle, SlicePipe} from '@angular/common';
 import {MatFormField, MatInput, MatLabel, MatSuffix} from '@angular/material/input';
 import {convertToSupabaseUrl} from '../../utils/img-converter';
+import {Store} from '@ngrx/store';
+import {VideoState} from '../../ngrx/states/video.state';
+import * as VideoActions from '../../ngrx/actions/video.actions';
+import {Subscription} from 'rxjs';
+import {VideoModel} from '../../models/video.model';
 
 @Component({
   selector: 'app-home',
@@ -25,15 +39,36 @@ import {convertToSupabaseUrl} from '../../utils/img-converter';
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent implements AfterViewInit {
+export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
   isExpanded = false;
   showCommentExpanded = false;
+
+  subscriptions: Subscription[] = []
 
   @ViewChild('pageContainer', {static: true}) pageContainerRef!: ElementRef;
   viewportWidth = 0;
   viewportHeight = 0;
 
-  constructor(private cdr: ChangeDetectorRef) {
+  constructor(private cdr: ChangeDetectorRef, private store: Store<{
+    video: VideoState
+  }>) {
+    this.store.dispatch(VideoActions.getLatestVideos({
+      page: 0
+    }))
+  }
+
+  ngOnInit() {
+    this.subscriptions.push(
+      this.store.select(state => state.video.latestVideos).subscribe(videos => {
+        console.log(videos)
+        this.cards = videos;
+      })
+    )
+
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   ngAfterViewInit() {
@@ -84,9 +119,7 @@ export class HomeComponent implements AfterViewInit {
   }
 
 
-  cards = [
-    {videoSrc: 'video1.mp4', title: 'Video 1', aspectRatio: '9:16'},
-  ];
+  cards: VideoModel[] = [];
   comments = [
     {
       id: 1,
