@@ -41,7 +41,7 @@
     gap: 8px;
     border-radius: 12px;
     overflow: hidden;
-    padding: 16px 0;
+    //padding: 16px 0;
     transition: transform 0.3s ease;
 
   }
@@ -241,4 +241,46 @@
     gap: 16px;
     margin-top: 8px;
   }
+}
+
+.avatar-frame {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 50%;
+
+  }
+}
+
+.btn-wrapper {
+  height: fit-content;
+  padding: 10px 0 0 10px;
+  align-self: flex-end;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  button {
+    box-shadow: none;
+    border-radius: 100%;
+    //background-color: #f8faf4;
+    background-color: var(--mat-sys-surface);
+
+    border: 1px solid var(--mat-sys-outline-variant);
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  .heart.active {
+    color: #93000a;
+  }
+
+  .bookmark.active {
+    color: gold;
+  }
+
 }

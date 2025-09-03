@@ -28,6 +28,8 @@ import {convertToSupabaseUrl} from '../../utils/img-converter';
 export class HomeComponent implements AfterViewInit {
   isExpanded = false;
   showCommentExpanded = false;
+  isFavoriteActive = false
+  isSavetagActive = false
 
   @ViewChild('pageContainer', {static: true}) pageContainerRef!: ElementRef;
   viewportWidth = 0;
@@ -62,10 +64,10 @@ export class HomeComponent implements AfterViewInit {
     const viewportRatio = this.viewportWidth / this.viewportHeight;
     let width, height;
     if (videoRatio > viewportRatio) {
-      width = this.viewportWidth - (100 + 32 + 16);
+      width = this.viewportWidth;
       height = width / videoRatio;
     } else {
-      height = this.viewportHeight - ((100 + 32 + 16));
+      height = this.viewportHeight;
       width = height * videoRatio;
     }
     width = Math.max(0, width);

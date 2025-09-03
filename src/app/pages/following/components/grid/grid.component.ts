@@ -28,6 +28,7 @@ export class GridComponent {
       maxHeight: '100vh',
       panelClass: 'full-screen-dialog'
     });
+    console.log('Dialog opened');
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
