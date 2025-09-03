@@ -8,18 +8,22 @@ import {Store} from '@ngrx/store';
 import {VideoState} from '../../ngrx/states/video.state';
 import {clearVideoState, uploadVideo} from '../../ngrx/actions/video.actions';
 import {Observable, Subscription} from 'rxjs';
-import {Router} from '@angular/router';
 import {VideoModel} from '../../models/video.model';
 import {AsyncPipe} from '@angular/common';
+import {MatButtonModule} from '@angular/material/button';
+import {Router} from '@angular/router';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-create-video',
   imports: [
     MatIconModule,
+    MatButtonModule,
     MatSnackBarModule,
     MatButton,
     FormsModule,
     AsyncPipe,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './create-video.component.html',
   styleUrl: './create-video.component.scss'

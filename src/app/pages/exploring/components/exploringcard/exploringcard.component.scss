@@ -1,0 +1,104 @@
+/* Grid container */
+.video-grid {
+  display: grid;
+  gap: 2%;
+  padding: 2%;
+  background: var(--mat-sys-background);
+  max-width: 1200px;
+  margin: 0 auto;
+  justify-content: center;
+
+  // 6 card mặc định, co giãn nhưng giới hạn min/max
+  grid-template-columns: repeat(auto-fit, minmax(clamp(150px, 16%, 220px), 1fr));
+}
+
+/* Video card */
+.video-card {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+/* Thumbnail */
+.thumbnail {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: 1%;
+  background: var(--mat-sys-background);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .like-overlay {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 12px;
+
+    color: var(--mat-sys-on-primary);
+    font-size: 13px;  // giữ px cố định
+    font-weight: 500;
+
+    .heart {
+      font-size: 15px;  // giữ px cố định
+      color: var(--mat-sys-on-primary);
+    }
+  }
+}
+
+/* Info */
+.video-info {
+  margin-top: 8px;
+}
+
+.video-title {
+  font-size: 14px;  // giữ px cố định
+  font-weight: 600;
+  margin: 0;
+  color: var(--mat-sys-on-surface);
+}
+
+.video-meta {
+  font-size: 12px;  // giữ px cố định
+  color: #555;
+  margin-top: 2px;
+}
+
+.username {
+  font-weight: 500;
+}
+
+/* Chips box */
+.box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 1200px;
+  margin: 0 auto 0 auto;
+  padding: 0 2%;
+
+  mat-chip.selected {
+    background-color: var(--mat-sys-primary-fixed-dim);
+    color: white;
+  }
+}
+
+mat-chip {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+mat-chip.selected {
+  background-color: #ff0050;
+  color: #fff;
+  font-weight: bold;
+}

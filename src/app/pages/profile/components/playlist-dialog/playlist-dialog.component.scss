@@ -1,0 +1,36 @@
+.playlist-dialog {
+  width: 25vw;
+  height: 55vh;
+  display: flex;
+  flex-direction: column;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.dialog-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
+.error {
+  padding-bottom: 12px;
+}
+
+mat-icon {
+  margin-right: 8px;
+}
+
+mat-icon :hover {
+  cursor: pointer;
+}
+
+mat-form-field {
+  width: 100%;
+}

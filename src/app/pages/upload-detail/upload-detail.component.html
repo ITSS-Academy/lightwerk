@@ -1,44 +1,85 @@
-<div class="container">
-  <div class="left-container">
-    <h2>Informations</h2>
-    <form>
-      <input type="text" placeholder="Title" class="text">
+@if (!(this.isGettingVideoInfo$ | async)) {
+  <div class="container">
 
-      <textarea placeholder="Description (optional)" maxlength="80"></textarea>
-      <span>0/80 characters</span>
 
-      <mat-form-field appearance="outline" class="custom-select">
-        <mat-label>Category</mat-label>
-        <mat-select>
-          <mat-option value="education">Education</mat-option>
-          <mat-option value="entertainment">Entertainment</mat-option>
-          <mat-option value="music">Music</mat-option>
-        </mat-select>
-      </mat-form-field>
+    <div class="left-container">
+      <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
 
-      <div class="privacy">
-        <span>Privacy</span>
-        <label><input type="radio" name="privacy" checked> Public</label>
-        <label><input type="radio" name="privacy"> Private</label>
+        <h2>Informations</h2>
+
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Title</mat-label>
+          <input formControlName="title" matInput placeholder="Enter title" maxlength="50" required>
+          <mat-hint align="end">0 / 50</mat-hint>
+        </mat-form-field>
+
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Description (optional)</mat-label>
+          <textarea formControlName="description" matInput placeholder="Enter description" maxlength="80"></textarea>
+          <mat-hint align="end">0 / 80</mat-hint>
+        </mat-form-field>
+
+
+        <mat-form-field appearance="outline" class="full-width" [color]="outlineColor">
+          <mat-label>Category</mat-label>
+          <input type="text"
+                 matInput
+                 formControlName="category"
+                 [matAutocomplete]="auto"
+                 #trigger="matAutocompleteTrigger"
+                 (keydown.enter)="onCategoryInputEnter($event)"
+                 (blur)="onCategoryInputBlur()">
+          <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+            @for (option of this.filteredCategoriesNames | async; track $index) {
+              <mat-option [value]="option">
+                {{ option }}
+              </mat-option>
+            }
+          </mat-autocomplete>
+
+          @if (errorMessage) {
+            <mat-error>{{ errorMessage }}</mat-error>
+          }
+        </mat-form-field>
+
+
+        <div class="privacy">
+          <span>Privacy</span>
+          <mat-radio-group formControlName="privacy" value="public">
+            <mat-radio-button value="public">Public</mat-radio-button>
+            <mat-radio-button value="private">Private</mat-radio-button>
+          </mat-radio-group>
+        </div>
+
+        <input #thumbnailInput formControlName="thumbnail" type="file" hidden (change)="onThumbnailSelected($event)"
+               accept="image/*">
+
+        <button mat-flat-button color="primary" type="submit">
+          <mat-icon>cloud_upload</mat-icon>
+          Upload
+        </button>
+      </form>
+
+    </div>
+
+    <div class="right-container">
+      <div class="thumbnail-header">
+        <h2>Thumbnail</h2>
+        <button (click)="thumbnailInput.click()" mat-flat-button color="primary" class="btn-thumbnail">
+          <mat-icon>image</mat-icon>
+          Upload
+        </button>
       </div>
-
-      <button type="submit" class="btn-upload">
-        <mat-icon>cloud_upload</mat-icon> Upload
-      </button>
-    </form>
-  </div>
-
-
-  <div class="right-container">
-    <div class="thumbnail-header">
-      <h2>Thumbnail</h2>
-      <button class="btn-thumbnail">
-        <mat-icon>image</mat-icon> Upload
-      </button>
+      <div class="thumbnail-preview">
+        <img [src]="thumbnailPreviewUrl || convertToSupabaseUrl((videoDetails$ | async)!.thumbnailPath, 'thumbnail')"
+             alt="thumbnail">
+        <button (click)="thumbnailInput.click()" mat-flat-button color="accent" class="btn-choose">
+          Choose your thumbnail
+        </button>
+      </div>
     </div>
-    <div class="thumbnail-preview">
-      <img src="https://i.ytimg.com/vi/5qap5aO4i9A/maxresdefault.jpg" alt="thumbnail">
-      <button class="btn-choose">Choose your thumbnail</button>
-    </div>
+
   </div>
-</div>
+}

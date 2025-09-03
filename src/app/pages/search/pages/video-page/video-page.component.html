@@ -1,0 +1,26 @@
+<div class="search-header">
+  <mat-icon [routerLink]="['/search']">chevron_left</mat-icon>
+  <span>Search</span>
+</div>
+<div class="video-container">
+  <div class="video-grid">
+    @for (item of videoList; track item.id) {
+      <mat-card class="video-card" appearance="outlined">
+        <img mat-card-image class="video-thumbnail"
+             src="{{item.imageUrl}}"
+             alt="Video Placeholder Image">
+        <mat-card-content>
+          <span class="title">{{ item.title }}</span>
+          <div class="video-details">
+            <div class="user">
+              <img class="user-avatar" src="{{item.avatar}}" alt="Username">
+              <span class="user-name">{{ item.username }}</span>
+            </div>
+            <span class="date">{{ item.date | date }}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    }
+  </div>
+</div>
+

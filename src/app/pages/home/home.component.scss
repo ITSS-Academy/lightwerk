@@ -57,6 +57,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 5px
 }
 
 .avatar-wrapper {
@@ -98,14 +99,10 @@
 }
 
 
-.button-love,
-.button-comment,
-.button-save,
-.button-share {
+.action-btn {
   width: clamp(30px, 50px, 70px);
   height: clamp(30px, 50px, 70px);
   border-radius: 50%;
-  background: #2f2f2f;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -113,12 +110,6 @@
   transition: background 0.2s ease;
 }
 
-.button-love:hover,
-.button-comment:hover,
-.button-save:hover,
-.button-share:hover {
-  background: #1f1f1f;
-}
 
 mat-icon {
   font-size: clamp(18px, 28px, 38px);;
@@ -151,19 +142,16 @@ mat-icon {
      width: clamp(30px, 50px, 70px);
      height: clamp(30px, 50px, 70px);
      border-radius: 50%;
-     background: #1f1f1f;
      display: flex;
      justify-content: center;
      align-items: center;
      cursor: pointer;
 }
   .button-down:hover{
-    background: #2f2f2f;
     transition: background 0.2s ease;
   }
 
   .button-up:hover{
-    background: #2f2f2f;
     transition: background 0.2s ease;
   }
 }

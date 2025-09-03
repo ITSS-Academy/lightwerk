@@ -1,0 +1,11 @@
+<mat-card class="video-card" appearance="outlined">
+  <img mat-card-image
+       src="{{likedVideoCard.image}}"
+       alt="Video Placeholder Image">
+  <mat-card-content>
+    <span class="title">{{ likedVideoCard.title }}</span>
+    <div class="video-details">
+      <span class="date">{{ likedVideoCard.date | date }}</span>
+    </div>
+  </mat-card-content>
+</mat-card>

@@ -10,6 +10,13 @@ import {LikedVideosComponent} from './components/liked-videos/liked-videos.compo
 import {MatButton} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
 import {ProfileDialogComponent} from './components/profile-dialog/profile-dialog.component';
+import {FollowDialogComponent} from './components/follow-dialog/follow-dialog.component';
+
+interface UserModel {
+  id: string;
+  username: string;
+  imageUrl: string;
+}
 
 @Component({
   selector: 'app-profile',
@@ -62,6 +69,19 @@ export class ProfileComponent implements OnInit, OnDestroy {
     });
   }
 
+  readonly dialogUser = inject(MatDialog);
+
+  openDialogUser(type: 'followers' | 'following') {
+    const selectedTab = type === 'followers' ? 0 : 1;
+    const dialogRef = this.dialog.open(FollowDialogComponent, {
+      data: {selectedTab}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
+
   ngOnInit() {
 
   }
@@ -75,6 +95,62 @@ export class ProfileComponent implements OnInit, OnDestroy {
     const route = this.tabRoutes[idx];
     this.router.navigate([route], {relativeTo: this.route});
   }
+
+  followers: UserModel[] = [
+    {
+      id: "1",
+      username: "User_1",
+      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
+    },
+    {
+      id: "2",
+      username: "User_2",
+      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
+    },
+    {
+      id: "3",
+      username: "User_3",
+      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
+    },
+    {
+      id: "4",
+      username: "User_4",
+      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
+    },
+    {
+      id: "5",
+      username: "User_5",
+      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
+    },
+  ];
+
+  following: UserModel[] = [
+    {
+      id: "1",
+      username: "User_1",
+      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
+    },
+    {
+      id: "2",
+      username: "User_2",
+      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
+    },
+    {
+      id: "3",
+      username: "User_3",
+      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
+    },
+    {
+      id: "4",
+      username: "User_4",
+      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
+    },
+    {
+      id: "5",
+      username: "User_5",
+      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
+    },
+  ];
 
 
 }

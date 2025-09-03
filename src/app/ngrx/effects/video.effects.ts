@@ -29,3 +29,37 @@ export const uploadVideo = createEffect(
   },
   {functional: true}
 );
+
+export const getVideoInfo = createEffect(
+  (actions$ = inject(Actions), videoService = inject(VideoService)) => {
+    return actions$.pipe(
+      ofType(VideoActions.getVideoInfo),
+      exhaustMap((action) =>
+        videoService.getVideoInfo(action.videoId).pipe(
+          map((video) => VideoActions.getVideoInfoSuccess({video})),
+          catchError((error: any) =>
+            of(VideoActions.getVideoInfoFailure({error: error}))
+          )
+        )
+      )
+    );
+  },
+  {functional: true}
+);
+
+export const createVideoInfo = createEffect(
+  (actions$ = inject(Actions), videoService = inject(VideoService)) => {
+    return actions$.pipe(
+      ofType(VideoActions.createVideoInfo),
+      exhaustMap((action) =>
+        videoService.createInfo(action.video).pipe(
+          map((video) => VideoActions.createVideoInfoSuccess({video})),
+          catchError((error: any) =>
+            of(VideoActions.createVideoInfoFailure({error: error}))
+          )
+        )
+      )
+    );
+  },
+  {functional: true}
+);
