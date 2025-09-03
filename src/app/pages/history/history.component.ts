@@ -36,7 +36,6 @@ export class HistoryComponent implements AfterViewInit {
   ];
   exampleDatabase!: ExampleHttpDatabase | null;
   data: VideoModel[] = [];
-
   resultsLength = 0;
   isLoadingResults = true;
   isRateLimitReached = false;

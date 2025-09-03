@@ -1,8 +1,24 @@
-
 mat-card-content h3 {
   font-size: 16px;
   font-weight: 600;
-  margin: 4px 0 2px 0;
+}
+
+.wrapper {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  position: relative;
+  align-items: center;
+  gap: 8px;
+  height: 100%;
+  max-height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  // turn off scrollbar for webkit browsers
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .card-title {
@@ -13,18 +29,19 @@ mat-card-content h3 {
 
 .grid-list {
   display: grid;
-  grid-gap: 1rem;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 24px;
-  padding: 20px;
-  max-width: 1200px;
-  justify-content: center;
+  gap: 16px;
+  max-width: 100%;
+  width: 100%;
   margin: 0 auto;
+  justify-content: center;
+  overflow-x: hidden;
 }
 
-.cach-header {
-  width: 100%;
-  height: 2%;
+@media (max-width: 400px) {
+  .grid-list {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
 }
 
 .thumbnail {
@@ -49,14 +66,14 @@ mat-card-content h3 {
     align-items: center;
     gap: 4px;
     padding: 3px 8px;
+    font-size: 16px;
     border-radius: 12px;
-
     color: #fff;
     font-size: 13px;
     font-weight: 500;
 
     .heart {
-      font-size: 15px;
+      font-size: 16x;
       color: var(--mat-sys-on-primary);
     }
   }

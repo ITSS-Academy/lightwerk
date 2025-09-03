@@ -22,12 +22,30 @@
 <!--  </div>-->
 <!--</div>-->
 
+<div style="position: relative">
   <video
-  #target
-  id="my-video"
-  class="video-js vjs-lime centered"
-  controls
-  playsinline
-  preload="auto"
-  data-setup="{}"
-> </video>
+    #target
+    id="my-video"
+    class="video-js vjs-lime centered"
+    controls
+    playsinline
+    preload="auto"
+    data-setup="{}"
+  >
+
+  </video>
+  <div class="video-title-wrapper"
+       [ngClass]="{ 'expanded': isExpanded }"
+       style=" width: 100%; position: absolute; padding: 0 10px; bottom: 30px; left: 0; z-index: 100">
+    <div class="video-title" [ngClass]="{ 'collapsed': !isExpanded }"
+         [ngStyle]="{'maxWidth': isExpanded ? '' : '100%'}">
+      Video Title GoesVideo Title GoesVideo Title GoesVideo Title GoesVideo Title GoesVideo Title GoesVideo Title
+      GoesVideo Title GoesVideo Title GoesVideo Title GoesVideo Title GoesVideo Title GoesVideo Title GoesVideo Title
+      GoesVideo Title GoesVideo Title GoesVideo Title GoesVideo Title GoesVideo Title GoesVideo Title GoesVideo Title
+      GoesVideo Title GoesVideo Title GoesVideo Title GoesVideo Title GoesVideo Title GoesVideo Title Goes
+    </div>
+    <button class="toggle-btn" (click)="isExpanded = !isExpanded">
+      {{ isExpanded ? 'Thu gọn' : 'Xem thêm' }}
+    </button>
+  </div>
+</div>

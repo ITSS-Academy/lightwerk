@@ -1,15 +1,18 @@
-import {AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild, Renderer2} from '@angular/core';
 import Player from 'video.js/dist/types/player';
 import videojs from 'video.js';
 import {FormsModule} from '@angular/forms';
 import "videojs-hotkeys";
+import {NgClass, NgStyle} from '@angular/common';
 
 
 @Component({
   selector: 'app-video',
   standalone: true,
   imports: [
-    FormsModule
+    FormsModule,
+    NgClass,
+    NgStyle
   ],
   templateUrl: './video.component.html',
   styleUrl: './video.component.scss'
@@ -17,10 +20,11 @@ import "videojs-hotkeys";
 export class VideoComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('target', {static: true}) target!: ElementRef;
   @Input() videoSrc!: string;
-
+  @Input() aspectRatio!: string
   player!: Player;
   videoVisible = false;
   private previousScrollTop: number = 0;
+  isExpanded = false;
 
 
   items: Array<{
@@ -36,7 +40,7 @@ export class VideoComponent implements OnInit, OnDestroy, AfterViewInit {
       preload: 'auto',
       responsive: true,
       fluid: true,
-      aspectRatio: '4:3',
+      aspectRatio: this.aspectRatio,
       playbackRates: [0.5, 1, 1.25, 1.5, 2],
       sources: [
         {
@@ -82,6 +86,7 @@ export class VideoComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+
   adjustControlButtons(isFullscreen: boolean) {
     const containerEl: any = this.player.el()
     const height = containerEl.offsetHeight - 80;
@@ -121,6 +126,10 @@ export class VideoComponent implements OnInit, OnDestroy, AfterViewInit {
 
   playVideo() {
 
+  }
+
+  toggleExpand() {
+    this.isExpanded = !this.isExpanded;
   }
 
 }
