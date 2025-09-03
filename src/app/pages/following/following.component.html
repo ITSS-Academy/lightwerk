@@ -1,9 +1,8 @@
 <div
-  style="display: flex; justify-content: space-between; position: relative; align-items: center;  gap: 8px; height: 100%">
-  <div style="flex: 1; height: 100%">
-    <router-outlet></router-outlet>
-  </div>
-  <div style="display: flex; position: absolute; right: 0; top: 6px; ">
+  class="wrapper"
+>
+  <div
+    style="display: flex; justify-content: flex-end; width: 100%; position: sticky; top: 0; z-index: 10; ">
     <button mat-button [class.active]="isManageActive()" (click)="goToManage()">Manage</button>
     <button mat-icon-button [class.active]="isGridActive()" (click)="goToGrid()">
       <mat-icon>grid_on</mat-icon>
@@ -12,5 +11,9 @@
       <mat-icon>view_stream</mat-icon>
     </button>
   </div>
-</div>
 
+  <div style="flex: 1; height: 100%; width: 100%; padding: 8px; box-sizing: border-box;">
+    <router-outlet></router-outlet>
+  </div>
+
+</div>

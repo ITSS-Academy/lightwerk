@@ -1,5 +1,5 @@
 <mat-sidenav-container>
-  <mat-sidenav class="mat-elevation-z1" [opened]="!isSmallScreen ? true : !collapsed()"
+  <mat-sidenav [opened]="!isSmallScreen ? true : !collapsed()"
                (closedStart)="collapsed.set(true)"
                [mode]="sidebarMode()"
                [style.width]="this.sidebarWidth()"
@@ -9,12 +9,12 @@
   </mat-sidenav>
   <mat-sidenav-content [style.margin-left]="this.calculateMargin()"
                        [style.transition]="!isSmallScreen? 'all 0.3s ease-in-out' : 'none'">
-    <div style="height: 100%; width: 100%; display: flex; flex-direction: column">
+    <div style="height: 100%; width: 100%; display: flex; flex-direction: column; padding: 0 16px">
       <app-header (toggleMenuEvent)="toggleSidebar()"></app-header>
 
 
       @if (!(isLoggingIn$| async)) {
-        <div class="content">
+        <div class="content" [ngClass]="{'with-background': this.headerTitle != 'Home'}">
           <router-outlet></router-outlet>
         </div>
       } @else {
