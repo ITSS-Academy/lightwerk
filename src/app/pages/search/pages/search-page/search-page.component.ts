@@ -25,8 +25,7 @@ interface VideoModel {
     MatCardImage,
     MatIconModule,
     RouterLink,
-    MatFormField,
-    MatInput
+
   ],
   templateUrl: './search-page.component.html',
   styleUrl: './search-page.component.scss'

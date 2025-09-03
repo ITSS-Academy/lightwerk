@@ -54,11 +54,11 @@ img {
 
 .button {
   position: relative;
-  width: 40%;
+  width: 50%;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  gap: 0.5rem;
+  gap: 1rem;
 }
 
 .button > button[mat-button] {

@@ -32,8 +32,6 @@ interface VideoCard {
   imports: [
     MatButton,
     NgStyle,
-    LikedVideoCardComponent,
-    MatIcon,
     VideoCardComponent,
   ],
   templateUrl: './playlist-detail.component.html',
@@ -109,7 +107,7 @@ export class PlaylistDetailComponent implements OnInit {
     this.dialog.open(MakePublicDialogComponent, {
       width: '400px',
       height: '150px',
-      data: { playlistId: this.playlistDetail.id }
+      data: {playlistId: this.playlistDetail.id}
     })
   }
 
@@ -118,7 +116,7 @@ export class PlaylistDetailComponent implements OnInit {
     this.dialog.open(DeletePlaylistDialogComponent, {
       width: '400px',
       height: '200px',
-      data: { playlistId: this.playlistDetail.id }
+      data: {playlistId: this.playlistDetail.id}
     })
   }
 
@@ -126,7 +124,7 @@ export class PlaylistDetailComponent implements OnInit {
     this.dialog.open(ChangeNameDialogComponent, {
       width: '400px',
       height: '250px',
-      data: { playlistId: this.playlistDetail.id, currentName: this.playlistDetail.name }
+      data: {playlistId: this.playlistDetail.id, currentName: this.playlistDetail.name}
     })
   }
 

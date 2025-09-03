@@ -4,20 +4,20 @@
   <div class="playlist-detail">
 
     <div class="playlist-detail-stats">
-      <span class="name">{{ playlistDetail?.name }}</span>
+      <span class="name">{{ playlistDetail.name }}</span>
 
 
       @if (playlistDetail.video == 1) {
-        <span class="stats">{{ playlistDetail?.video }} video</span>
+        <span class="stats">{{ playlistDetail.video }} video</span>
       } @else {
-        <span class="stats">{{ playlistDetail?.video }} videos</span>
+        <span class="stats">{{ playlistDetail.video }} videos</span>
       }
 
 
 
 
-      <span class="stats">Created by <img src="{{playlistDetail?.avatar}}"
-                                          alt="User profile">{{ playlistDetail?.username }}</span>
+      <span class="stats">Created by <img src="{{playlistDetail.avatar}}"
+                                          alt="User profile">{{ playlistDetail.username }}</span>
     </div>
 
     <div class="button">

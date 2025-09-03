@@ -1,13 +1,9 @@
 import {Component, Input} from '@angular/core';
 import {MatCard, MatCardContent, MatCardImage} from '@angular/material/card';
 import {DatePipe} from '@angular/common';
+import {VideoModel} from '../../../../models/video.model';
+import {convertToSupabaseUrl} from '../../../../utils/img-converter';
 
-interface VideoModel {
-  id: string;
-  title: string;
-  image: string;
-  date: Date
-}
 
 @Component({
   selector: 'app-video-card',
@@ -23,4 +19,5 @@ interface VideoModel {
 export class VideoCardComponent {
   @Input() video!: VideoModel;
 
+  protected readonly convertToSupabaseUrl = convertToSupabaseUrl;
 }
