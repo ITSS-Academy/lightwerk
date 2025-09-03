@@ -7,8 +7,12 @@
     </button>
     <div class="frame-video" [ngStyle]="getCardBoxStyle(videoDetail)">
 
-      <app-dialog-video [aspectRatio]="'9:16'"
-                        videoSrc="{{convertToSupabaseUrl('id','video')}}"></app-dialog-video>
+
+      @if (videoId && videoId != '') {
+        <app-dialog-video [aspectRatio]="'9:16'"
+                          videoSrc="{{convertToSupabaseUrl(`${videoId}/master.m3u8`,'video')}}"></app-dialog-video>
+      }
+
     </div>
 
   </div>
@@ -117,3 +121,7 @@
     </div>
   </div>
 </div>
+
+
+<!--'detail.thumbnailPath','thumbnail'-->
+<!--'id/master.m3u8','video'-->

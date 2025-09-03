@@ -16,8 +16,12 @@ import {MatFormField, MatHint, MatInput, MatLabel, MatSuffix} from '@angular/mat
 import {NgClass, NgStyle} from '@angular/common';
 import {DialogVideoComponent} from '../dialog-video/dialog-video.component';
 import {convertToSupabaseUrl} from '../../utils/img-converter';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {DIALOG_DATA} from '@angular/cdk/dialog';
+import {Store} from '@ngrx/store';
+import * as VideoActions from '../../ngrx/actions/video.actions';
+import {VideoModel} from '../../models/video.model';
+import {VideoState} from '../../ngrx/states/video.state';
 
 @Component({
   selector: 'app-detail-dialog',
@@ -34,6 +38,9 @@ export class DetailDialogComponent implements AfterViewInit, OnInit, OnDestroy {
   isSavetagActive = false
   isFollowing = false
   subscriptions: Subscription[] = [];
+  videoId: string = ''
+
+  videoDetail$: Observable<VideoModel>
 
 
   @ViewChild('pageContainer', {static: true}) pageContainerRef!: ElementRef;
@@ -41,8 +48,12 @@ export class DetailDialogComponent implements AfterViewInit, OnInit, OnDestroy {
   viewportHeight = 0;
 
   constructor(private dialogRef: MatDialogRef<DetailDialogComponent>,
-              private cdr: ChangeDetectorRef
+              private cdr: ChangeDetectorRef,
+              private store: Store<{
+                video: VideoState
+              }>
   ) {
+    this.videoDetail$ = this.store.select(state => state.video.videoDetail)
     console.log('DetailDialogComponent loaded');
   }
 
@@ -51,10 +62,18 @@ export class DetailDialogComponent implements AfterViewInit, OnInit, OnDestroy {
     this.subscriptions.push(
       this.dialogRef.afterOpened().subscribe(() => {
         this.updateContainerSize()
+      }),
+      this.videoDetail$.subscribe(detail => {
+        if (detail) {
+          console.log(detail.id)
+          this.videoId = detail.id;
+
+        }
       })
     );
 
-    console.log(this.id())
+    this.store.dispatch(VideoActions.getVideoDetail({videoId: this.id()}))
+
   }
 
   ngOnDestroy() {
