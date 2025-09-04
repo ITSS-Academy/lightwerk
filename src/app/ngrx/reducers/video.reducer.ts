@@ -132,7 +132,7 @@ export const videoReducer = createReducer(
       isGetLatestError: error,
       isGetLatestSuccess: false,
     }
-  })
+  }),
 );
 
 
