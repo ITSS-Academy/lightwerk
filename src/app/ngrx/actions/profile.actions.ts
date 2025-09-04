@@ -11,9 +11,9 @@ export const getUserVideos = createAction(
 );
 
 export const getUserVideosSuccess = createAction(
-  "[UserVideo] Get user videos success", props<{ userVideos: VideoModel[] }>()
+  "[UserVideo] Get user videos success", props<{ userVideos: VideoModel[], totalCount: number, currentPage: number }>()
 );
 
 export const getUserVideosFailure = createAction(
   "[UserVideo] Get user videos failure", props<{ error: any }>()
-)
+);

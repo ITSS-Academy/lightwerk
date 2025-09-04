@@ -27,7 +27,7 @@ export class ProfileService {
         return this.http.get<{
           videos: VideoModel[];
           totalCount: number;
-        }>(`${environment.api_base_url}/video/user-videos/${uid}?page=${page}&orderBy=${orderBy}&limit=10`, {
+        }>(`${environment.api_base_url}/video/user-videos/${uid}?page=${page}&orderBy=${orderBy}&limit=12`, {
           headers: {
             Authorization: `${data.data.session.access_token}`
           }

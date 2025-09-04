@@ -7,6 +7,8 @@ export const initialState: ProfileState = {
   userVideos: <VideoModel[]>[],
   isLoading: false,
   error: null,
+  currentPage: 0,
+  totalCount: 0,
 }
 
 
@@ -22,13 +24,18 @@ export const profileReducer = createReducer(
     }
   }),
 
-  on(ProfileActions.getUserVideosSuccess, (state, {userVideos, type}) => {
+  on(ProfileActions.getUserVideosSuccess, (state, {userVideos, totalCount, currentPage, type}) => {
     console.log(type);
+    // Filter out duplicates by id
+    const existingIds = new Set(state.userVideos.map(v => v.id));
+    const newUniqueVideos = userVideos.filter(v => !existingIds.has(v.id));
     return <ProfileState>{
       ...state,
-      userVideos: userVideos,
+      userVideos: currentPage > 0 ? [...state.userVideos, ...newUniqueVideos] : userVideos,
       isLoading: false,
       error: null,
+      currentPage,
+      totalCount,
     }
   }),
   on(ProfileActions.getUserVideosFailure, (state, {error, type}) => {

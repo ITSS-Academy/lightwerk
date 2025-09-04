@@ -50,3 +50,5 @@ export const getVideoDetailFailure = createAction('[Video] Get Video Detail Fail
   { error: any }
 >())
 
+export const clearVideoDetail = createAction('[Video] Clear Video Detail')
+

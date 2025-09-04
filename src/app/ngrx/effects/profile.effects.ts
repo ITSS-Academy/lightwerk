@@ -12,7 +12,11 @@ export const getUserVideosEffect = createEffect(
       switchMap((arg) => profileService.getUserVideo(arg.profileId, arg.page, arg.orderBy).pipe(
         map((res) => {
           console.log(res);
-          return profileActions.getUserVideosSuccess({userVideos: res.videos,});
+          return profileActions.getUserVideosSuccess({
+            userVideos: res.videos,
+            totalCount: res.totalCount,
+            currentPage: arg.page
+          });
         }),
         catchError((error: { message: any }) =>
           of(profileActions.getUserVideosFailure({error}))

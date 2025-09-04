@@ -162,7 +162,16 @@ export const videoReducer = createReducer(
       isGettingVideoDetailSuccess: false,
       isGettingVideoDetailError: error,
     }
-  })
+  }),
+  on(VideoActions.clearVideoDetail, (state) => {
+    return {
+      ...state,
+      videoDetail: {} as VideoModel,
+      isGettingVideoDetail: false,
+      isGettingVideoDetailSuccess: false,
+      isGettingVideoDetailError: null,
+    }
+  }),
 );
 
 
