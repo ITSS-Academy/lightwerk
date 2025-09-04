@@ -20,3 +20,37 @@ export const getLikeCount = createEffect(
   },
   {functional: true}
 )
+
+export const deleteLikeVideo = createEffect(
+  (actions$: Actions = inject(Actions), likeVideoService: LikeVideoService = inject(LikeVideoService)) => {
+    return actions$.pipe(
+      ofType(likeVideoActions.clearLikeVideoState),
+      exhaustMap((action) =>
+        likeVideoService.deleteLikeVideo(action.videoId, action.profileId).pipe(
+          map((res) => likeVideoActions.clearLikeVideoStateSuccess({countAfterDelete: res.count})),
+          catchError((error: any) =>
+            of(likeVideoActions.createLikeVideoStateFailure({error: error}))
+          )
+        )
+      )
+    );
+  },
+  {functional: true}
+)
+
+export const addLikeVideo = createEffect(
+  (actions$: Actions = inject(Actions), likeVideoService: LikeVideoService = inject(LikeVideoService)) => {
+    return actions$.pipe(
+      ofType(likeVideoActions.createLikeVideoState),
+      exhaustMap((action) =>
+        likeVideoService.addLikeVideo(action.videoId, action.profileId).pipe(
+          map((res) => likeVideoActions.createLikeVideoStateSuccess({countAfterCreate: res.count})),
+          catchError((error: any) =>
+            of(likeVideoActions.createLikeVideoStateFailure({error: error}))
+          )
+        )
+      )
+    );
+  },
+  {functional: true}
+)
