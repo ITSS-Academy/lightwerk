@@ -3,12 +3,12 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  HostListener,
+  HostListener, inject, model,
   OnDestroy,
   OnInit,
   ViewChild
 } from '@angular/core';
-import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatButton, MatIconButton} from '@angular/material/button';
 import {MatCard, MatCardAvatar, MatCardHeader, MatCardTitleGroup} from '@angular/material/card';
 import {MatIconModule} from '@angular/material/icon';
@@ -16,7 +16,12 @@ import {MatFormField, MatHint, MatInput, MatLabel, MatSuffix} from '@angular/mat
 import {NgClass, NgStyle} from '@angular/common';
 import {DialogVideoComponent} from '../dialog-video/dialog-video.component';
 import {convertToSupabaseUrl} from '../../utils/img-converter';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
+import {DIALOG_DATA} from '@angular/cdk/dialog';
+import {Store} from '@ngrx/store';
+import * as VideoActions from '../../ngrx/actions/video.actions';
+import {VideoModel} from '../../models/video.model';
+import {VideoState} from '../../ngrx/states/video.state';
 
 @Component({
   selector: 'app-detail-dialog',
@@ -25,19 +30,30 @@ import {Subscription} from 'rxjs';
   styleUrl: './detail-dialog.component.scss'
 })
 export class DetailDialogComponent implements AfterViewInit, OnInit, OnDestroy {
+  readonly data = inject<{ id: string }>(MAT_DIALOG_DATA);
+  id = model(this.data.id);
+
   isExpanded = false;
   isFavoriteActive = false
   isSavetagActive = false
   isFollowing = false
   subscriptions: Subscription[] = [];
+  videoId: string = ''
+
+  videoDetail$: Observable<VideoModel>
+
 
   @ViewChild('pageContainer', {static: true}) pageContainerRef!: ElementRef;
   viewportWidth = 0;
   viewportHeight = 0;
 
   constructor(private dialogRef: MatDialogRef<DetailDialogComponent>,
-              private cdr: ChangeDetectorRef
+              private cdr: ChangeDetectorRef,
+              private store: Store<{
+                video: VideoState
+              }>
   ) {
+    this.videoDetail$ = this.store.select(state => state.video.videoDetail)
     console.log('DetailDialogComponent loaded');
   }
 
@@ -46,8 +62,18 @@ export class DetailDialogComponent implements AfterViewInit, OnInit, OnDestroy {
     this.subscriptions.push(
       this.dialogRef.afterOpened().subscribe(() => {
         this.updateContainerSize()
+      }),
+      this.videoDetail$.subscribe(detail => {
+        if (detail) {
+          console.log(detail.id)
+          this.videoId = detail.id;
+
+        }
       })
     );
+
+    this.store.dispatch(VideoActions.getVideoDetail({videoId: this.id()}))
+
   }
 
   ngOnDestroy() {

@@ -1,0 +1,15 @@
+<h2>Make public</h2>
+<div class = makePublic>
+  @if (!isPrivate) {
+    <p>Your playlist is public</p>
+
+  } @else {
+    <p>Your playlist is private</p>
+  }
+  <mat-icon (click) = "togglePrivacy()">
+    {{isPrivate ? 'toggle_off' : 'toggle_on'}}</mat-icon>
+
+</div>
+
+
+
