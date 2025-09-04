@@ -6,7 +6,19 @@ const initialState: LikeVideoState = {
   count: 0,
   isLoading: false,
   isLoadSuccess: false,
-  isLoadError: null
+  isLoadError: null,
+
+  countAfterDelete: 1,
+  isDeleting: false,
+  isDeleteSuccess: false,
+  isDeleteError: null,
+
+  countAfterAdd: 0,
+  isAdding: false,
+  isAddSuccess: false,
+  isAddError: null,
+
+
 }
 
 export const likeVideoReducer = createReducer(
@@ -38,6 +50,66 @@ export const likeVideoReducer = createReducer(
       isLoadSuccess: false,
       isLoadError: error
     }
-  })
-)
+  }),
 
+  //delete like video
+  on(LikeVideoActions.clearLikeVideoState, (state, {type}) => {
+    console.log(type);
+    return {
+      ...state,
+      isDeleting: true,
+      isDeleteSuccess: false,
+      isDeleteError: null
+    }
+  }),
+
+  on(LikeVideoActions.clearLikeVideoStateSuccess, (state, {type, countAfterDelete}) => {
+    console.log(type);
+    return {
+      ...state,
+      countAfterDelete: countAfterDelete,
+      isDeleting: false,
+      isDeleteSuccess: true,
+      isDeleteError: null
+    }
+  }),
+
+  on(LikeVideoActions.clearLikeVideoStateFailure, (state, {type, error}) => {
+      console.log(type);
+      return {
+        ...state,
+        isDeleting: false,
+        isDeleteSuccess: false,
+        isDeleteError: error
+      }
+    }
+  ),
+  on(LikeVideoActions.createLikeVideoState, (state, {type}) => {
+    console.log(type);
+    return {
+      ...state,
+      isAdding: true,
+      isAddSuccess: false,
+      isAddError: null
+    }
+  }),
+  on(LikeVideoActions.createLikeVideoStateSuccess, (state, {type, countAfterCreate}) => {
+    console.log(type);
+    return {
+      ...state,
+      countAfterAdd: countAfterCreate,
+      isAdding: false,
+      isAddSuccess: true,
+      isAddError: null
+    }
+  }),
+  on(LikeVideoActions.createLikeVideoStateFailure, (state, {type, error}) => {
+      console.log(type);
+      return {
+        ...state,
+        isAdding: false,
+        isAddSuccess: false,
+        isAddError: error
+      }
+    }
+  ));
