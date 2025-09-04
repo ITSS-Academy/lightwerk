@@ -3,9 +3,12 @@ import {MatButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {ActivatedRoute} from '@angular/router';
 import {NgStyle} from '@angular/common';
-import {MatChip} from '@angular/material/chips';
 import {MatDialog} from '@angular/material/dialog';
-import {AddDialogComponent} from './components/add-dialog/add-dialog.component';
+import {MakePublicDialogComponent} from './components/make-public-dialog/make-public-dialog.component';
+import {DeletePlaylistDialogComponent} from './components/delete-playlist-dialog/delete-playlist-dialog.component';
+import {ChangeNameDialogComponent} from './components/change-name-dialog/change-name-dialog.component';
+import {LikedVideoCardComponent} from '../profile/components/liked-video-card/liked-video-card.component';
+import {VideoCardComponent} from './components/video-card/video-card.component';
 
 interface PlaylistModel {
   id: string;
@@ -17,12 +20,19 @@ interface PlaylistModel {
   thumbnail: string;
 }
 
+interface VideoCard {
+  id: string;
+  title: string;
+  image: string;
+  date: Date;
+}
+
 @Component({
   selector: 'app-playlist-detail',
   imports: [
     MatButton,
-    MatIcon,
     NgStyle,
+    VideoCardComponent,
   ],
   templateUrl: './playlist-detail.component.html',
   styleUrl: './playlist-detail.component.scss'
@@ -92,29 +102,58 @@ export class PlaylistDetailComponent implements OnInit {
       thumbnail: "https://d28hgpri8am2if.cloudfront.net/book_images/onix/cvr9781626860605/the-art-of-war-9781626860605_lg.jpg"
     },
   ];
-  openDialog(): void {
-    const dialogRef = this.dialog.open(AddDialogComponent, {
-      data: {  }
-    });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-    });
+  openDialogmakePublic() {
+    this.dialog.open(MakePublicDialogComponent, {
+      width: '400px',
+      height: '150px',
+      data: {playlistId: this.playlistDetail.id}
+    })
   }
 
-  makePublic() {
-    // TODO: Implement make public functionality
-    console.log('Make public clicked');
-  }
-
-  deletePlaylist() {
+  openDialogDeletePlaylist() {
     // TODO: Implement delete playlist functionality
-    console.log('Delete playlist clicked');
+    this.dialog.open(DeletePlaylistDialogComponent, {
+      width: '400px',
+      height: '200px',
+      data: {playlistId: this.playlistDetail.id}
+    })
   }
 
-  changeName() {
-    // TODO: Implement change name functionality
-    console.log('Change name clicked');
+  openDialogChangeName() {
+    this.dialog.open(ChangeNameDialogComponent, {
+      width: '400px',
+      height: '250px',
+      data: {playlistId: this.playlistDetail.id, currentName: this.playlistDetail.name}
+    })
   }
+
+  VideoList: VideoCard[] = [
+    {
+      id: "1",
+      title: "Chinese Tones",
+      image: "https://blog-cdn.italki.com/wp-content/uploads/sites/2/2022/09/30084900/chinese-tones.jpg",
+      date: new Date(),
+    },
+    {
+      id: "2",
+      title: "Chinese Characters Origin",
+      image: "https://openbooks.lib.msu.edu/app/uploads/sites/66/2021/06/character-strokes.jpg",
+      date: new Date(),
+    },
+    {
+      id: "3",
+      title: "Chinese Grammar (part 1)",
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRy1oMNizUhInauwSnVB6IYg70Wyr9Bxjwvwg&s",
+      date: new Date(),
+    },
+    {
+      id: "4",
+      title: "Respecting the elders in China",
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxUGk2gZmRDLNy4Alh8H25L5-Y8d2Maw-53g&s",
+      date: new Date(),
+    },
+
+  ];
 
 }

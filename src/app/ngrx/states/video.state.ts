@@ -18,4 +18,8 @@ export interface VideoState {
   isGettingLatest: boolean,
   isGetLatestSuccess: boolean,
   isGetLatestError: any,
+
+  isGettingVideoDetail: boolean,
+  isGettingVideoDetailSuccess: boolean,
+  isGettingVideoDetailError: any,
 }

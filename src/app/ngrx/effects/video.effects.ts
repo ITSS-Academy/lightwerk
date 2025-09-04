@@ -80,3 +80,20 @@ export const getLatestVideos = createEffect(
   },
   {functional: true}
 );
+
+export const getVideoDetail = createEffect(
+  (actions$ = inject(Actions), videoService = inject(VideoService)) => {
+    return actions$.pipe(
+      ofType(VideoActions.getVideoDetail),
+      exhaustMap((action) =>
+        videoService.getVideoDetail(action.videoId).pipe(
+          map((video) => VideoActions.getVideoDetailSuccess({video})),
+          catchError((error: any) =>
+            of(VideoActions.getVideoDetailFailure({error: error}))
+          )
+        )
+      )
+    );
+  },
+  {functional: true}
+);
