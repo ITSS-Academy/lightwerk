@@ -1,21 +1,16 @@
-<mat-card class="custom-card" appearance="outlined">
+<div class="video-card" [attr.data-id]="video.id">
   <div class="thumbnail">
-    <img
-      src="{{video.thumbnail}}"
-      alt="video thumbnail">
+    <img [src]="convertToSupabaseUrl(`${video.thumbnailPath}`,'thumbnail')" alt="video thumbnail"/>
     <div class="like-overlay">
-      <span class="heart">❤</span>
-      <span class="count">{{ video.favourite }}</span>
+      <!--      <span class="heart">❤</span>-->
+      <!--      <span class="count">{{ video.likes }}</span>-->
     </div>
-
   </div>
-
-  <mat-card-content>
-    <h3>User {{ video.name }}</h3>
-    <p class="card-title"> Title{{ video.title }} </p>
-    <p>{{ video.uploadDate }}</p>
-    <div class="card-footer">
-
-    </div>
-  </mat-card-content>
-</mat-card>
+  <div class="video-info">
+    <h4 class="video-title">{{ video.title }}</h4>
+    <p class="video-meta">
+      <span class="username">{{ video.profile?.username }}</span> •
+      <span class="date">{{ video.createdAt }}</span>
+    </p>
+  </div>
+</div>

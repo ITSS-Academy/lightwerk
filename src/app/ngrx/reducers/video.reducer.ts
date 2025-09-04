@@ -19,6 +19,8 @@ const initialState: VideoState = {
   isCreateInfoSuccess: false,
 
   latestVideos: [],
+  canGetMoreLatest: true,
+  isGettingFirstLatest: false,
   isGettingLatest: false,
   isGetLatestSuccess: false,
   isGetLatestError: null,
@@ -116,15 +118,18 @@ export const videoReducer = createReducer(
     console.log(type);
     return {
       ...state,
+      isGettingFirstLatest: state.latestVideos.length === 0,
       isGettingLatest: true,
       isGetLatestError: null,
       isGetLatestSuccess: false,
     }
   }),
-  on(VideoActions.getLatestVideosSuccess, (state, {videos}) => {
+  on(VideoActions.getLatestVideosSuccess, (state, {videos, totalItems}) => {
     return {
       ...state,
-      latestVideos: videos,
+      canGetMoreLatest: state.latestVideos.length + videos.length < totalItems,
+      latestVideos: [...state.latestVideos, ...videos],
+      isGettingFirstLatest: false,
       isGettingLatest: false,
       isGetLatestError: null,
       isGetLatestSuccess: true,
