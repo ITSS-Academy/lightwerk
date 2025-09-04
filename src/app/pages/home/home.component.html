@@ -1,128 +1,82 @@
 <div style="display: flex; width: 100%; height: 100%">
-  <div class="page-container" #pageContainer>
+  <div class="page-container">
     <!-- Render a list of cards with different aspect ratios -->
-    <div class="video-actions-wrapper">
-      @if (!(isGettingLatestVideos$ | async)) {
-        <div class="video-cards">
-          @for (card of cards; track $index) {
-            @if (card.aspectRatio) {
-              <!--              {{ card.aspectRatio }}-->
-              <div class="card-container">
-                <div class="card-wrapper">
+    <!--    <div class="video-actions-wrapper">-->
+    @if (!(isGettingLatestVideos$ | async)) {
+      <div class="video-cards" #cardsContainer>
+        @for (card of cards; track $index) {
+          @if (card.aspectRatio) {
+            <div class="card-wrapper subItem">
 
-                  <!--            <div class="card-header">-->
-                  <!--              <div class="avatar-wrapper">-->
-                  <!--                <div class="avatar">-->
-                  <!--                  <img-->
-                  <!--                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKcoMLJm-27p7TGy6EZdZguVb24jZiNvCQQg&s"-->
-                  <!--                    alt="avatar"-->
-                  <!--                  >-->
-                  <!--                </div>-->
-                  <!--                <span class="username">username</span>-->
-                  <!--              </div>-->
-                  <!--              <div class="follow-btn">-->
-                  <!--                <button mat-flat-button color="primary">Follow</button>-->
-                  <!--              </div>-->
-                  <!--            </div>-->
 
+              <div
+                #pageContainer
+                style="flex: 1; height: 100% ; display: flex; justify-content: center; flex-direction: row; align-items: center; padding: 0 16px"
+              >
+                <div style="display: flex; flex-direction: row; gap: 8px; width: fit-content; height: fit-content">
                   <div class="card" [ngStyle]="getCardBoxStyle(card)">
                     <div class="card-media">
-                      <app-video
-                        [aspectRatio]="card.aspectRatio"
-                        videoSrc="{{convertToSupabaseUrl(`${card.id}/master.m3u8`,'video')}}"></app-video>
+                      @if ($index === currentVideoIndex) {
+                        <app-video
+                          aspectRatio="{{card.aspectRatio}}"
+                          videoSrc="{{convertToSupabaseUrl(`${card.id}/master.m3u8`,'video')}}"></app-video>
+                      } @else {
+                        <img
+                          [src]="convertToSupabaseUrl(card.thumbnailPath, 'thumbnail')"
+                          [alt]="card.title || 'Video thumbnail'"
+                          style="width:100%;height:100%;object-fit:cover;"/>
+                      }
                     </div>
                   </div>
+                  <div class="btn-wrapper">
+                    <button mat-fab aria-label="Example icon button with a delete icon" class="heart"
+                            [class.active]="isFavoriteActive"
+                            (click)="isFavoriteActive = !isFavoriteActive">
+                      @if (isFavoriteActive) {
+                        <mat-icon>favorite</mat-icon>
+                      } @else {
+                        <mat-icon>favorite_border</mat-icon>
+                      }
+                    </button>
 
-                  <!--            <div class="card-footer">-->
+                    <button (click)="toggleComments()" mat-fab aria-label="Example icon button with a delete icon">
+                      <mat-icon
+                        fontSet="material-symbols-outlined"
+                      >comment
+                      </mat-icon>
+                    </button>
 
-                  <!--              <div class="function-of-the-button">-->
-                  <!--                <div class="button-item">-->
-                  <!--                  <button mat-button class="action" [class.active]="true">-->
-                  <!--                    @if (false) {-->
-                  <!--                      <mat-icon>favorite</mat-icon>-->
-                  <!--                    } @else {-->
-                  <!--                      <mat-icon>favorite_border</mat-icon>-->
-                  <!--                    }-->
+                    <button mat-fab aria-label="Example icon button with a delete icon" class="bookmark"
+                            [class.active]="isSavetagActive"
+                            (click)="isSavetagActive = !isSavetagActive">
+                      @if (isSavetagActive) {
+                        <mat-icon>bookmark</mat-icon>
+                      } @else {
+                        <mat-icon>bookmark_border</mat-icon>
+                      }
+                    </button>
+                    <button mat-fab aria-label="Example icon button with a delete icon" class="avatar-frame">
+                      <img
+                        src="https://image.dienthoaivui.com.vn/x,webp,q90/https://dashboard.dienthoaivui.com.vn/uploads/dashboard/editor_upload/avatar-ca-sau-cute-2.jpg"
+                        alt="">
+                    </button>
 
-                  <!--                    <span>10N</span>-->
-                  <!--                  </button>-->
-                  <!--                </div>-->
 
-                  <!--                <div class="button-item">-->
-                  <!--                  <button mat-button class="action" [class.active]="true"-->
-                  <!--                          (click)="toggleComments()">-->
-                  <!--                    @if (false) {-->
-                  <!--                      <mat-icon>comment</mat-icon>-->
-                  <!--                    } @else {-->
-                  <!--                      <mat-icon-->
-                  <!--                        fontSet="material-symbols-outlined"-->
-                  <!--                      >comment-->
-                  <!--                      </mat-icon>-->
-                  <!--                    }-->
-
-                  <!--                    <span>10N</span>-->
-                  <!--                  </button>-->
-                  <!--                </div>-->
-
-                  <!--                <div class="button-item">-->
-                  <!--                  <button mat-button class="action" [class.active]="true">-->
-                  <!--                    @if (false) {-->
-                  <!--                      <mat-icon>bookmark</mat-icon>-->
-                  <!--                    } @else {-->
-                  <!--                      <mat-icon>bookmark_border</mat-icon>-->
-                  <!--                    }-->
-
-                  <!--                    <span>10N</span>-->
-                  <!--                  </button>-->
-                  <!--                </div>-->
-
-                  <!--              </div>-->
-                  <!--            </div>-->
-
+                  </div>
                 </div>
+
+
               </div>
-            }
 
+
+            </div>
           }
-        </div>
 
-      }
-      <div class="btn-wrapper">
-        <button mat-fab aria-label="Example icon button with a delete icon" class="heart"
-                [class.active]="isFavoriteActive"
-                (click)="isFavoriteActive = !isFavoriteActive">
-          @if (isFavoriteActive) {
-            <mat-icon>favorite</mat-icon>
-          } @else {
-            <mat-icon>favorite_border</mat-icon>
-          }
-        </button>
-
-        <button (click)="toggleComments()" mat-fab aria-label="Example icon button with a delete icon">
-          <mat-icon
-            fontSet="material-symbols-outlined"
-          >comment
-          </mat-icon>
-        </button>
-
-        <button mat-fab aria-label="Example icon button with a delete icon" class="bookmark"
-                [class.active]="isSavetagActive"
-                (click)="isSavetagActive = !isSavetagActive">
-          @if (isSavetagActive) {
-            <mat-icon>bookmark</mat-icon>
-          } @else {
-            <mat-icon>bookmark_border</mat-icon>
-          }
-        </button>
-        <button mat-fab aria-label="Example icon button with a delete icon" class="avatar-frame">
-          <img
-            src="https://image.dienthoaivui.com.vn/x,webp,q90/https://dashboard.dienthoaivui.com.vn/uploads/dashboard/editor_upload/avatar-ca-sau-cute-2.jpg"
-            alt="">
-        </button>
-
-
+        }
       </div>
-    </div>
+
+    }
+    <!--    </div>-->
   </div>
 
   @if (showCommentExpanded) {

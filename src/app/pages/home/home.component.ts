@@ -19,8 +19,9 @@ import {convertToSupabaseUrl} from '../../utils/img-converter';
 import {Store} from '@ngrx/store';
 import {VideoState} from '../../ngrx/states/video.state';
 import * as VideoActions from '../../ngrx/actions/video.actions';
-import {Observable, Subscription} from 'rxjs';
+import {Observable, Subscription, take} from 'rxjs';
 import {VideoModel} from '../../models/video.model';
+import {filter} from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -48,10 +49,71 @@ export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
 
   subscriptions: Subscription[] = []
   isGettingLatestVideos$: Observable<boolean>
+  pageContainerRef!: ElementRef;
 
-  @ViewChild('pageContainer', {static: true}) pageContainerRef!: ElementRef;
+  @ViewChild('pageContainer', {static: false})
+  set pageContainer(content: ElementRef) {
+    this.pageContainerRef = content;
+    if (this.pageContainerRef) {
+      this.updateContainerSize();
+    }
+  }
+
+  @ViewChild(VideoComponent) videoComponent!: VideoComponent;
+  cardsContainerRef!: ElementRef;
+
+  @ViewChild('cardsContainer', {static: false})
+  set cardsContainer(content: ElementRef) {
+    this.cardsContainerRef = content;
+    if (this.cardsContainerRef) {
+      this.setupObserver();
+      if (this.cardsContainerRef) {
+        this.cardsContainerRef.nativeElement.addEventListener('wheel', (e: WheelEvent) => {
+          e.preventDefault();
+          e.stopPropagation();
+          this.cardsContainerRef.nativeElement.scrollBy({
+            top: e.deltaY,
+            behavior: 'smooth'
+          });
+        }, {passive: false});
+      }
+
+      document.addEventListener('fullscreenchange', () => {
+        const containerEl = this.cardsContainerRef.nativeElement;
+        const htmlItems: HTMLElement[] = Array.from(containerEl.children);
+
+        const currentItem = htmlItems[this.currentVideoIndex];
+
+        if (document.fullscreenElement) {
+          this.previousScrollTop = currentItem.offsetTop;
+          console.log('Entering fullscreen mode', this.previousScrollTop);
+          containerEl.style.scrollSnapType = 'none';
+          this.isFullscreen = true;
+          this.videoComponent.adjustControlButtons(true)
+        } else {
+          containerEl.style.scrollSnapType = 'y mandatory';
+          containerEl.scrollTop = this.previousScrollTop;
+          console.log('Exiting fullscreen mode', this.previousScrollTop);
+          this.isFullscreen = false;
+          this.videoComponent.adjustControlButtons(false)
+        }
+      });
+
+
+    } else {
+      if (this.observer) this.observer.disconnect();
+    }
+  }
+
+
   viewportWidth = 0;
   viewportHeight = 0;
+
+  private previousScrollTop: number = 0;
+  currentVideoIndex: number = 0;
+  isFullscreen: boolean = false;
+
+  observer!: IntersectionObserver
 
   constructor(private cdr: ChangeDetectorRef, private store: Store<{
     video: VideoState
@@ -67,19 +129,24 @@ export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
     this.subscriptions.push(
       this.store.select(state => state.video.latestVideos).subscribe(videos => {
         console.log(videos)
-        this.cards = videos;
+        this.cards = videos.map((v, index) => {
+          return {
+            ...v,
+            type: index === this.currentVideoIndex ? 'video' : 'image',
+          }
+        })
       })
     )
-
   }
 
   ngOnDestroy() {
     this.subscriptions.forEach(sub => sub.unsubscribe());
+    if (this.observer) this.observer.disconnect();
   }
 
   ngAfterViewInit() {
-    this.updateContainerSize();
     this.cdr.detectChanges();
+
   }
 
   @HostListener('window:resize')
@@ -90,7 +157,8 @@ export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
   updateContainerSize() {
     if (this.pageContainerRef && this.pageContainerRef.nativeElement) {
       const rect = this.pageContainerRef.nativeElement.getBoundingClientRect();
-      this.viewportWidth = rect.width;
+      console.log('Container size:', rect.width, rect.height);
+      this.viewportWidth = rect.width - 112;
       this.viewportHeight = rect.height;
     }
   }
@@ -124,6 +192,48 @@ export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
     };
   }
 
+
+  setupObserver() {
+    if (this.observer) this.observer.disconnect();
+
+    this.observer = new IntersectionObserver((entries) => {
+      console.log('IntersectionObserver entries:', entries);
+      entries.forEach(entry => {
+        if (this.isFullscreen) return;
+        if (entry.isIntersecting) {
+
+          // nếu như mà phần tử hiện tại đang là video thì không làm gì cả
+          const index = Array.from(this.cardsContainerRef.nativeElement.children).indexOf(entry.target);
+          if (index !== -1 && index !== this.currentVideoIndex) {
+            this.currentVideoIndex = index;
+
+            this.cards = this.cards.map((item, i) => ({
+              ...item,
+              type: i === this.currentVideoIndex ? 'video' : 'image',
+            }));
+
+            setTimeout(() => this.observeAllElements())
+
+            // Ví dụ nếu bạn có component con
+            // this.videoComponent.playVideo();
+          }
+        }
+      });
+    }, {
+      root: this.cardsContainerRef.nativeElement,
+      threshold: 0.1 // Lowered for debugging
+    });
+
+    this.observeAllElements();
+  }
+
+  observeAllElements() {
+    const elements = this.cardsContainerRef.nativeElement.querySelectorAll('.subItem');
+    console.log('Observing elements:', elements);
+    elements.forEach((el: Element) => {
+      this.observer.observe(el);
+    });
+  }
 
   cards: VideoModel[] = [];
   comments = [

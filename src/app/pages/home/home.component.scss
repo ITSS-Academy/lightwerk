@@ -16,7 +16,6 @@
 
 
   .card-container {
-    scroll-snap-align: start;
     //flex: 0 0 auto;
     width: fit-content;
     height: fit-content;
@@ -29,18 +28,17 @@
   }
 
   .card-wrapper {
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12), 0 1.5px 4px rgba(0, 0, 0, 0.08);
-    background-color: var(--mat-sys-surface);
     z-index: 10000;
     position: relative;
+    scroll-snap-align: start;
     display: flex;
-    flex-direction: column;
-    width: fit-content;
-    height: fit-content;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
     gap: 8px;
-    border-radius: 12px;
     overflow: hidden;
-    //padding: 16px 0;
+    padding: 16px 0;
     transition: transform 0.3s ease;
 
   }
@@ -48,9 +46,15 @@
   .card {
     //width: 100%;
     //height: 100%;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12), 0 1.5px 4px rgba(0, 0, 0, 0.08);
+    background-color: var(--mat-sys-surface);
+    border-radius: 12px;
+
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    position: relative;
+    z-index: 100000;
 
     .card-media {
       width: 100%;
@@ -294,6 +298,10 @@
 .video-cards {
   scroll-snap-type: y mandatory;
   height: 100%;
-  width: fit-content;
+  width: 100%;
   overflow: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
