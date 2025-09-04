@@ -148,4 +148,19 @@ export class VideoService {
       })
     )
   }
+
+  getVideoDetail(videoId: string): Observable<VideoModel> {
+    return from(this.getAccessToken()).pipe(
+      mergeMap((data) => {
+        if (data.error || !data.data.session) {
+          return throwError(() => new Error('No access token'));
+        }
+        return this.http.get<VideoModel>(`${environment.api_base_url}/video/get-video/${videoId}`, {
+          headers: {
+            Authorization: `${data.data.session.access_token}`
+          }
+        });
+      })
+    )
+  }
 }

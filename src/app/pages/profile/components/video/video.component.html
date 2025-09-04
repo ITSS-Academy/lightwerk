@@ -1,15 +1,14 @@
 <div class="video-container">
   <div class="sort-container">
     <mat-button-toggle-group name="Sort" aria-label="sort" [value]="sortValue">
-      <mat-button-toggle value="latest">Latest</mat-button-toggle>
-      <mat-button-toggle value="popular">Popular</mat-button-toggle>
-      <mat-button-toggle value="oldest">Oldest</mat-button-toggle>
+      <mat-button-toggle value="desc">Latest</mat-button-toggle>
+      <mat-button-toggle value="asc">Oldest</mat-button-toggle>
     </mat-button-toggle-group>
   </div>
 
 
   <div class="video-grid">
-    @for (item of videoList; track $index) {
+    @for (item of videoList$ | async; track $index) {
       <app-video-card [video]="item"></app-video-card>
     }
   </div>

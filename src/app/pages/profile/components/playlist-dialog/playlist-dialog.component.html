@@ -5,34 +5,62 @@
     <mat-icon (click)="onNoClick()">close</mat-icon>
   </div>
   <mat-dialog-content>
-    <form [formGroup]="form">
-      <div class="dialog-header-name">
-        <mat-form-field appearance="outline">
-          <input matInput placeholder="Name" formControlName="name"/>
-        </mat-form-field>
-        @if (form.get("name")?.invalid && form.get("name")?.touched) {
-          <div class="error">
-            <span style="color: red; font-size: 0.7rem">Name is required</span>
+    <form [formGroup]="form" class="dialog-form">
+      <div class="dialog-detail">
+        <div class="dialog-header-name">
+          <mat-form-field appearance="outline">
+            <input matInput placeholder="Name" formControlName="name"/>
+          </mat-form-field>
+          @if (form.get("name")?.invalid && form.get("name")?.touched) {
+          }
+        </div>
+        <div class="dialog-header-desc">
+          <mat-form-field appearance="outline">
+            <input class="desc" matInput placeholder="Description" formControlName="description"/>
+          </mat-form-field>
+        </div>
+        <div class="dialog-header-visibility">
+          <mat-radio-group formControlName="isPrivate" aria-label="Select an option">
+            <mat-radio-button value=true>Private</mat-radio-button>
+            <mat-radio-button value=false>Public</mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+      <div class="thumbnail">
+        @if (!thumbnail) {
+          <div class="button" (click)="onEditPhotoClick()">
+            <button mat-flat-button class="add">
+              <mat-icon>add_circle</mat-icon>
+              Add Thumbnail
+            </button>
           </div>
+          <input
+            type="file"
+            id="thumbnail-photo-input"
+            accept="image/*"
+            style="display: none;"
+            (change)="onFileSelected($event)">
+          <img
+            src="https://www.shutterstock.com/image-vector/default-ui-image-placeholder-wireframes-600nw-1037719192.jpg"
+            alt="Default">
+        } @else {
+          <div class="button" (click)="onEditPhotoClick()">
+            <button mat-flat-button class="add">
+              <mat-icon>edit</mat-icon>
+              Change Thumbnail
+            </button>
+          </div>
+          <img [src]="thumbnail" alt="thumbnail" (click)="onEditPhotoClick()">
+          <input
+            type="file"
+            id="thumbnail-photo-input"
+            accept="image/*"
+            style="display: none;"
+            (change)="onFileSelected($event)">
+
         }
       </div>
-      <div class="dialog-header-desc">
-        <mat-form-field appearance="outline">
-          <input matInput placeholder="Description" formControlName="description"/>
-        </mat-form-field>
-      </div>
-      <div class="dialog-header-visibility">
-        <mat-radio-group formControlName="isPrivate" aria-label="Select an option">
-          <mat-radio-button value=true>Private</mat-radio-button>
-          <mat-radio-button value=false>Public</mat-radio-button>
-        </mat-radio-group>
-      </div>
-      <div class="button">
-        <button mat-flat-button>
-          <mat-icon>add_circle</mat-icon>
-          Add Video
-        </button>
-      </div>
+
     </form>
 
 
