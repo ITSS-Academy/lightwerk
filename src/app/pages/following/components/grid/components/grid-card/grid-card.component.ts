@@ -2,6 +2,8 @@ import {Component, inject, Input} from '@angular/core';
 import {MatCard, MatCardContent} from "@angular/material/card";
 import {MatDialog} from '@angular/material/dialog';
 import {DetailDialogComponent} from '../../../../../../components/detail-dialog/detail-dialog.component';
+import {VideoModel} from '../../../../../../models/video.model';
+import {convertToSupabaseUrl} from '../../../../../../utils/img-converter';
 
 @Component({
   selector: 'app-grid-card',
@@ -13,27 +15,10 @@ import {DetailDialogComponent} from '../../../../../../components/detail-dialog/
   styleUrl: './grid-card.component.scss'
 })
 export class GridCardComponent {
-  @Input() video!: {
-    id: number;
-    name: string;
-    title: string;
-    thumbnail: string;
-    favourite: number;
-    uploadDate: string;
-  }
+  @Input() video!: VideoModel;
+
   readonly dialog = inject(MatDialog);
 
-  openDialog() {
-    const dialogRef = this.dialog.open(DetailDialogComponent, {
-      width: '100vw',
-      height: '100vh',
-      maxWidth: '100%',
-      maxHeight: '100vh',
-      panelClass: 'full-screen-dialog'
-    });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-    });
-  }
+  protected readonly convertToSupabaseUrl = convertToSupabaseUrl;
 }

@@ -163,4 +163,26 @@ export class VideoService {
       })
     )
   }
+
+  getVideosByFollowedProfiles(page: number) {
+    return from(this.getAccessToken()).pipe(
+      mergeMap((data) => {
+        if (data.error || !data.data.session) {
+          return throwError(() => new Error('No access token'));
+        }
+        return this.http.get<{
+          videos: VideoModel[]
+          pagination: {
+            limit: number,
+            page: number,
+            totalCount: number
+          }
+        }>(`${environment.api_base_url}/video/following-videos?page=${page}&limit=10`, {
+          headers: {
+            Authorization: `${data.data.session.access_token}`
+          }
+        });
+      })
+    )
+  }
 }

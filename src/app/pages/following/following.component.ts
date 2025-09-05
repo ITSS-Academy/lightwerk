@@ -1,8 +1,11 @@
-import {Component} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {MatButtonModule,} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {Router, RouterLink, RouterOutlet} from '@angular/router';
 import {ActivatedRoute} from '@angular/router';
+import {Store} from '@ngrx/store';
+import {FollowingState} from '../../ngrx/states/following.state';
+import * as FollowingActions from '../../ngrx/actions/following.actions';
 
 @Component({
   selector: 'app-following',
@@ -15,8 +18,17 @@ import {ActivatedRoute} from '@angular/router';
   templateUrl: './following.component.html',
   styleUrl: './following.component.scss'
 })
-export class FollowingComponent {
-  constructor(public router: Router, public route: ActivatedRoute) {
+export class FollowingComponent implements OnDestroy {
+  constructor(public router: Router, public route: ActivatedRoute, private store: Store<{
+    following: FollowingState
+  }>) {
+    this.store.dispatch(FollowingActions.getVideosFollowedChannels({
+      page: 0
+    }));
+  }
+
+  ngOnDestroy() {
+    this.store.dispatch(FollowingActions.clearFollowingState());
   }
 
   isManageActive(): boolean {

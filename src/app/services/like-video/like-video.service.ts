@@ -42,7 +42,7 @@ export class LikeVideoService {
     )
   }
 
-  deleteLikeVideo(videoId: string) {
+  deleteLikeVideo(videoId: string, profileId: string) {
     return from(this.getAccessToken()).pipe(
       mergeMap((data) => {
         let headers = {};
@@ -53,10 +53,36 @@ export class LikeVideoService {
         }
         return this.http.delete<{
           count: number
-        }>(`${environment.api_base_url}/like-video/delete-like-video/${videoId}`, {
+        }>(`${environment.api_base_url}/like-video/delete-like-video/${videoId}/${profileId}`, {
+          headers: headers
+        });
+      })
+    )
+  }
+
+  addLikeVideo(videoId: string, profileId: string) {
+    return from(this.getAccessToken()).pipe(
+      mergeMap((data) => {
+        let headers = {};
+        if (!data.error && data.data.session) {
+          headers = {
+            Authorization: `${data.data.session.access_token}`
+          }
+        }
+        return this.http.post<{
+          count: number
+        }>(`${environment.api_base_url}/like-video`, {
+          videoId: videoId,
+          profileId: profileId
+        }, {
           headers: headers
         });
       })
     )
   }
 }
+
+
+
+
+

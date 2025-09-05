@@ -70,7 +70,10 @@ export const getLatestVideos = createEffect(
       ofType(VideoActions.getLatestVideos),
       exhaustMap((action) =>
         videoService.getLatestVideos(action.page).pipe(
-          map((res) => VideoActions.getLatestVideosSuccess({videos: res.videos})),
+          map((res) => VideoActions.getLatestVideosSuccess({
+            videos: res.videos,
+            totalItems: res.pagination.totalCount
+          })),
           catchError((error: any) =>
             of(VideoActions.getLatestVideosFailure({error: error}))
           )
