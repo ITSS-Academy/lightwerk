@@ -33,7 +33,7 @@ export const appConfig: ApplicationConfig = {
         likeVideo: likeVideoReducer,
         profile: profileReducer,
         history: historyReducer,
-        following: followingReducer,        playlist: playlistReducer
+        following: followingReducer,
         playlist: playlistReducer
       },
     ),
