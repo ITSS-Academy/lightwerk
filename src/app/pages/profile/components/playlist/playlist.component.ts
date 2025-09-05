@@ -5,6 +5,9 @@ import {MatIcon} from '@angular/material/icon';
 import {MatDialog} from '@angular/material/dialog';
 import {PlaylistDialogComponent} from '../playlist-dialog/playlist-dialog.component';
 import {PlaylistCardComponent} from '../playlist-card/playlist-card.component';
+import {
+  MakePublicDialogComponent
+} from '../../../playlist-detail/components/make-public-dialog/make-public-dialog.component';
 
 
 interface PlayListModel {
@@ -22,7 +25,7 @@ interface PlayListModel {
     MatButton,
     MatIcon,
     PlaylistCardComponent,
-
+    MakePublicDialogComponent,
   ],
   templateUrl: './playlist.component.html',
   styleUrl: './playlist.component.scss'
@@ -82,19 +85,32 @@ export class PlaylistComponent {
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
       if (result) {
-        if (result.name != undefined) {
-          this.name = result.name;
+        // Add new playlist if name is provided
+        if (result.name) {
+          const newPlaylist: PlayListModel = {
+            id: (this.playlistCollection.length + 1).toString(),
+            image: result.image || 'https://www.shutterstock.com/image-vector/default-ui-image-placeholder-wireframes-600nw-1037719192.jpg',
+            name: result.name,
+            videoCount: 0,
+            isPrivate: result.isPrivate ?? false,
+            date: new Date()
+          };
+          this.playlistCollection.push(newPlaylist);
+          this.name = '';
+          this.isPrivate = false;
         }
-        if (result.isPrivate != undefined) {
-          this.isPrivate = result.isPrivate;
-        }
-
       }
     })
   }
 
+  openPrivacyDialog(): void {
+    const dialogRef = this.dialog.open(MakePublicDialogComponent, {
+      width: '400px',
+      data: {isPrivate: this.isPrivate}
+    });
+    dialogRef.afterClosed().subscribe((result: boolean) => {
+      this.isPrivate = result;
+    });
+  }
 
 }
-
-
-

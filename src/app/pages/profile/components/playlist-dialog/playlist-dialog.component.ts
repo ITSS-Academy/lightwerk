@@ -64,6 +64,7 @@ export class PlaylistDialogComponent {
       this.dialogRef.close({
         name: this.form.get('name')?.value,
         isPrivate: this.form.get('isPrivate')?.value,
+        image: this.thumbnail // Pass thumbnail to parent
       });
     }
   }

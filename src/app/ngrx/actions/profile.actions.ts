@@ -22,3 +22,7 @@ export const SortUserVideos = createAction(
   '[UserVideo] Sort user videos',
   props<{ sortOrder: 'asc' | 'desc' }>()
 );
+
+export const clearUserVideos = createAction(
+  '[UserVideo] Clear user videos'
+);

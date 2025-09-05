@@ -5,7 +5,6 @@ import {
   MatColumnDef,
   MatHeaderCell,
   MatHeaderCellDef,
-  MatHeaderRow,
   MatRow,
   MatTable,
   MatTableModule
@@ -49,13 +48,12 @@ export const PLAYLIST_DATA: Playlist[] = [
     CdkDropList,
     MatColumnDef,
     MatCell,
-    MatIcon,
     MatCellDef,
     MatHeaderCell,
     MatHeaderCellDef,
-    MatHeaderRow,
     MatRow,
     CdkDrag,
+    MatIcon,
   ],
   templateUrl: './playlist-table.component.html',
   styleUrl: './playlist-table.component.scss',
@@ -63,7 +61,7 @@ export const PLAYLIST_DATA: Playlist[] = [
 })
 export class PlaylistTableComponent {
   @ViewChild('table', {static: true}) table: MatTable<Playlist> | undefined;
-  displayedColumns: string[] = ['position', 'thumbnail', 'title'];
+  displayedColumns: string[] = ['position', 'title'];
   dataSource = PLAYLIST_DATA;
 
   drop(event: CdkDragDrop<string>) {

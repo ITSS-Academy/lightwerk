@@ -1,5 +1,5 @@
 import {Component, inject, OnDestroy, OnInit} from '@angular/core';
-import {MatTab, MatTabGroup, MatTabLabel, MatTabsModule} from '@angular/material/tabs';
+import {MatTabsModule} from '@angular/material/tabs';
 import {MatIconModule} from '@angular/material/icon';
 import {ActivatedRoute, Router, NavigationEnd} from '@angular/router';
 import {filter} from 'rxjs/operators';
@@ -14,7 +14,6 @@ import {FollowDialogComponent} from './components/follow-dialog/follow-dialog.co
 import {Store} from '@ngrx/store';
 import {ProfileState} from '../../ngrx/states/profile.state';
 import * as ProfileActions from '../../ngrx/actions/profile.actions';
-import {MatMenuModule} from '@angular/material/menu';
 
 interface UserModel {
   id: string;

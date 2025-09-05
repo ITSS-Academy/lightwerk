@@ -47,7 +47,7 @@ export const profileReducer = createReducer(
   }),
   on(ProfileActions.SortUserVideos, (state, {sortOrder}) => {
     const sortedVideos = [...state.userVideos].sort((a, b) => {
-      // Use createdAt for sorting; adjust if your model uses a different property
+      // Reverse mapping: 'desc' = ascending, 'asc' = descending
       if (sortOrder === 'asc') {
         return (a.createdAt > b.createdAt) ? 1 : -1;
       } else {
@@ -58,5 +58,13 @@ export const profileReducer = createReducer(
       ...state,
       userVideos: sortedVideos
     };
-  })
+  }),
+  on(ProfileActions.clearUserVideos, (state) => ({
+    ...state,
+    userVideos: [],
+    totalCount: 0,
+    canLoadMore: true,
+    error: null,
+    isLoading: false,
+  })),
 )
