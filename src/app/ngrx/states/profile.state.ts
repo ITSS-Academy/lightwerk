@@ -5,6 +5,6 @@ export interface ProfileState {
   userVideos: VideoModel[];
   isLoading: boolean;
   error: any;
-  currentPage: number;
+  canLoadMore: boolean;
   totalCount: number;
 }

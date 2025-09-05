@@ -11,9 +11,14 @@ export const getUserVideos = createAction(
 );
 
 export const getUserVideosSuccess = createAction(
-  "[UserVideo] Get user videos success", props<{ userVideos: VideoModel[], totalCount: number, currentPage: number }>()
+  "[UserVideo] Get user videos success", props<{ userVideos: VideoModel[], totalCount: number }>()
 );
 
 export const getUserVideosFailure = createAction(
   "[UserVideo] Get user videos failure", props<{ error: any }>()
+);
+
+export const SortUserVideos = createAction(
+  '[UserVideo] Sort user videos',
+  props<{ sortOrder: 'asc' | 'desc' }>()
 );

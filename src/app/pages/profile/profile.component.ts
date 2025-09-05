@@ -3,7 +3,7 @@ import {MatTab, MatTabGroup, MatTabLabel, MatTabsModule} from '@angular/material
 import {MatIconModule} from '@angular/material/icon';
 import {ActivatedRoute, Router, NavigationEnd} from '@angular/router';
 import {filter} from 'rxjs/operators';
-import {Subscription, combineLatest} from 'rxjs';
+import {Subscription, combineLatest, take} from 'rxjs';
 import {VideoComponent} from './components/video/video.component';
 import {PlaylistComponent} from './components/playlist/playlist.component';
 import {LikedVideosComponent} from './components/liked-videos/liked-videos.component';
@@ -11,10 +11,10 @@ import {MatButton} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
 import {ProfileDialogComponent} from './components/profile-dialog/profile-dialog.component';
 import {FollowDialogComponent} from './components/follow-dialog/follow-dialog.component';
-import {ProfileService} from '../../services/profile/profile.service';
 import {Store} from '@ngrx/store';
 import {ProfileState} from '../../ngrx/states/profile.state';
 import * as ProfileActions from '../../ngrx/actions/profile.actions';
+import {MatMenuModule} from '@angular/material/menu';
 
 interface UserModel {
   id: string;
@@ -30,8 +30,7 @@ interface UserModel {
     VideoComponent,
     PlaylistComponent,
     LikedVideosComponent,
-    MatButton
-  ],
+    MatButton],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
@@ -48,13 +47,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
   videoList$!: import("rxjs").Observable<import("../../models/video.model").VideoModel[]>;
   isLoading$!: import("rxjs").Observable<boolean>;
   totalCount$!: import("rxjs").Observable<number>;
-  currentPage$!: import("rxjs").Observable<number>;
 
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private profileService: ProfileService, // <-- inject service
     private store: Store<{ profile: ProfileState }>
   ) {
     this.subscription.push(
@@ -69,8 +66,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.videoList$ = this.store.select('profile', 'userVideos');
     this.isLoading$ = this.store.select('profile', 'isLoading');
     this.totalCount$ = this.store.select('profile', 'totalCount');
-    this.currentPage$ = this.store.select('profile', 'currentPage');
-    // Initial load
     this.store.dispatch(ProfileActions.getUserVideos({
       profileId: this.profileId,
       orderBy: 'desc',
@@ -96,7 +91,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
     });
   }
 
-  readonly dialogUser = inject(MatDialog);
 
   openDialogUser(type: 'followers' | 'following') {
     const selectedTab = type === 'followers' ? 0 : 1;
@@ -111,35 +105,31 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   onScroll(event: Event) {
     const element = event.target as HTMLElement;
-    console.log('Scroll event:', element.scrollTop, element.scrollHeight, element.clientHeight);
-    if (element.scrollHeight - element.scrollTop === element.clientHeight) {
+    if (element.scrollTop + element.clientHeight >= element.scrollHeight) {
       if (this.selectedIndex === 0) {
-          this.loadMoreVideos();
+        this.loadMoreVideos();
       }
     }
   }
 
   loadMoreVideos() {
-    const sub = combineLatest([
+    combineLatest([
       this.isLoading$,
-      this.totalCount$,
-      this.currentPage$,
+      this.store.select('profile', 'canLoadMore'),
       this.videoList$
-    ]).subscribe(([isLoading, totalCount, currentPage, videoList]) => {
-      videoList = videoList ?? [];
-      const loadedCount = videoList.length;
-      const safeTotalCount = typeof totalCount === 'number' ? totalCount : 0;
-      const safeCurrentPage = typeof currentPage === 'number' ? currentPage : 0;
-      if (!isLoading && loadedCount < safeTotalCount) {
+    ]).pipe(
+      take(1)
+    ).subscribe(([isLoading, canLoadMore, videoList]) => {
+      console.log('isLoading:', isLoading, 'canLoadMore:', canLoadMore, 'current video count:', videoList.length);
+      if (!isLoading && canLoadMore) {
+        // console.log(videoList.length / 10);
         this.store.dispatch(ProfileActions.getUserVideos({
           profileId: this.profileId,
           orderBy: 'desc',
-          page: safeCurrentPage + 1
+          page: videoList.length / 10
         }));
       }
-      sub.unsubscribe(); // Unsubscribe after one emission
     });
-    this.subscription.push(sub);
   }
 
   ngOnInit() {

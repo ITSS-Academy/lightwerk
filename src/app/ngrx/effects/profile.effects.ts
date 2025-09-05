@@ -15,7 +15,6 @@ export const getUserVideosEffect = createEffect(
           return profileActions.getUserVideosSuccess({
             userVideos: res.videos,
             totalCount: res.totalCount,
-            currentPage: arg.page
           });
         }),
         catchError((error: { message: any }) =>

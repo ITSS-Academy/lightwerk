@@ -1,0 +1,31 @@
+<mat-table #table [dataSource]="dataSource" class="mat-elevation-z8"
+           cdkDropList (cdkDropListDropped)="drop($event)"
+           cdkDropListData="dataSource">
+
+  <ng-container matColumnDef="position" sticky>
+    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+    <mat-cell *matCellDef="let video">
+      <span class="drag-cursor">{{ video.id }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="thumbnail">
+    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+    <mat-cell *matCellDef="let video">
+      <img [src]="video.thumbnail" alt="thumbnail" width="120px">
+    </mat-cell>
+  </ng-container>
+
+
+  <ng-container matColumnDef="title">
+    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+    <mat-cell *matCellDef="let video">
+      {{ video.title }}
+      {{ video.user }}
+    </mat-cell>
+  </ng-container>
+
+
+  <mat-row *matRowDef="let row; columns: displayedColumns;" cdkDrag [cdkDragData]="row"></mat-row>
+</mat-table>
+

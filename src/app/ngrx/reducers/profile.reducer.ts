@@ -7,7 +7,7 @@ export const initialState: ProfileState = {
   userVideos: <VideoModel[]>[],
   isLoading: false,
   error: null,
-  currentPage: 0,
+  canLoadMore: true,
   totalCount: 0,
 }
 
@@ -24,18 +24,17 @@ export const profileReducer = createReducer(
     }
   }),
 
-  on(ProfileActions.getUserVideosSuccess, (state, {userVideos, totalCount, currentPage, type}) => {
+  on(ProfileActions.getUserVideosSuccess, (state, {userVideos, totalCount, type}) => {
     console.log(type);
     // Filter out duplicates by id
-    const existingIds = new Set(state.userVideos.map(v => v.id));
-    const newUniqueVideos = userVideos.filter(v => !existingIds.has(v.id));
+
     return <ProfileState>{
       ...state,
-      userVideos: currentPage > 0 ? [...state.userVideos, ...newUniqueVideos] : userVideos,
+      userVideos: [...state.userVideos, ...userVideos],
       isLoading: false,
       error: null,
-      currentPage,
-      totalCount,
+      canLoadMore: state.userVideos.length < totalCount,
+      totalCount: totalCount,
     }
   }),
   on(ProfileActions.getUserVideosFailure, (state, {error, type}) => {
@@ -45,5 +44,19 @@ export const profileReducer = createReducer(
       isLoading: false,
       error: error,
     }
+  }),
+  on(ProfileActions.SortUserVideos, (state, {sortOrder}) => {
+    const sortedVideos = [...state.userVideos].sort((a, b) => {
+      // Use createdAt for sorting; adjust if your model uses a different property
+      if (sortOrder === 'asc') {
+        return (a.createdAt > b.createdAt) ? 1 : -1;
+      } else {
+        return (a.createdAt < b.createdAt) ? 1 : -1;
+      }
+    });
+    return {
+      ...state,
+      userVideos: sortedVideos
+    };
   })
 )

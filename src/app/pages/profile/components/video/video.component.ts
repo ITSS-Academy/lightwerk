@@ -28,19 +28,12 @@ export class VideoComponent implements OnInit {
   subscription: Subscription[] = [];
 
   constructor(
-    private profileService: ProfileService,
-    private activatedRoute: ActivatedRoute,
     private store: Store<{
       profile: ProfileState
     }>) {
-    const profileId = this.activatedRoute.snapshot.params['profileId'];
 
     this.videoList$ = this.store.select('profile', 'userVideos');
-    this.store.dispatch(ProfileActions.getUserVideos({
-      profileId: profileId,
-      orderBy: 'asc',
-      page: 0
-    }));
+
   }
 
   ngOnInit() {
@@ -55,5 +48,10 @@ export class VideoComponent implements OnInit {
     )
   }
 
+  onSortChange(event: any) {
+    const value = event.value;
+    this.sortValue = value;
+    this.store.dispatch(ProfileActions.SortUserVideos({sortOrder: value}));
+  }
 
 }
