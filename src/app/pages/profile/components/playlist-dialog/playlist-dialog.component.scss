@@ -1,81 +1,156 @@
-
 .playlist-dialog {
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  border-radius: 16px;
   display: flex;
   flex-direction: column;
-  overflow-y: hidden;
-
+  overflow: hidden;
 }
 
-.dialog-detail {
+/* Header */
+.playlist-dialog .dialog-header {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  overflow-y: hidden;
-
-}
-
-.dialog-header {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
   justify-content: space-between;
-}
-
-.dialog-form {
-  display: flex;
-  flex-direction: row;
-  gap: 5rem;
-}
-
-
-mat-icon {
-  margin-right: 8px;
-}
-
-mat-icon :hover {
-  cursor: pointer;
-}
-
-mat-form-field {
-  width: 100%;
-}
-
-.button {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  margin-bottom: 1rem;
+  padding: 12px 20px;
+  border-bottom: 1px solid #eee;
 }
 
-.add {
+.playlist-dialog .dialog-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.playlist-dialog .dialog-header mat-icon {
+  cursor: pointer;
+  font-size: 20px;
+  color: #666;
+  transition: 0.2s;
+}
+
+.playlist-dialog .dialog-header mat-icon:hover {
+  color: #000;
+}
+
+/* Form */
+.playlist-dialog .dialog-form {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  padding: 16px 20px;
+  overflow-y: auto;
+}
+
+.playlist-dialog .dialog-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.playlist-dialog .dialog-header-name mat-form-field {
   width: 100%;
-  color: #ffffff;
-  font-weight: bold;
 }
 
-.thumbnail {
+.playlist-dialog .dialog-header-visibility {
+  display: flex;
+  justify-content: flex-start;
+  gap: 20px;
+  align-items: center;
+}
+
+/* Thumbnail */
+.playlist-dialog .thumbnail {
+  flex: 1;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  border: 1px dashed #ccc;
+  border-radius: 12px;
+  padding: 12px;
+  position: relative;
+  transition: 0.3s;
 }
 
+.playlist-dialog .thumbnail:hover {
+  border-color: #1976d2;
+  background: #f9f9f9;
+}
 
-img {
+.playlist-dialog .thumbnail img {
+  width: 100%;
+  height: auto;
+  max-height: 300px;
   object-fit: cover;
-  width: 90px;
-  height: 160px;
+  border-radius: 12px;
   cursor: pointer;
 }
 
+/* Button overlay */
+.playlist-dialog .thumbnail .button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0; /* Ẩn mặc định */
+  transition: opacity 0.3s;
+}
+
+.playlist-dialog .thumbnail:hover .button {
+  opacity: 1; /* Hiện khi hover ảnh */
+}
 
 
+/* Container nút */
+.playlist-dialog .thumbnail .button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 12px;
+}
+
+/* Nút Add Thumbnail */
+.playlist-dialog .thumbnail .add {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* khoảng cách icon và chữ */
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: 24px; /* bo tròn pill */
+  padding: 10px 20px;
+
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  border: none;
+}
+
+/* Hover */
+.playlist-dialog .thumbnail .add:hover {
+  transform: scale(1.05);
+}
+
+
+/* Footer */
+.playlist-dialog mat-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 20px;
+  border-top: 1px solid #eee;
+}
+
+.playlist-dialog mat-dialog-actions button {
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 6px 18px;
+}
+
+.error-text {
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+}
