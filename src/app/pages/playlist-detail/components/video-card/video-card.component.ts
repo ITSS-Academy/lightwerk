@@ -4,13 +4,9 @@ import {MatCard, MatCardContent, MatCardImage} from "@angular/material/card";
 import {MatIcon} from '@angular/material/icon';
 import {MatDialog} from '@angular/material/dialog';
 import {DeleteVideoDialogComponent} from '../delete-video-dialog/delete-video-dialog.component';
+import {VideoModel} from '../../../../models/video.model';
+import {convertToSupabaseUrl} from '../../../../utils/img-converter';
 
-interface VideoCard {
-  id: string;
-  title: string;
-  image: string;
-  date: Date;
-}
 
 @Component({
   selector: 'app-video-card',
@@ -25,12 +21,12 @@ interface VideoCard {
   styleUrl: './video-card.component.scss'
 })
 export class VideoCardComponent {
- @Input() video!: VideoCard;
+  @Input() video!: VideoModel;
 
   readonly dialog = inject(MatDialog);
 
   openDialog() {
-    const dialogRef= this.dialog.open(DeleteVideoDialogComponent, {
+    const dialogRef = this.dialog.open(DeleteVideoDialogComponent, {
       width: '400px',
       height: '150px',
       data: {videoId: this.video.id}
@@ -39,4 +35,6 @@ export class VideoCardComponent {
       console.log(`Dialog result: ${result}`);
     });
   }
+
+  protected readonly convertToSupabaseUrl = convertToSupabaseUrl;
 }

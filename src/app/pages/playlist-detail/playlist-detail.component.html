@@ -1,38 +1,43 @@
-<div class="playlist-container" [ngStyle]="backgroundImageStyle">
-  <div class="playlist-background-blur"></div>
-  <div class="playlist-background-gradient"></div>
-  <div class="playlist-detail">
+@if (!(isLoading$ | async)) {
+  @if (playListDetail$ | async; as playlist) {
+    <div class="playlist-container" [ngStyle]="backgroundImageStyle">
+      <div class="playlist-background-blur"></div>
+      <div class="playlist-background-gradient"></div>
+      <div class="playlist-detail">
 
-    <div class="playlist-detail-stats">
-      <span class="name">{{ playlistDetail.name }}</span>
-
-
-      @if (playlistDetail.video == 1) {
-        <span class="stats">{{ playlistDetail.video }} video</span>
-      } @else {
-        <span class="stats">{{ playlistDetail.video }} videos</span>
-      }
+        <div class="playlist-detail-stats">
+          <span class="name">{{ playlistDetail?.title }}</span>
 
 
+          <!--          @if (playlist.videos.length == 1) {-->
+          <!--            <span class="stats">{{ playlist.videos.length }} video</span>-->
+          <!--          } @else {-->
+          <!--            <span class="stats">{{ playlist.videos.length }} videos</span>-->
+          <!--          }-->
 
 
-      <span class="stats">Created by <img src="{{playlistDetail.avatar}}"
-                                          alt="User profile">{{ playlistDetail.username }}</span>
+          <span class="stats">Created by <img
+            src="{{convertToSupabaseUrl(playlistDetail.thumbnailPath, 'thumbnail')}}"
+            alt="User profile">{{ playlistDetail.profileId }}</span>
+        </div>
+
+        <div class="button">
+          <button mat-button (click)="openDialogmakePublic()">Make public</button>
+          <button mat-button (click)="openDialogDeletePlaylist()">Delete Playlist</button>
+          <button mat-button (click)="openDialogChangeName()">Change Name</button>
+        </div>
+      </div>
     </div>
 
-    <div class="button">
-      <button mat-button (click)="openDialogmakePublic()">Make public</button>
-      <button mat-button (click)="openDialogDeletePlaylist()">Delete Playlist</button>
-      <button mat-button (click)="openDialogChangeName()">Change Name</button>
+    <div class="video-container">
+      <div class="video-grid">
+        @for (item of playlist.videos; track item.id) {
+          <app-video-card [video]="item"></app-video-card>
+        }
+      </div>
     </div>
-  </div>
-</div>
 
-<div class="video-container">
-  <div class="video-grid">
-    @for (item of VideoList; track item.id) {
-      <app-video-card [video]="item"></app-video-card>
-    }
-  </div>
-</div>
 
+  }
+
+}

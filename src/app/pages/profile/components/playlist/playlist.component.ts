@@ -1,20 +1,18 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {VideoCardComponent} from '../video-card/video-card.component';
 import {MatButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatDialog} from '@angular/material/dialog';
 import {PlaylistDialogComponent} from '../playlist-dialog/playlist-dialog.component';
 import {PlaylistCardComponent} from '../playlist-card/playlist-card.component';
-
-
-interface PlayListModel {
-  id: string;
-  image: string;
-  name: string;
-  videoCount: number;
-  isPrivate: boolean;
-  date: Date;
-}
+import {Observable, Subscription} from 'rxjs';
+import {PlaylistState} from '../../../../ngrx/states/playlist.state';
+import {Store} from '@ngrx/store';
+import {PlaylistModel} from '../../../../models/playlist.model';
+import {map} from 'rxjs/operators';
+import {AsyncPipe} from '@angular/common';
+import * as PlayListAction from '../../../../ngrx/actions/playlist.actions';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-playlist',
@@ -22,51 +20,38 @@ interface PlayListModel {
     MatButton,
     MatIcon,
     PlaylistCardComponent,
+    AsyncPipe,
 
   ],
   templateUrl: './playlist.component.html',
   styleUrl: './playlist.component.scss'
 })
 
-export class PlaylistComponent {
+export class PlaylistComponent implements OnInit, OnDestroy {
+  subscriptions: Subscription[] = [];
+  isPlayList$!: Observable<PlaylistModel[]>
 
+  constructor(private store: Store<{
+                playlist: PlaylistState,
+              }>, private activatedRoute: ActivatedRoute
+  ) {
+    this.isPlayList$ = this.store.select(state => state.playlist.playlists)
+  }
 
-  playlistCollection: PlayListModel[] = [
-    {
-      id: "1",
-      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Flag_of_the_People%27s_Republic_of_China.svg/250px-Flag_of_the_People%27s_Republic_of_China.svg.png",
-      name: "Fun Chinese Facts",
-      videoCount: 2,
-      isPrivate: true,
-      date: new Date()
-    },
+  ngOnInit() {
+    this.subscriptions.push(
+      this.store.select(state => state.playlist.playlists).subscribe(playlistState => {
+        console.log(playlistState)
+      })
+    );
+    const profileID = this.activatedRoute.snapshot.paramMap.get('profileId');
+    this.store.dispatch(PlayListAction.loadAllPlaylists({profileID: profileID!}));
 
-    {
-      id: "2",
-      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/HSK-logo.jpg/500px-HSK-logo.jpg",
-      name: "HSK tips",
-      videoCount: 3,
-      isPrivate: false,
-      date: new Date()
-    },
+  }
 
-    {
-      id: "3",
-      image: "https://www.engineer4free.com/uploads/1/0/2/9/10296972/3295580_orig.jpg",
-      name: "What is a Linear Algebra ?",
-      videoCount: 1,
-      isPrivate: false,
-      date: new Date()
-    },
-    {
-      id: "4",
-      image: "https://d28hgpri8am2if.cloudfront.net/book_images/onix/cvr9781626860605/the-art-of-war-9781626860605_lg.jpg",
-      name: "The Art Of War (Series)",
-      videoCount: 3,
-      isPrivate: false,
-      date: new Date()
-    }
-  ];
+  ngOnDestroy() {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
 
   readonly dialog = inject(MatDialog);
   name!: string;
