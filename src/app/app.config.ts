@@ -18,6 +18,8 @@ import {likeVideoReducer} from './ngrx/reducers/like-video.reducer';
 import * as LikeVideoEffects from './ngrx/effects/like-video.effects';
 import {historyReducer} from './ngrx/reducers/history.reducer';
 import * as HistoryEffects from './ngrx/effects/history.effects';
+import {followingReducer} from './ngrx/reducers/following.reducer';
+import * as FollowingEffects from './ngrx/effects/following.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({eventCoalescing: true}), provideRouter(routes), provideAnimationsAsync(),
@@ -28,10 +30,11 @@ export const appConfig: ApplicationConfig = {
         category: categoryReducer,
         likeVideo: likeVideoReducer,
         profile: profileReducer,
-        history: historyReducer
+        history: historyReducer,
+        following: followingReducer
       },
     ),
-    provideEffects(AuthEffects, VideoEffects, CategoryEffects, ProfileEffects,LikeVideoEffects, HistoryEffects),
+    provideEffects(AuthEffects, VideoEffects, CategoryEffects, ProfileEffects, LikeVideoEffects, FollowingEffects,HistoryEffects),
     provideHttpClient()]
 };
 

@@ -27,6 +27,8 @@ import {Store} from '@ngrx/store';
 import {VideoState} from '../../../../ngrx/states/video.state';
 import * as VideoActions from '../../../../ngrx/actions/video.actions';
 import {VideoListComponent} from '../../../../components/video-list/video-list.component';
+import {FollowingState} from '../../../../ngrx/states/following.state';
+import * as FollowingActions from '../../../../ngrx/actions/following.actions';
 
 @Component({
   selector: 'app-list',
@@ -39,27 +41,43 @@ import {VideoListComponent} from '../../../../components/video-list/video-list.c
   styleUrl: './list.component.scss'
 })
 export class ListComponent implements OnInit, OnDestroy {
-  isGettingLatestVideos$: Observable<boolean>
+  isGettingVideosFollowedFirst$: Observable<boolean>
+  isGettingMore: boolean = false
+  canLoadMore: boolean = true
   subscriptions: Subscription[] = []
   cards!: VideoModel[]
 
 
   constructor(private store: Store<{
-    video: VideoState
+    video: VideoState,
+    following: FollowingState
   }>) {
-    this.isGettingLatestVideos$ = this.store.select(state => state.video.isGettingLatest)
+    this.isGettingVideosFollowedFirst$ = this.store.select(state => state.following.isGettingFirst)
 
-    this.store.dispatch(VideoActions.getLatestVideos({
-      page: 0
-    }))
+  }
+
+  getMoreVideos() {
+    console.log('get more videos')
+    console.log(this.canLoadMore, this.isGettingMore)
+    if (this.canLoadMore && !this.isGettingMore) {
+      this.store.dispatch(FollowingActions.getVideosFollowedChannels({
+        page: Math.floor(this.cards.length / 10)
+      }))
+    }
   }
 
   ngOnInit() {
     this.subscriptions.push(
-      this.store.select(state => state.video.latestVideos).subscribe(videos => {
+      this.store.select(state => state.following.videos).subscribe(videos => {
         console.log(videos)
         this.cards = videos
-      })
+      }),
+      this.store.select(state => state.following.canLoadMore).subscribe(canLoadMore => {
+        this.canLoadMore = canLoadMore
+      }),
+      this.store.select(state => state.following.isGettingVideosFollowedChannels).subscribe(isGettingMore => {
+        this.isGettingMore = isGettingMore
+      }),
     )
   }
 
