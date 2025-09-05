@@ -7,3 +7,11 @@ button.active, .mat-icon-button.active {
 button.active:hover, .mat-icon-button.active:hover {
   background: var(--mat-sys-surface-container-highest, #d0d0d0) !important;
 }
+
+.wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}

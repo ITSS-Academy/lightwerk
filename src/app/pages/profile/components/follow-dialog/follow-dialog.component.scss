@@ -1,3 +1,4 @@
+
 .user-container {
   width: 450px;
   display: flex;
@@ -8,6 +9,19 @@
   background: #ffffff;
 }
 
+/* tắt scroll mặc định của mat-dialog-content */
+::ng-deep .mat-mdc-dialog-content {
+  overflow: hidden !important;
+
+}
+
+
+.list-scroll {
+  max-height: 400px; /* hoặc 60vh nếu muốn chiếm theo màn hình */
+  overflow-y: auto;
+  padding: 0 8px;
+  overflow-x: hidden;
+}
 
 .user-detail {
   display: flex;
@@ -36,11 +50,30 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 50%;
 }
 
 .button {
   flex: 0 0 auto;
 }
+
+
+/* default: chưa follow */
+.follow-btn {
+  border: var(--mat-sys-primary) 2px solid;
+
+  color: var(--mat-sys-primary);
+  font-weight: 600;
+  border-radius: 9999px;
+  padding: 6px 16px;
+}
+
+/* khi active: đã follow */
+.follow-btn.active {
+  background-color: var(--mat-sys-primary);
+  color: var(--mat-sys-background);
+}
+
 
 @media (max-width: 520px) {
   .user-container {
@@ -55,6 +88,3 @@
     width: 100%;
   }
 }
-
-
-

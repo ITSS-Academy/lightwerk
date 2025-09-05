@@ -70,9 +70,29 @@ export const getLatestVideos = createEffect(
       ofType(VideoActions.getLatestVideos),
       exhaustMap((action) =>
         videoService.getLatestVideos(action.page).pipe(
-          map((res) => VideoActions.getLatestVideosSuccess({videos: res.videos})),
+          map((res) => VideoActions.getLatestVideosSuccess({
+            videos: res.videos,
+            totalItems: res.pagination.totalCount
+          })),
           catchError((error: any) =>
             of(VideoActions.getLatestVideosFailure({error: error}))
+          )
+        )
+      )
+    );
+  },
+  {functional: true}
+);
+
+export const getVideoDetail = createEffect(
+  (actions$ = inject(Actions), videoService = inject(VideoService)) => {
+    return actions$.pipe(
+      ofType(VideoActions.getVideoDetail),
+      exhaustMap((action) =>
+        videoService.getVideoDetail(action.videoId).pipe(
+          map((video) => VideoActions.getVideoDetailSuccess({video})),
+          catchError((error: any) =>
+            of(VideoActions.getVideoDetailFailure({error: error}))
           )
         )
       )

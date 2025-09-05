@@ -35,7 +35,18 @@ export const getLatestVideos = createAction('[Video] Get Latest Videos', props<{
   page: number,
 }>());
 export const getLatestVideosSuccess = createAction('[Video] Get Latest Videos Success', props<
-  { videos: VideoModel[] }>());
+  { videos: VideoModel[], totalItems: number }>());
 export const getLatestVideosFailure = createAction('[Video] Get Latest Videos Failure', props<{
   error: any,
 }>());
+
+export const getVideoDetail = createAction('[Video] Get Video Detail', props<{
+  videoId: string
+}>())
+export const getVideoDetailSuccess = createAction('[Video] Get Video Detail Success', props<{
+  video: VideoModel
+}>())
+export const getVideoDetailFailure = createAction('[Video] Get Video Detail Failure', props<
+  { error: any }
+>())
+

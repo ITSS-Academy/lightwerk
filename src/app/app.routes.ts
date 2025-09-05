@@ -1,4 +1,5 @@
 import {Routes} from '@angular/router';
+import {searchRoutes} from './pages/search/search.routes';
 
 export const routes: Routes = [
   {
@@ -27,7 +28,21 @@ export const routes: Routes = [
   },
   {
     path: 'search',
-    loadComponent: () => import('./pages/search/search.component').then(m => m.SearchComponent),
+    loadComponent: () => import('./pages/search/pages/search-page/search-page.component').then(m => m.SearchPageComponent),
+    data: {
+      headerTitle: 'Search',
+    }
+  },
+  {
+    path: 'search/user',
+    loadComponent: () => import('./pages/search/pages/user-page/user-page.component').then(m => m.UserPageComponent),
+    data: {
+      headerTitle: 'Search',
+    }
+  },
+  {
+    path: 'search/video',
+    loadComponent: () => import('./pages/search/pages/video-page/video-page.component').then(m => m.VideoPageComponent),
     data: {
       headerTitle: 'Search',
     }

@@ -74,6 +74,8 @@ export class PlaylistComponent {
 
   openDialog(): void {
     const dialogRef = this.dialog.open(PlaylistDialogComponent, {
+      width: '700px',
+      height: '400px',
       data: {name: this.name, isPrivate: this.isPrivate},
     });
 

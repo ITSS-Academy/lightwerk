@@ -148,4 +148,41 @@ export class VideoService {
       })
     )
   }
+
+  getVideoDetail(videoId: string): Observable<VideoModel> {
+    return from(this.getAccessToken()).pipe(
+      mergeMap((data) => {
+        if (data.error || !data.data.session) {
+          return throwError(() => new Error('No access token'));
+        }
+        return this.http.get<VideoModel>(`${environment.api_base_url}/video/get-video/${videoId}`, {
+          headers: {
+            Authorization: `${data.data.session.access_token}`
+          }
+        });
+      })
+    )
+  }
+
+  getVideosByFollowedProfiles(page: number) {
+    return from(this.getAccessToken()).pipe(
+      mergeMap((data) => {
+        if (data.error || !data.data.session) {
+          return throwError(() => new Error('No access token'));
+        }
+        return this.http.get<{
+          videos: VideoModel[]
+          pagination: {
+            limit: number,
+            page: number,
+            totalCount: number
+          }
+        }>(`${environment.api_base_url}/video/following-videos?page=${page}&limit=10`, {
+          headers: {
+            Authorization: `${data.data.session.access_token}`
+          }
+        });
+      })
+    )
+  }
 }

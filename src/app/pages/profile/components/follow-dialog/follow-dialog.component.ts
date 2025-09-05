@@ -1,15 +1,14 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {MatDialogContent} from '@angular/material/dialog';
 import {MatTab, MatTabGroup} from '@angular/material/tabs';
 import {MatButton} from '@angular/material/button';
+import {Store} from '@ngrx/store';
+import {ProfileState} from '../../../../ngrx/states/profile.state';
+import {ProfileModel} from '../../../../models/profile.model';
+import {Observable, Subscription} from 'rxjs';
+import * as ProfileActions from '../../../../ngrx/actions/profile.actions';
 
-
-interface UserModel {
-  id: string;
-  username: string;
-  imageUrl: string;
-}
 
 @Component({
   selector: 'app-follow-dialog',
@@ -22,66 +21,68 @@ interface UserModel {
   templateUrl: './follow-dialog.component.html',
   styleUrl: './follow-dialog.component.scss'
 })
-export class FollowDialogComponent {
-  followers: UserModel[] = [
-    {
-      id: "1",
-      username: "User_1",
-      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
-    },
-    {
-      id: "2",
-      username: "User_2",
-      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
-    },
-    {
-      id: "3",
-      username: "User_3",
-      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
-    },
-    {
-      id: "4",
-      username: "User_4",
-      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
-    },
-    {
-      id: "5",
-      username: "User_5",
-      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
-    },
-  ];
+export class FollowDialogComponent implements OnInit, OnDestroy {
+  subscription: Subscription[] = [];
+  followersList$!: Observable<ProfileModel[]>;
+  followingList$!: Observable<ProfileModel[]>;
 
-  following: UserModel[] = [
-    {
-      id: "1",
-      username: "User_1",
-      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
-    },
-    {
-      id: "2",
-      username: "User_2",
-      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
-    },
-    {
-      id: "3",
-      username: "User_3",
-      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
-    },
-    {
-      id: "4",
-      username: "User_4",
-      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
-    },
-    {
-      id: "5",
-      username: "User_5",
-      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
-    },
-  ];
+  followers: ProfileModel[] = [];
+  following: ProfileModel[] = [];
 
   selectedIndex: number;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { selectedTab: number }) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { selectedTab: number },
+              private store: Store<{ profile: ProfileState }>
+  ) {
     this.selectedIndex = data?.selectedTab ?? 0;
+    this.followersList$ = this.store.select(state => state.profile.followersList);
+    this.followingList$ = this.store.select(state => state.profile.followingList);
+  }
+
+  ngOnInit() {
+    const userId = "123";
+
+
+    this.store.dispatch(ProfileActions.getFollowersList({userId}));
+
+    this.store.dispatch(ProfileActions.getFollowingList({userId}));
+
+
+    this.subscription.push(
+      this.followersList$.subscribe(list => {
+        this.followers = list.map(item => ({
+            ...item,
+            isFollowing: item.isFollowing
+          }),
+        )
+        console.log('Followers:', this.followers);
+      }),
+
+      this.followingList$.subscribe(list => {
+        this.following = list.map(item => ({
+            ...item,
+            isFollowing: item.isFollowing
+          }),
+        )
+        console.log('Following:', this.following);
+      })
+    );
+  }
+
+
+  ngOnDestroy() {
+    this.subscription.forEach(sub => sub.unsubscribe());
+  }
+
+  toggleFollow(item: ProfileModel) {
+    item.isFollowing = !item.isFollowing;
+  }
+
+  get followersCount(): number {
+    return this.followers.length;
+  }
+
+  get followingCount(): number {
+    return this.following.length;
   }
 }

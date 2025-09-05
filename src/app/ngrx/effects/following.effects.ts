@@ -1,28 +1,25 @@
-import * as FollowingActions from '../actions/following.actions';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {inject} from '@angular/core';
-import {FollowingService} from '../../services/following/following.service';
-import {exhaustMap, of} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
+import * as followingActions from '../actions/following.actions';
+import {catchError, exhaustMap, map, of} from 'rxjs';
+import {VideoService} from '../../services/video/video.service';
 
-export const getFollowingVideos = createEffect(
-  (
-    actions$: Actions = inject(Actions),
-    followingService: FollowingService = inject(FollowingService)
-  ) => {
+export const getVideosFollowedChannels = createEffect(
+  (actions$ = inject(Actions), videoService = inject(VideoService)) => {
     return actions$.pipe(
-      ofType(FollowingActions.getFollowingVideoList),
-      exhaustMap(() =>
-        followingService.getAllVideosFollowing().pipe(
-          map((res) =>
-            FollowingActions.getFollowingVideoListSuccess({videos: res.videos})
-          ),
+      ofType(followingActions.getVideosFollowedChannels),
+      exhaustMap(({page}) =>
+        videoService.getVideosByFollowedProfiles(page).pipe(
+          map((res) => followingActions.getVideosFollowedChannelsSuccess({
+            videos: res.videos,
+            totalItems: res.pagination.totalCount
+          })),
           catchError((error: any) =>
-            of(FollowingActions.getFollowingVideoListFailure({error}))
+            of(followingActions.getVideosFollowedChannelsFailure({error}))
           )
         )
       )
     );
   },
   {functional: true}
-);
+)

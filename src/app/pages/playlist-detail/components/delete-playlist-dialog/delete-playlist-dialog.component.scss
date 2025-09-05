@@ -1,0 +1,23 @@
+h2 {
+  font-size: 1.34rem;
+  text-align: center;
+}
+
+p {
+  text-align: center;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.no {
+  border: 1px solid #1e7e34;
+  background-color: white;
+}
+
+button {
+  width: 10rem;
+}

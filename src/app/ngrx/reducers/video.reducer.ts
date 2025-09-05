@@ -19,9 +19,16 @@ const initialState: VideoState = {
   isCreateInfoSuccess: false,
 
   latestVideos: [],
+  canGetMoreLatest: true,
+  isGettingFirstLatest: false,
   isGettingLatest: false,
   isGetLatestSuccess: false,
   isGetLatestError: null,
+
+  isGettingVideoDetail: false,
+  isGettingVideoDetailSuccess: false,
+  isGettingVideoDetailError: null,
+
 }
 
 export const videoReducer = createReducer(
@@ -111,15 +118,18 @@ export const videoReducer = createReducer(
     console.log(type);
     return {
       ...state,
+      isGettingFirstLatest: state.latestVideos.length === 0,
       isGettingLatest: true,
       isGetLatestError: null,
       isGetLatestSuccess: false,
     }
   }),
-  on(VideoActions.getLatestVideosSuccess, (state, {videos}) => {
+  on(VideoActions.getLatestVideosSuccess, (state, {videos, totalItems}) => {
     return {
       ...state,
-      latestVideos: videos,
+      canGetMoreLatest: state.latestVideos.length + videos.length < totalItems,
+      latestVideos: [...state.latestVideos, ...videos],
+      isGettingFirstLatest: false,
       isGettingLatest: false,
       isGetLatestError: null,
       isGetLatestSuccess: true,
@@ -131,6 +141,31 @@ export const videoReducer = createReducer(
       isGettingLatest: false,
       isGetLatestError: error,
       isGetLatestSuccess: false,
+    }
+  }),
+  on(VideoActions.getVideoDetail, (state, {videoId}) => {
+    return {
+      ...state,
+      isGettingVideoDetail: true,
+      isGettingVideoDetailSuccess: false,
+      isGettingVideoDetailError: null,
+    }
+  }),
+  on(VideoActions.getVideoDetailSuccess, (state, {video}) => {
+    return {
+      ...state,
+      videoDetail: video,
+      isGettingVideoDetail: false,
+      isGettingVideoDetailSuccess: true,
+      isGettingVideoDetailError: null,
+    }
+  }),
+  on(VideoActions.getVideoDetailFailure, (state, {error}) => {
+    return {
+      ...state,
+      isGettingVideoDetail: false,
+      isGettingVideoDetailSuccess: false,
+      isGettingVideoDetailError: error,
     }
   })
 );

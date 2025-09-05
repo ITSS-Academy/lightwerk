@@ -1,4 +1,12 @@
-import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  HostListener,
+  OnDestroy, OnInit,
+  ViewChild
+} from '@angular/core';
 import {
   MatCard, MatCardActions,
   MatCardContent,
@@ -12,177 +20,68 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatFormField, MatInput, MatLabel, MatSuffix} from '@angular/material/input';
 import {VideoComponent} from '../../../../components/video/video.component';
 import {convertToSupabaseUrl} from '../../../../utils/img-converter';
-import {NgStyle} from '@angular/common';
+import {AsyncPipe, NgStyle} from '@angular/common';
+import {Observable, Subscription} from 'rxjs';
+import {VideoModel} from '../../../../models/video.model';
+import {Store} from '@ngrx/store';
+import {VideoState} from '../../../../ngrx/states/video.state';
+import * as VideoActions from '../../../../ngrx/actions/video.actions';
+import {VideoListComponent} from '../../../../components/video-list/video-list.component';
+import {FollowingState} from '../../../../ngrx/states/following.state';
+import * as FollowingActions from '../../../../ngrx/actions/following.actions';
 
 @Component({
   selector: 'app-list',
   imports: [
-    MatButton,
     MatIconModule,
-    MatIconButton,
-    MatFormField,
-    MatInput,
-    MatLabel,
-    MatSuffix,
-    VideoComponent,
-    NgStyle
+    VideoListComponent,
+    AsyncPipe,
   ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'
 })
-export class ListComponent implements AfterViewInit {
-  isExpanded = false;
-  showCommentExpanded = false;
+export class ListComponent implements OnInit, OnDestroy {
+  isGettingVideosFollowedFirst$: Observable<boolean>
+  isGettingMore: boolean = false
+  canLoadMore: boolean = true
+  subscriptions: Subscription[] = []
+  cards!: VideoModel[]
 
-  @ViewChild('pageContainer', {static: true}) pageContainerRef!: ElementRef;
-  viewportWidth = 0;
-  viewportHeight = 0;
 
-  constructor(private cdr: ChangeDetectorRef) {
+  constructor(private store: Store<{
+    video: VideoState,
+    following: FollowingState
+  }>) {
+    this.isGettingVideosFollowedFirst$ = this.store.select(state => state.following.isGettingFirst)
+
   }
 
-
-  ngAfterViewInit() {
-    this.updateContainerSize();
-    this.cdr.detectChanges();
-  }
-
-  @HostListener('window:resize')
-  onResize() {
-    this.updateContainerSize();
-  }
-
-  updateContainerSize() {
-    if (this.pageContainerRef && this.pageContainerRef.nativeElement) {
-      const rect = this.pageContainerRef.nativeElement.getBoundingClientRect();
-      this.viewportWidth = rect.width;
-      this.viewportHeight = rect.height;
+  getMoreVideos() {
+    console.log('get more videos')
+    console.log(this.canLoadMore, this.isGettingMore)
+    if (this.canLoadMore && !this.isGettingMore) {
+      this.store.dispatch(FollowingActions.getVideosFollowedChannels({
+        page: Math.floor(this.cards.length / 10)
+      }))
     }
   }
 
-  getCardBoxStyle(card: { aspectRatio: string }) {
-    if (!this.viewportWidth || !this.viewportHeight) return {};
-    const [w, h] = card.aspectRatio.split(':').map(Number);
-    if (!w || !h) return {};
-    const videoRatio = w / h;
-    const viewportRatio = this.viewportWidth / this.viewportHeight;
-    let width, height;
-    if (videoRatio > viewportRatio) {
-      width = this.viewportWidth - (100 + 32 + 16);
-      height = width / videoRatio;
-    } else {
-      height = this.viewportHeight - ((100 + 32 + 16));
-      width = height * videoRatio;
-    }
-    width = Math.max(0, width);
-    height = Math.max(0, height);
-
-    return {
-      width: width + 'px',
-      height: height + 'px',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-      position: 'relative',
-      overflow: 'hidden',
-    };
+  ngOnInit() {
+    this.subscriptions.push(
+      this.store.select(state => state.following.videos).subscribe(videos => {
+        console.log(videos)
+        this.cards = videos
+      }),
+      this.store.select(state => state.following.canLoadMore).subscribe(canLoadMore => {
+        this.canLoadMore = canLoadMore
+      }),
+      this.store.select(state => state.following.isGettingVideosFollowedChannels).subscribe(isGettingMore => {
+        this.isGettingMore = isGettingMore
+      }),
+    )
   }
 
-
-  cards = [
-    {videoSrc: 'video1.mp4', title: 'Video 1', aspectRatio: '9:16'},
-  ];
-  comments = [
-    {
-      id: 1,
-      name: "Mạnh Mèo",
-      avatar: "https://i.pravatar.cc/40?img=1",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 28, 2022"
-    },
-    {
-      id: 2,
-      name: "Anh Bi",
-      avatar: "https://i.pravatar.cc/40?img=2",
-      text: "Simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
-      date: "July 28, 2022"
-    },
-    {
-      id: 3,
-      name: "Bé My",
-      avatar: "https://i.pravatar.cc/40?img=3",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 29, 2022"
-    },
-    {
-      id: 4,
-      name: "Chị Đen",
-      avatar: "https://i.pravatar.cc/40?img=4",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 30, 2022"
-    },
-    {
-      id: 5,
-      name: "Anh Lu Lu",
-      avatar: "https://i.pravatar.cc/40?img=5",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 28, 2022"
-    },
-    {
-      id: 6,
-      name: "Mạnh Mèo",
-      avatar: "https://i.pravatar.cc/40?img=1",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 28, 2022"
-    },
-    {
-      id: 7,
-      name: "Anh Bi",
-      avatar: "https://i.pravatar.cc/40?img=2",
-      text: "Simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
-      date: "July 28, 2022"
-    },
-    {
-      id: 8,
-      name: "Bé My",
-      avatar: "https://i.pravatar.cc/40?img=3",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 29, 2022"
-    },
-    {
-      id: 9,
-      name: "Chị Đen",
-      avatar: "https://i.pravatar.cc/40?img=4",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 30, 2022"
-    },
-    {
-      id: 10,
-      name: "Anh Lu Lu",
-      avatar: "https://i.pravatar.cc/40?img=5",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 28, 2022"
-    }
-  ];
-
-  videos = [
-    {
-      videoSrc: 'asdfas',
-      aspectRatio: '16:9',
-      profile: {}
-    },
-    {
-      videoSrc: 'asdfas',
-      aspectRatio: '9:16',
-      profile: {}
-    }
-  ]
-
-
-  toggleComments() {
-    this.showCommentExpanded = !this.showCommentExpanded;
+  ngOnDestroy() {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
-
-  protected readonly convertToSupabaseUrl = convertToSupabaseUrl;
 }

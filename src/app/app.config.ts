@@ -12,6 +12,8 @@ import {videoReducer} from './ngrx/reducers/video.reducer';
 import * as VideoEffects from './ngrx/effects/video.effects';
 import {categoryReducer} from './ngrx/reducers/category.reducer';
 import * as CategoryEffects from './ngrx/effects/category.effects';
+import {profileReducer} from './ngrx/reducers/profile.reducer';
+import * as ProfileEffects from './ngrx/effects/profile.effects';
 import {likeVideoReducer} from './ngrx/reducers/like-video.reducer';
 import * as LikeVideoEffects from './ngrx/effects/like-video.effects';
 import {followingReducer} from './ngrx/reducers/following.reducer';
@@ -25,10 +27,11 @@ export const appConfig: ApplicationConfig = {
         video: videoReducer,
         category: categoryReducer,
         likeVideo: likeVideoReducer,
-        following: followingReducer,
+        profile: profileReducer,
+        following: followingReducer
       },
     ),
-    provideEffects(AuthEffects, VideoEffects, CategoryEffects, LikeVideoEffects, FollowingEffects),
+    provideEffects(AuthEffects, VideoEffects, CategoryEffects, ProfileEffects, LikeVideoEffects, FollowingEffects),
     provideHttpClient()]
 };
 

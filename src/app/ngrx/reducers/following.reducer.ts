@@ -1,39 +1,48 @@
-import * as FollowingActions from '../actions/following.actions';
 import {createReducer, on} from '@ngrx/store';
+import * as FollowingActions from '../actions/following.actions';
 import {FollowingState} from '../states/following.state';
 
-export const initialFollowingState: FollowingState = {
-  FollowingVideoList: [],
-  isLoading: false,
-  isLoadSuccess: false,
+const initialState: FollowingState = {
+  videos: [],
+  canLoadMore: true,
+  isGettingFirst: false,
+  isGettingVideosFollowedChannels: false,
   error: null
-};
+}
 
 export const followingReducer = createReducer(
-  initialFollowingState,
-
-
-  on(FollowingActions.getFollowingVideoList, (state, {type}) => ({
-    ...state,
-    isLoading: true,
-    isLoadSuccess: false,
-    error: null
-  })),
-
-
-  on(FollowingActions.getFollowingVideoListSuccess, (state, {type, videos}) => ({
-    ...state,
-    isLoading: false,
-    isLoadSuccess: true,
-    FollowingVideoList: videos,
-    error: null
-  })),
-
-
-  on(FollowingActions.getFollowingVideoListFailure, (state, {type, error}) => ({
-    ...state,
-    isLoading: false,
-    isLoadSuccess: false,
-    error
-  }))
-);
+  initialState,
+  on(FollowingActions.getVideosFollowedChannels, (state, action) => {
+    console.log('action', action)
+    return {
+      ...state,
+      isGettingVideosFollowedChannels: true,
+      error: null,
+      isGettingFirst: state.videos.length === 0
+    }
+  }),
+  on(FollowingActions.getVideosFollowedChannelsSuccess, (state, action) => {
+    console.log('action', action)
+    console.log('state', state)
+    console.log(state.videos.length + action.videos.length < action.totalItems)
+    return {
+      ...state,
+      isGettingVideosFollowedChannels: false,
+      isGettingFirst: false,
+      canLoadMore: state.videos.length + action.videos.length < action.totalItems,
+      videos: [...state.videos, ...action.videos],
+      error: null
+    }
+  }),
+  on(FollowingActions.getVideosFollowedChannelsFailure, (state, action) => {
+    return {
+      ...state,
+      isGettingVideosFollowedChannels: false,
+      isGettingFirst: false,
+      error: action.error
+    }
+  }),
+  on(FollowingActions.clearFollowingState, (state) => {
+    return initialState;
+  })
+)
