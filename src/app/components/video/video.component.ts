@@ -1,4 +1,15 @@
-import {AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild, Renderer2} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  Renderer2,
+  Output,
+  EventEmitter
+} from '@angular/core';
 import Player from 'video.js/dist/types/player';
 import videojs from 'video.js';
 import {FormsModule} from '@angular/forms';
@@ -21,6 +32,7 @@ export class VideoComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('target', {static: true}) target!: ElementRef;
   @Input() videoSrc!: string;
   @Input() aspectRatio!: string
+  @Output() videoReady = new EventEmitter<void>();
   player!: Player;
   videoVisible = false;
   private previousScrollTop: number = 0;
@@ -62,6 +74,10 @@ export class VideoComponent implements OnInit, OnDestroy, AfterViewInit {
           enableVolumeScroll: false
         }
       }
+    });
+
+    this.player.on('canplay', () => {
+      this.videoReady.emit();
     });
 
     this.player.ready(() => {
