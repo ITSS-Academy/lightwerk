@@ -1,116 +1,80 @@
-import {HttpClient} from '@angular/common/http';
-import {Component, ViewChild, AfterViewInit, inject} from '@angular/core';
-import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
-import {MatSort, MatSortModule, SortDirection} from '@angular/material/sort';
-import {merge, Observable, of as observableOf} from 'rxjs';
-import {catchError, map, startWith, switchMap} from 'rxjs/operators';
-import {MatTableModule} from '@angular/material/table';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {DatePipe, DecimalPipe} from '@angular/common';
-import {environment} from '../../environments/environment.development';
-import {AuthState} from '../../ngrx/states/auth.state';
-import {Store} from '@ngrx/store';
-import {VideoModel} from '../../models/video.model';
-import {MatIconModule} from '@angular/material/icon';
-import {VideoComponent} from '../../components/video/video.component';
+import { HttpClient } from '@angular/common/http';
+import { Component, ViewChild, AfterViewInit, inject, OnInit, OnDestroy } from '@angular/core';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule, SortDirection } from '@angular/material/sort';
+import { merge, Observable, of as observableOf, Subscription } from 'rxjs';
+import { catchError, map, startWith, switchMap } from 'rxjs/operators';
+import { MatTableModule } from '@angular/material/table';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import {AsyncPipe, DatePipe, DecimalPipe, JsonPipe} from '@angular/common';
+import { environment } from '../../environments/environment.development';
+import { AuthState } from '../../ngrx/states/auth.state';
+import { Store } from '@ngrx/store';
+import { VideoModel } from '../../models/video.model';
+import { MatIconModule } from '@angular/material/icon';
+import { VideoComponent } from '../../components/video/video.component';
+import { HistoryState } from '../../ngrx/states/history.state';
+import * as HistoryActions from '../../ngrx/actions/history.actions';
+import {convertToSupabaseUrl} from '../../utils/img-converter';
+import {ThumbnailListComponent} from '../../components/thumbnail-list/thumbnail-list.component';
+import {provideNativeDateAdapter} from '@angular/material/core';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-history',
-  imports: [MatProgressSpinnerModule, MatIconModule, MatTableModule, MatSortModule, MatPaginatorModule, DatePipe, DecimalPipe, VideoComponent],
+  imports: [
+    MatProgressSpinnerModule,
+    MatIconModule,
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
+    ThumbnailListComponent,
+    MatFormFieldModule, MatDatepickerModule, FormsModule, ReactiveFormsModule, JsonPipe, AsyncPipe
+  ],
+  providers: [provideNativeDateAdapter()],
   templateUrl: './history.component.html',
-  styleUrl: './history.component.scss'
+  styleUrls: ['./history.component.scss']
 })
-export class HistoryComponent implements AfterViewInit {
-  private _httpClient = inject(HttpClient);
+export class HistoryComponent implements OnInit, OnDestroy {
+  subscription: Subscription[] = [];
 
-  displayedColumns: string[] = [
-    'title',
-    'description',
-    'categoryId',
-    'thumbnailPath',
-    'duration',
-    'viewCount',
-    'status',
-    'createdAt',
-    'isPublic',
-  ];
-  exampleDatabase!: ExampleHttpDatabase | null;
-  data: VideoModel[] = [];
-  resultsLength = 0;
-  isLoadingResults = true;
-  isRateLimitReached = false;
+  readonly range = new FormGroup({
+    start: new FormControl<Date | null>(null),
+    end: new FormControl<Date | null>(null),
+  });
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  // Observable để bind ra HTML
+  videos$!: Observable<VideoModel[]>;
+  isLoading$!: Observable<boolean>;
 
-  constructor(private store: Store<{ auth: AuthState }>) {
+  constructor(private store: Store<{ history: HistoryState }>) {
+    this.store.dispatch(HistoryActions.getAllHistory());
   }
 
-  ngAfterViewInit() {
-    this.exampleDatabase = new ExampleHttpDatabase(this._httpClient, this.store);
+  ngOnInit() {
+    // Giữ nguyên subscription log data
+    this.subscription.push(
+      this.store.select(state => state.history.historyVideos).subscribe(data => {
+        console.log(data.map(d => d.video));
+      })
+    );
 
-    // If the user changes the sort order, reset back to the first page.
-    this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
+    // Thêm Observable để binding ra thumbnail
+    this.videos$ = this.store.select(state => state.history.historyVideos).pipe(
+      map(historyVideos => historyVideos.map(h => h.video))
+    );
 
-    merge(this.sort.sortChange, this.paginator.page)
-      .pipe(
-        startWith({}),
-        switchMap(() => {
-          this.isLoadingResults = true;
-          return this.exampleDatabase!.getRepoIssues(
-            this.sort.active,
-            this.sort.direction,
-            this.paginator.pageIndex,
-          ).pipe(catchError(() => observableOf(null)));
-        }),
-        map(data => {
-          // Flip flag to show that loading has finished.
-          this.isLoadingResults = false;
-          this.isRateLimitReached = data === null;
-
-          if (data === null) {
-            return [];
-          }
-
-          // Only refresh the result length if there is new data. In case of rate
-          // limit errors, we do not want to reset the paginator to zero, as that
-          // would prevent users from re-triggering requests.
-          this.resultsLength = data.totalCount;
-          return data.videos;
-        }),
-      )
-      .subscribe(data => (this.data = data));
-  }
-}
-
-export interface GithubApi {
-  videos: VideoModel[];
-  totalCount: number;
-}
-
-
-/** An example database that the data source uses to retrieve data for the table. */
-export class ExampleHttpDatabase {
-  accessToken!: string
-
-  constructor(private _httpClient: HttpClient, private store: Store<{
-    auth: AuthState
-  }>) {
-    this.store.select((state: any) => state.auth).subscribe((authState) => {
-      this.accessToken = authState.auth.access_token || '';
-    });
+    // isLoading$ nếu có trong store, mặc định false nếu chưa có
+    this.isLoading$ = this.store.select(state => state.history.isLoading || false);
   }
 
-  getRepoIssues(sort: string, order: SortDirection, page: number): Observable<GithubApi> {
-    const href = `${environment.api_base_url}/video/user-videos/7bd0330f-b0e1-4ee7-aba0-fff2860e749d`;
-    console.log(sort, order, page)
-    const requestUrl = `${href}?sort=${sort}&orderBy=${order}&page=${page}&limit=10`;
-
-    return this._httpClient.get<GithubApi>(requestUrl, {
-      headers: {
-        'Authorization': this.accessToken
-      }
-    });
+  ngOnDestroy() {
+    this.subscription.forEach(sub => sub.unsubscribe());
   }
+
+  protected readonly convertToSupabaseUrl = convertToSupabaseUrl;
+
 
 }
