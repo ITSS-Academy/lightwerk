@@ -1,17 +1,15 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {MatCard, MatCardContent, MatCardImage} from '@angular/material/card';
 import {MatIcon} from '@angular/material/icon';
 import {Router} from '@angular/router';
 import {DatePipe} from '@angular/common';
+import {PlaylistModel} from '../../../../models/playlist.model';
+import {convertToSupabaseUrl} from '../../../../utils/img-converter';
+import {Observable, Subscription} from 'rxjs';
+import {Store} from '@ngrx/store';
+import {PlaylistState} from '../../../../ngrx/states/playlist.state';
+import {filter} from 'rxjs/operators';
 
-interface PlayListModel {
-  id: string;
-  image: string;
-  name: string;
-  videoCount: number;
-  isPrivate: boolean;
-  date: Date;
-}
 
 @Component({
   selector: 'app-playlist-card',
@@ -26,14 +24,17 @@ interface PlayListModel {
   styleUrl: './playlist-card.component.scss'
 })
 export class PlaylistCardComponent {
-  constructor(private router: Router) {
+
+  constructor(private router: Router,) {
 
   }
+  
 
-  @Input() playlist!: PlayListModel
+  @Input() playlist!: PlaylistModel
 
   navigateToPlaylistDetail(id: string): void {
     this.router.navigate(['/playlist', id]).then();
   }
 
+  protected readonly convertToSupabaseUrl = convertToSupabaseUrl;
 }
