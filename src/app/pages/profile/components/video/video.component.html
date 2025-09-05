@@ -1,6 +1,6 @@
 <div class="video-container">
   <div class="sort-container">
-    <mat-button-toggle-group name="Sort" aria-label="sort" [value]="sortValue">
+    <mat-button-toggle-group name="Sort" aria-label="sort" [value]="sortValue" (change)="onSortChange($event)">
       <mat-button-toggle value="desc">Latest</mat-button-toggle>
       <mat-button-toggle value="asc">Oldest</mat-button-toggle>
     </mat-button-toggle-group>

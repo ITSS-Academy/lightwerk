@@ -1,4 +1,4 @@
-import {Component, Inject, inject} from '@angular/core';
+import {Component, Inject, inject, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {
   MAT_DIALOG_DATA,
@@ -12,6 +12,11 @@ import {PlaylistComponent} from '../playlist/playlist.component';
 import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {MatIcon} from '@angular/material/icon';
 import {MatRadioButton, MatRadioGroup} from '@angular/material/radio';
+import {Subscription} from 'rxjs';
+import {Store} from '@ngrx/store';
+import {VideoState} from '../../../../ngrx/states/video.state';
+import {PlaylistState} from '../../../../ngrx/states/playlist.state';
+import * as PlaylistActions from '../../../../ngrx/actions/playlist.actions';
 
 @Component({
   selector: 'app-playlist-dialog',
@@ -30,25 +35,42 @@ import {MatRadioButton, MatRadioGroup} from '@angular/material/radio';
   templateUrl: './playlist-dialog.component.html',
   styleUrl: './playlist-dialog.component.scss'
 })
-export class PlaylistDialogComponent {
+export class PlaylistDialogComponent implements OnInit, OnDestroy {
   thumbnail: string = '';
-  selectedFile: File | null = null
+  selectedFile: File | null = null;
   readonly dialogRef = inject(MatDialogRef<PlaylistComponent>);
   form: FormGroup;
-  nameCount: number = 0
+  nameCount: number = 0;
+  subscriptions: Subscription[] = [];
 
-
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private store: Store<{ playlist: PlaylistState }>
+  ) {
+    // ✅ Khởi tạo form
     this.form = new FormGroup({
       name: new FormControl(data?.name || '', [
         Validators.required,
-        Validators.pattern(/^[a-zA-Z0-9.]+$/)]),
-      description: new FormControl(data?.name || ''),
-
-      isPrivate: new FormControl('true')
+        Validators.pattern(/^[a-zA-Z0-9.]+$/)
+      ]),
+      isPrivate: new FormControl(data?.isPrivate ?? true)
     });
+
     this.thumbnail = data?.thumbnail || '';
-    this.nameCount = this.form.get('nameCount')?.value?.length || 0;
+    this.nameCount = this.form.get('name')?.value?.length || 0;
+  }
+
+  ngOnInit(): void {
+
+    this.subscriptions.push(
+      this.form.get('name')!.valueChanges.subscribe(() => this.updateNameCount()),
+      this.store.select(state => state.playlist).subscribe(playlistState => {
+        if ((playlistState).isCreateSuccess) {
+          console.log("Playlist created:", playlistState.playlists);
+          this.dialogRef.close();
+        }
+      })
+    );
   }
 
   onNoClick(): void {
@@ -56,15 +78,23 @@ export class PlaylistDialogComponent {
   }
 
   updateNameCount(): void {
-    this.nameCount = this.form.get('nameCount')?.value?.length || 0;
+    this.nameCount = this.form.get('name')?.value?.length || 0;
   }
 
-  onSave() {
-    if (!this.form.invalid) {
-      this.dialogRef.close({
+  onSave(): void {
+    if (this.form.valid) {
+      const playlistData = {
         name: this.form.get('name')?.value,
         isPrivate: this.form.get('isPrivate')?.value,
-      });
+        thumbnail: this.selectedFile ?? this.thumbnail
+      };
+
+
+      this.store.dispatch(PlaylistActions.createPlaylist({
+        title: playlistData.name,
+        isPublic: !playlistData.isPrivate,
+        thumbnail: this.selectedFile ?? undefined
+      }));
     }
   }
 
@@ -80,13 +110,8 @@ export class PlaylistDialogComponent {
       if (this.isValidImageFile(file)) {
         this.selectedFile = file;
         this.previewImage(file);
-        console.log(this.selectedFile);
-        this.form.get('profileImage')?.setValue(file);
-        this.form.get('profileImage')?.updateValueAndValidity();
       } else {
-        alert('Please select a valid image file (JPG, PNG, GIF)');
-        this.form.get('profileImage')?.setValue(null);
-        this.form.get('profileImage')?.updateValueAndValidity();
+        alert('Please select a valid image file (JPG, PNG, GIF, <5MB)');
       }
     }
   }
@@ -103,5 +128,10 @@ export class PlaylistDialogComponent {
       this.thumbnail = e.target?.result as string;
     };
     reader.readAsDataURL(file);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(s => s.unsubscribe());
+    this.store.dispatch(PlaylistActions.clearCreatePlaylistState());
   }
 }

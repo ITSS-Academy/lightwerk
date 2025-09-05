@@ -8,7 +8,7 @@
 
 <div class="video-container">
   <div class="video-grid">
-    @for (item of playlistCollection; track item.id) {
+    @for (item of (isPlayList$ | async); track item.id) {
       <app-playlist-card [playlist]="item"></app-playlist-card>
     }
   </div>

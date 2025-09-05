@@ -1,12 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Input} from '@angular/core';
 import {MatButtonToggle, MatButtonToggleGroup} from '@angular/material/button-toggle';
 import * as ProfileActions from '../../../../ngrx/actions/profile.actions'
 import {Store} from '@ngrx/store';
 import {Observable, Subscription} from 'rxjs';
 import {VideoModel} from '../../../../models/video.model';
-import {ProfileService} from '../../../../services/profile/profile.service';
 import {ProfileState} from '../../../../ngrx/states/profile.state';
-import {ActivatedRoute} from '@angular/router';
 import {VideoCardComponent} from '../video-card/video-card.component';
 import {AsyncPipe} from '@angular/common';
 
@@ -23,24 +21,18 @@ import {AsyncPipe} from '@angular/common';
   styleUrl: './video.component.scss'
 })
 export class VideoComponent implements OnInit {
+  @Input() profileId!: string;
   sortValue = 'desc';
   videoList$!: Observable<VideoModel[]>;
   subscription: Subscription[] = [];
 
   constructor(
-    private profileService: ProfileService,
-    private activatedRoute: ActivatedRoute,
     private store: Store<{
       profile: ProfileState
     }>) {
-    const profileId = this.activatedRoute.snapshot.params['profileId'];
 
     this.videoList$ = this.store.select('profile', 'userVideos');
-    this.store.dispatch(ProfileActions.getUserVideos({
-      profileId: profileId,
-      orderBy: 'asc',
-      page: 0
-    }));
+
   }
 
   ngOnInit() {
@@ -55,5 +47,17 @@ export class VideoComponent implements OnInit {
     )
   }
 
+  onSortChange(event: any) {
+    const value = event.value;
+    this.sortValue = value;
+    // Clear video state before sorting
+    this.store.dispatch(ProfileActions.clearUserVideos());
+    // Fetch videos with new sort order
+    this.store.dispatch(ProfileActions.getUserVideos({
+      profileId: this.profileId,
+      orderBy: value,
+      page: 0
+    }));
+  }
 
 }

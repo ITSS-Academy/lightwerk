@@ -21,6 +21,8 @@ export interface ProfileState {
   isLoadingFollowersList: boolean,
   errorLoadingFollowersList: any,
   isGetSuccessFollowersList: boolean,
+  canLoadMore: boolean;
+  totalCount: number;
 }
 
 
