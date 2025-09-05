@@ -1,5 +1,5 @@
-@if (!(isGettingLatestVideos$ | async)) {
-  <app-video-list [cards]="cards"></app-video-list>
+@if (!(isGettingVideosFollowedFirst$ | async)) {
+  <app-video-list [cards]="cards" (getMoreEvent)="getMoreVideos()"></app-video-list>
 }
 
 <!--<div style="width: 100%; height: 100%; background-color: #0c0f0c"></div>-->

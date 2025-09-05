@@ -106,6 +106,8 @@ export class VideoListComponent implements AfterViewInit, OnDestroy {
 
   observer!: IntersectionObserver
 
+  videoReadyStates: boolean[] = [];
+
   constructor(private cdr: ChangeDetectorRef) {
   }
 
@@ -116,7 +118,8 @@ export class VideoListComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.cdr.detectChanges();
-
+    // Initialize videoReadyStates for all cards
+    this.videoReadyStates = this.cards ? Array(this.cards.length).fill(false) : [];
   }
 
   @HostListener('window:resize')
@@ -304,4 +307,9 @@ export class VideoListComponent implements AfterViewInit, OnDestroy {
 
   protected readonly convertToSupabaseUrl = convertToSupabaseUrl;
 
+  onVideoReady(index: number) {
+    console.log('Video at index', index, 'is ready');
+    this.videoReadyStates[index] = true;
+    this.cdr.detectChanges();
+  }
 }
