@@ -12,12 +12,13 @@ import {MatDialogRef} from '@angular/material/dialog';
 })
 export class DeletePlaylistDialogComponent {
   readonly dialogRef = inject(MatDialogRef<DeletePlaylistDialogComponent>);
+
   onNoClick(): void {
     this.dialogRef.close();
   }
 
   onYesClick(): void {
     this.dialogRef.close();
-    //TODO: Implement delete functionality
+
   }
 }

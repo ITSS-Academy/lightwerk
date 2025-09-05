@@ -1,11 +1,13 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatIcon} from '@angular/material/icon';
 import {MatDialogRef} from '@angular/material/dialog';
+import {MatSlideToggle} from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-make-public-dialog',
   imports: [
-    MatIcon
+    MatIcon,
+    MatSlideToggle
   ],
   templateUrl: './make-public-dialog.component.html',
   styleUrl: './make-public-dialog.component.scss'
@@ -20,7 +22,6 @@ export class MakePublicDialogComponent {
   togglePrivacy() {
     this.isPrivate = !this.isPrivate;
     this.isPrivateChange.emit(this.isPrivate);
-    this.dialogRef.close(this.isPrivate); // Close dialog and return new value
   }
 
 

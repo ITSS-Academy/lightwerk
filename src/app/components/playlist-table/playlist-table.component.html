@@ -6,21 +6,32 @@
       <ng-container matColumnDef="position" sticky>
         <mat-header-cell *matHeaderCellDef></mat-header-cell>
         <mat-cell *matCellDef="let video">
-          <span class="drag-cursor"></span>
+          <span class="drag-cursor">{{ video.id }}</span>
           <img [src]="video.thumbnail" alt="thumbnail" width="200px" height="150px" style="padding: 10px">
           <div class="info-detail">
             <span>{{ video.title }}</span>
             <span>{{ video.user }}</span>
+            <span>{{ video.desc }}</span>
           </div>
-        </mat-cell>
-      </ng-container>
-    </div>
-
-    <div class="trash">
-      <ng-container matColumnDef="title">
-        <mat-header-cell *matHeaderCellDef></mat-header-cell>
-        <mat-cell *matCellDef="let video">
-          <mat-icon>delete</mat-icon>
+          <div class="action">
+            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item>
+                <mat-icon>bookmark</mat-icon>
+                <span>Playlist</span>
+              </button>
+              <button mat-menu-item (click)="openSnackBar()">
+                <mat-icon>schedule</mat-icon>
+                <span>Watch Later</span>
+              </button>
+              <button mat-menu-item (click)="deleteVideo(video.id)">
+                <mat-icon>delete</mat-icon>
+                <span>Delete</span>
+              </button>
+            </mat-menu>
+          </div>
         </mat-cell>
       </ng-container>
     </div>

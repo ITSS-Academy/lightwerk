@@ -1,11 +1,12 @@
 .container {
-  max-width: 800px;
+  max-width: 600px;
   width: 100%;
   margin: 32px auto;
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   display: flex;
+  gap: 16px;
 }
 
 .mat-table {
@@ -53,6 +54,7 @@
   align-items: flex-start;
   justify-content: center;
   margin-left: 16px;
+  max-width: 220px; // Prevent shrinking too much
 }
 
 .info-detail span:first-child {
@@ -60,6 +62,10 @@
   font-weight: 600;
   color: #222;
   margin-bottom: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
 }
 
 .info-detail span:last-child {
@@ -88,12 +94,11 @@
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
-.trash mat-cell, .trash mat-header-cell {
-  text-align: right;
-  justify-content: flex-end;
+.action {
+  margin-left: auto;
   display: flex;
   align-items: center;
-  padding-right: 24px;
+  justify-content: center;
 }
 
 @media (max-width: 600px) {
@@ -109,3 +114,5 @@
     font-size: 1rem;
   }
 }
+
+
