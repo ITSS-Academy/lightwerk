@@ -14,8 +14,7 @@
             >
 
               <div style="display: flex; flex-direction: row; gap: 8px; width: fit-content; height: fit-content">
-                {{ videoReadyStates[currentVideoIndex] }}
-                {{ currentVideoIndex }}
+               
 
                 <div class="card" [ngStyle]="getCardBoxStyle(card)">
                   <div class="card-media">
@@ -24,14 +23,14 @@
                       [alt]="card.title || 'Video thumbnail'"
                       style="width:100%;height:100%;object-fit:cover;"
                       [ngStyle]="{display: videoReadyStates[currentVideoIndex] ? 'none' : 'block'}"/>
-                    @if ($index === currentVideoIndex) {
-
+                    @if (Math.abs($index - currentVideoIndex) <= 2 && $index >= currentVideoIndex - 1) {
                       <app-video
+                        [videoId]="card.id"
                         aspectRatio="{{card.aspectRatio}}"
                         videoSrc="{{convertToSupabaseUrl(`${card.id}/master.m3u8`,'video')}}"
                         (videoReady)="onVideoReady($index)"
-                        [ngStyle]="{display: videoReadyStates[currentVideoIndex] ? 'block' : 'none'}"></app-video>
-
+                        [ngStyle]="{display: videoReadyStates[currentVideoIndex] ? 'block' : 'none'}">
+                      </app-video>
                     } @else {
                       <img
                         [src]="convertToSupabaseUrl(card.thumbnailPath, 'thumbnail')"

@@ -32,12 +32,13 @@ export class VideoComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('target', {static: true}) target!: ElementRef;
   @Input() videoSrc!: string;
   @Input() aspectRatio!: string
+  @Input() videoId!: string;
+  @Input() thumbnailPath!: string;
   @Output() videoReady = new EventEmitter<void>();
   player!: Player;
   videoVisible = false;
   private previousScrollTop: number = 0;
   isExpanded = false;
-
 
   items: Array<{
     videoSrc: string;
@@ -82,6 +83,37 @@ export class VideoComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.player.ready(() => {
       // this.player.play();
+
+      const dock = document.createElement('div');
+      dock.style.position = 'absolute';
+      dock.style.top = '10px';
+      dock.style.left = '0';
+      dock.style.width = '100%';
+      dock.style.display = 'flex';
+      dock.style.gap = '8px';
+      dock.className = 'vjs-top-left-dock';
+      this.player.el().appendChild(dock);
+
+      // Lấy playToggle và volumePanel từ controlBar
+      const playBtn = this.player!.getChild('ControlBar')!.getChild('PlayToggle')!.el();
+      const volumePanel = this.player!.getChild('ControlBar')!.getChild('VolumePanel')!.el() as HTMLElement;
+
+      volumePanel.setAttribute('tabindex', '-1'); // cho phép .focus()
+
+      volumePanel.addEventListener('pointerenter', (e) => {
+        if (e.pointerType === 'mouse') volumePanel.focus({preventScroll: true});
+      });
+      volumePanel.addEventListener('pointerleave', () => volumePanel.blur());
+
+      // Gắn vào dock
+      dock.appendChild(playBtn);
+      dock.appendChild(volumePanel);
+
+      // Chuyển các nút từ controlBar sang dock
+      // dock.appendChild(this.player.controlBar.playToggle.el());
+      // dock.appendChild(player.controlBar.volumePanel.el());
+
+
     })
     // Tùy chỉnh tốc độ mặc định
     this.player.playbackRate(1.0);
@@ -91,7 +123,7 @@ export class VideoComponent implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit(): void {
     this.player.ready(() => {
       if (this.player) {
-        this.adjustControlButtons(false)
+        // this.adjustControlButtons(false)
       }
     })
   }

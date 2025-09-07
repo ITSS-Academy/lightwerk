@@ -80,13 +80,13 @@ export class VideoListComponent implements AfterViewInit, OnDestroy {
           console.log('Entering fullscreen mode', this.previousScrollTop);
           containerEl.style.scrollSnapType = 'none';
           this.isFullscreen = true;
-          this.videoComponent.adjustControlButtons(true)
+          // this.videoComponent.adjustControlButtons(true)
         } else {
           containerEl.style.scrollSnapType = 'y mandatory';
           containerEl.scrollTop = this.previousScrollTop;
           console.log('Exiting fullscreen mode', this.previousScrollTop);
           this.isFullscreen = false;
-          this.videoComponent.adjustControlButtons(false)
+          // this.videoComponent.adjustControlButtons(false)
         }
       });
 
@@ -312,4 +312,6 @@ export class VideoListComponent implements AfterViewInit, OnDestroy {
     this.videoReadyStates[index] = true;
     this.cdr.detectChanges();
   }
+
+  protected readonly Math = Math;
 }

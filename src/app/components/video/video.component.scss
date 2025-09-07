@@ -10,6 +10,7 @@ $border-radius: 0 !default;
 
 ::ng-deep.video-js.vjs-lime {
   border-radius: $border-radius;
+  background-color: var(--mat-sys-surface);
 
   .vjs-big-play-button {
     width: 2em;
@@ -67,7 +68,7 @@ $border-radius: 0 !default;
   }
 
   .vjs-control-bar > *:not(.vjs-volume-panel) {
-    //display: none !important;
+    display: none !important;
   }
 
   button.vjs-icon-cog {
@@ -158,4 +159,144 @@ $border-radius: 0 !default;
       rgba(0, 0, 0, 0.6) 50%, /* giữa tối */
       rgba(0, 0, 0, 0.1) 100% /* dưới trong suốt */
   );
+}
+
+
+// custom bar
+::ng-deep .vjs-top-left-dock .vjs-play-control {
+  width: 50px; /* tăng size nút */
+  height: 50px;
+  border-radius: 50%; /* hình tròn */
+  background: rgba(0, 0, 0, 0.6); /* nền mờ */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* icon play bên trong */
+::ng-deep.vjs-top-left-dock .vjs-play-control .vjs-icon-placeholder:before {
+  font-size: 2em; /* icon to hơn */
+  line-height: 1;
+  color: #fff; /* màu trắng */
+  position: relative;
+}
+
+/* Nếu muốn hiệu ứng hover giống YouTube */
+::ng-deep.vjs-top-left-dock .vjs-play-control:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+
+/* Khi hover panel bung ra để chỉnh âm lượng */
+::ng-deep.vjs-top-left-dock .vjs-volume-panel:hover {
+  width: 100%; /* đủ rộng để thấy thanh trượt */
+  border-radius: 25px; /* bo tròn hơn khi kéo dài */
+}
+
+/* Style cho nút mute (icon loa) */
+::ng-deep.vjs-top-left-dock .vjs-mute-control {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  //background: transparent; /* kế thừa nền từ panel */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.6); /* nền mờ */
+  //transition: width .35s ease, border-radius .35s ease, background .35s ease;
+}
+
+/* Icon loa bên trong */
+::ng-deep.vjs-top-left-dock .vjs-mute-control .vjs-icon-placeholder:before {
+  font-size: 2em; /* icon to hơn */
+  color: #fff; /* trắng */
+  line-height: 1;
+  position: relative;
+}
+
+/* Hover icon loa */
+::ng-deep.vjs-top-left-dock .vjs-volume-panel:hover .vjs-mute-control {
+  //background: rgba(0, 0, 0, 0.8);
+  border-radius: 50% 0 0 50%;
+  //transition: width .35s ease, border-radius .35s ease, background .35s ease;
+}
+
+::ng-deep.vjs-top-left-dock .vjs-volume-panel {
+  align-items: center;
+}
+
+
+::ng-deep.vjs-top-left-dock .vjs-volume-panel {
+  width: fit-content;
+  /* background: rgba(0, 0, 0, 0.6); */
+  height: 50px;
+  outline: none;
+}
+
+//::ng-deep.vjs-volume-panel:hover .vjs-volume-control {
+//  width: 100px !important;
+//  padding-right: 10px !important;
+//  background: rgba(0, 0, 0, 0.6) !important;
+//  height: 100% !important;
+//  border-radius: 0 37% 30% 0;
+//}
+
+::ng-deep .vjs-volume-bar {
+  width: 90% !important;
+  height: 0.3em;
+}
+
+
+::ng-deep .video-js .vjs-volume-bar {
+  margin: auto auto auto 0
+}
+
+::ng-deep .video-js .vjs-volume-panel .vjs-volume-control.vjs-volume-horizontal {
+  transition: width .35s ease,
+}
+
+
+/* Trạng thái mặc định (thu gọn) + transition mượt */
+:host ::ng-deep .vjs-top-left-dock .vjs-volume-control {
+  width: 0 !important;
+  padding-right: 0 !important;
+  background: transparent !important;
+  height: 100% !important;
+  border-radius: 0;
+  overflow: visible;
+
+  /* hiệu ứng */
+  transform-origin: left center;
+  transform: scaleX(0);
+  opacity: 0;
+  transition: width .35s ease,
+  padding-right .35s ease,
+  background .25s ease,
+  border-radius .35s ease,
+  transform .35s ease,
+  opacity .25s ease;
+}
+
+/* Khi .vjs-volume-panel được FOCUS (hoặc con bên trong được focus) */
+:host ::ng-deep .vjs-top-left-dock .vjs-volume-panel:focus .vjs-volume-control,
+:host ::ng-deep .vjs-top-left-dock .vjs-volume-panel:focus-within .vjs-volume-control {
+  width: 100px !important;
+  padding-right: 10px !important;
+  background: rgba(0, 0, 0, 0.6) !important;
+  height: 100% !important;
+  border-radius: 0 25px 25px 0;
+
+  transform: scaleX(1);
+  opacity: 1;
+}
+
+/* (Tùy chọn) khi panel focus, đổi nền + bo góc cho nút loa cho đồng bộ */
+:host ::ng-deep .vjs-top-left-dock .vjs-volume-panel:focus .vjs-mute-control,
+:host ::ng-deep .vjs-top-left-dock .vjs-volume-panel:focus-within .vjs-mute-control {
+  //background: rgba(0, 0, 0, 0.8);
+  border-radius: 50% 0 0 50%;
 }

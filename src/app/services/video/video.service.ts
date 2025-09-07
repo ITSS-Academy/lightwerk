@@ -130,9 +130,12 @@ export class VideoService {
   getLatestVideos(page: number,) {
     return from(this.getAccessToken()).pipe(
       mergeMap((data) => {
-        if (data.error || !data.data.session) {
-          return throwError(() => new Error('No access token'));
+        const headers = new Headers();
+
+        if (!data.error && data.data.session) {
+          headers.append('Authorization', `${data.data.session.access_token}`);
         }
+
         return this.http.get<{
           videos: VideoModel[]
           pagination: {
@@ -141,9 +144,7 @@ export class VideoService {
             totalCount: number
           }
         }>(`${environment.api_base_url}/video/latest?page=${page}&limit=10`, {
-          headers: {
-            Authorization: `${data.data.session.access_token}`
-          }
+          headers: headers as any
         });
       })
     )
