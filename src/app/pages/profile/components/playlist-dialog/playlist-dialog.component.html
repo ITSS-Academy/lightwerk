@@ -1,9 +1,9 @@
 <div class="playlist-dialog">
-
   <div class="dialog-header">
     <h2 mat-dialog-title>New playlist</h2>
     <mat-icon (click)="onNoClick()">close</mat-icon>
   </div>
+
   <mat-dialog-content>
     <form [formGroup]="form" class="dialog-form">
       <div class="dialog-detail">
@@ -11,28 +11,24 @@
           <mat-form-field appearance="outline">
             <input matInput placeholder="Name" formControlName="name"/>
           </mat-form-field>
+
           @if (form.get("name")?.invalid && form.get("name")?.touched) {
+            <div class="error-text">Name is required and must be alphanumeric with dot only.</div>
           }
         </div>
-        <div class="dialog-header-desc">
-          <mat-form-field appearance="outline">
-            <input class="desc" matInput placeholder="Description" formControlName="description"/>
-          </mat-form-field>
-        </div>
+
         <div class="dialog-header-visibility">
           <mat-radio-group formControlName="isPrivate" aria-label="Select an option">
-            <mat-radio-button value=true>Private</mat-radio-button>
-            <mat-radio-button value=false>Public</mat-radio-button>
+            <mat-radio-button [value]="true">Private</mat-radio-button>
+            <mat-radio-button [value]="false">Public</mat-radio-button>
           </mat-radio-group>
         </div>
       </div>
+
       <div class="thumbnail">
         @if (!thumbnail) {
           <div class="button" (click)="onEditPhotoClick()">
-            <button mat-flat-button class="add">
-              <mat-icon>add_circle</mat-icon>
-              Add Thumbnail
-            </button>
+            <button mat-flat-button class="add">Add Thumbnail</button>
           </div>
           <input
             type="file"
@@ -57,16 +53,12 @@
             accept="image/*"
             style="display: none;"
             (change)="onFileSelected($event)">
-
         }
       </div>
-
     </form>
-
-
   </mat-dialog-content>
+
   <mat-dialog-actions>
     <button mat-button (click)="onSave()">Create</button>
   </mat-dialog-actions>
-
 </div>

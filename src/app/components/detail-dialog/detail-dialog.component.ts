@@ -39,6 +39,9 @@ export class DetailDialogComponent implements AfterViewInit, OnInit, OnDestroy {
   isFollowing = false
   subscriptions: Subscription[] = [];
   videoId: string = ''
+  title: string = ''
+  description: string = ''
+  username: string = ''
 
   videoDetail$: Observable<VideoModel>
 
@@ -67,6 +70,9 @@ export class DetailDialogComponent implements AfterViewInit, OnInit, OnDestroy {
         if (detail) {
           console.log(detail.id)
           this.videoId = detail.id;
+          this.title = detail.title || '';
+          this.description = detail.description || '';
+          this.username = detail.profile?.username || '';
 
         }
       })
@@ -78,6 +84,7 @@ export class DetailDialogComponent implements AfterViewInit, OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscriptions.forEach(sub => sub.unsubscribe());
+    this.store.dispatch(VideoActions.clearVideoDetail())
   }
 
   ngAfterViewInit() {

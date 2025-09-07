@@ -1,16 +1,5 @@
 /* Grid container */
-.video-grid {
-  display: grid;
-  gap: 2%;
-  //padding: 2%;
-  background: var(--mat-sys-background);
-  max-width: 1200px;
-  margin: 0 auto;
-  justify-content: center;
 
-  // 6 card mặc định, co giãn nhưng giới hạn min/max
-  grid-template-columns: repeat(auto-fit, minmax(clamp(150px, 16%, 220px), 1fr));
-}
 
 /* Video card */
 .video-card {

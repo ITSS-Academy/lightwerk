@@ -1,19 +1,18 @@
 /* Grid container */
 .video-grid {
   display: grid;
-  gap: 2%;
-  padding: 2%;
-  background: var(--mat-sys-background);
+  grid-template-columns: repeat(auto-fill, minmax(clamp(150px,16%, 220px), 1fr));
+  gap: 1%; /* khoảng cách giữa card */
+  justify-content: start; /* dồn trái, không căn đều */
+  padding: 1%;
   max-width: 1200px;
   margin: 0 auto;
-  justify-content: center;
-
-  // 6 card mặc định, co giãn nhưng giới hạn min/max
-  grid-template-columns: repeat(auto-fit, minmax(clamp(150px, 16%, 220px), 1fr));
 }
 
-/* Video card */
 .video-card {
+  min-width: 150px;  /* để responsive không bị quá bé */
+  max-width: 220px;  /* hạn chế to quá */
+  width: 100%;
   display: flex;
   flex-direction: column;
   cursor: pointer;

@@ -1,11 +1,11 @@
 <mat-card class="video-card" appearance="outlined">
   <img mat-card-image
-       src="{{video.image}}"
+       src="{{convertToSupabaseUrl(video.thumbnailPath, 'thumbnail')}}"
        alt="Video Placeholder Image">
   <mat-card-content>
     <span class="title">{{ video.title }}</span>
     <div class="video-details">
-      <span class="date">{{ video.date | date }}</span>
+      <span class="date">{{ video.createdAt | date }}</span>
       <mat-icon (click)="openDialog()">delete</mat-icon>
     </div>
   </mat-card-content>
