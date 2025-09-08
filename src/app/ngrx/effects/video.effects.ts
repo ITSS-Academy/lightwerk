@@ -151,7 +151,7 @@ export const incrementViewCount = createEffect(
       switchMap((action) =>
         from(likeVideoService.getLikeCountAndIsLike(action.videoId)).pipe(
           map((res) => VideoActions.getLikeCountSuccess({
-            likesCount: res.likeCount,
+            likesCount: res.likeCount!,
             isLiked: res.isLike
           })),
           catchError((error: any) =>

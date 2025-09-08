@@ -145,6 +145,7 @@ export class VideoListComponent implements AfterViewInit, OnInit, OnDestroy {
       }),
       this.store.select(state => state.likeVideo.isAddSuccess).subscribe(likeVideo => {
         if (likeVideo) {
+          console.log(this.currentVideoIndex)
           this.store.dispatch(VideoActions.getLikeCount({videoId: this.cards && this.cards.length > 0 ? this.cards[this.currentVideoIndex].id : ''}))
         }
       }),
@@ -154,6 +155,7 @@ export class VideoListComponent implements AfterViewInit, OnInit, OnDestroy {
       }),
       this.store.select(state => state.likeVideo.isDeleteSuccess).subscribe(unlikeVideo => {
         if (unlikeVideo) {
+          console.log(this.currentVideoIndex)
           this.store.dispatch(VideoActions.getLikeCount({videoId: this.cards && this.cards.length > 0 ? this.cards[this.currentVideoIndex].id : ''}))
         }
       }),

@@ -91,13 +91,21 @@ export class LikeVideoService {
 
     const {data, error} = await supabase
       .from('like_video')
-      .select('*', {count: 'exact'})
+      .select('*')
       .eq('videoId', videoId)
       .eq('profileId', profileId);
     if (error) {
       throw new Error('Failed to get like count');
     }
-    return {likeCount: data?.length || 0, isLike: data?.length > 0};
+
+    const {count, error: countError} = await supabase
+      .from('like_video')
+      .select('*', {count: 'exact'})
+      .eq('videoId', videoId);
+    if (countError) {
+      throw new Error('Failed to get like count');
+    }
+    return {likeCount: count, isLike: data?.length > 0};
 
   }
 }

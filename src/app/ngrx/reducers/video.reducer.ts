@@ -255,7 +255,8 @@ export const videoReducer = createReducer(
       isGettingLikeCommentError: error,
     }
   }),
-  on(VideoActions.getLikeCount, (state, {videoId}) => {
+  on(VideoActions.getLikeCount, (state, {videoId,type}) => {
+    console.log(type);
     return {
       ...state,
       isGettingLiked: true,
@@ -263,7 +264,8 @@ export const videoReducer = createReducer(
       isGettingLikedError: null,
     }
   }),
-  on(VideoActions.getLikeCountSuccess, (state, {likesCount, isLiked}) => {
+  on(VideoActions.getLikeCountSuccess, (state, {likesCount, isLiked, type}) => {
+    console.log(type);
     return {
       ...state,
       videoDetail: <VideoModel>{
@@ -276,7 +278,8 @@ export const videoReducer = createReducer(
       isGettingLikedError: null,
     }
   }),
-  on(VideoActions.getLikeCountFailure, (state, {error}) => {
+  on(VideoActions.getLikeCountFailure, (state, {error,type}) => {
+    console.log(type);
     return {
       ...state,
       isGettingLiked: false,
