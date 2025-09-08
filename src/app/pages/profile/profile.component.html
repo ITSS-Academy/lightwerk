@@ -1,71 +1,75 @@
 <!--em sẽ code ơ đây -->
 
-<div class="profile-container">
-  <div class="profile-image">
-    <img class="user-image" [src]="profileImageUrl" alt="User's image">
-  </div>
-  <div class="profile-information">
-    <h2>{{ username }}</h2>
-    <button mat-flat-button (click)="openDialog()">
-      <mat-icon>edit</mat-icon>
-      Edit profile
-    </button>
-    <div class="stats">
-      <h3 (click)="openDialogUser('followers')"> {{ followers.length }} followers</h3>
-      <h3 (click)="openDialogUser('following')"> {{ following.length }} following</h3>
+<div class="profile-page" (scroll)="onScroll($event)">
+  <div class="profile-container">
+    <div class="profile-image">
+      <img class="user-image" [src]="profileImageUrl" alt="User's image">
     </div>
-    <p class="bio">{{ bio }}</p>
+    <div class="profile-information">
+      <h2>{{ username }}</h2>
+      <button mat-flat-button (click)="openDialog()">
+        <mat-icon>edit</mat-icon>
+        Edit profile
+      </button>
+      <div class="stats">
+        <h3 (click)="openDialogUser('followers')"> {{ followers.length }} followers</h3>
+        <h3 (click)="openDialogUser('following')"> {{ following.length }} following</h3>
+      </div>
+      <p class="bio">{{ bio }}</p>
+    </div>
   </div>
+  <!-- Đừng đụng vô cái ở dưới anh làm xong rồi nha-->
+  <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" [selectedIndex]="selectedIndex"
+                 (selectedIndexChange)="onTabChange($event)">
+
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="example-tab-icon"
+                  [fontSet]="selectedIndex == 0 ? '' : 'material-symbols-outlined'"
+        >video_library
+        </mat-icon>
+        Videos
+      </ng-template>
+      @if (selectedIndex == 0) {
+        <ng-container>
+          <app-video [profileId]="profileId"></app-video>
+        </ng-container>
+      }
+    </mat-tab>
+
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="example-tab-icon"
+                  [fontSet]="selectedIndex == 1 ? '' : 'material-symbols-outlined'"
+        >
+          playlist_play
+        </mat-icon>
+        Playlists
+      </ng-template>
+      @if (selectedIndex == 1) {
+        <ng-container>
+          <app-playlist></app-playlist>
+        </ng-container>
+      }
+    </mat-tab>
+
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="example-tab-icon"
+                  [fontSet]="selectedIndex == 2 ? '' : 'material-symbols-outlined'"
+        >
+          thumb_up
+        </mat-icon>
+        Liked Videos
+      </ng-template>
+      @if (selectedIndex == 2) {
+        <ng-container>
+          <app-liked-videos></app-liked-videos>
+        </ng-container>
+      }
+    </mat-tab>
+
+  </mat-tab-group>
+
+
 </div>
-<!-- Đừng đụng vô cái ở dưới anh làm xong rồi nha-->
-<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" [selectedIndex]="selectedIndex"
-               (selectedIndexChange)="onTabChange($event)">
-
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <mat-icon class="example-tab-icon"
-                [fontSet]="selectedIndex == 0 ? '' : 'material-symbols-outlined'"
-      >video_library
-      </mat-icon>
-      Videos
-    </ng-template>
-    @if (selectedIndex == 0) {
-      <ng-container>
-        <app-video></app-video>
-      </ng-container>
-    }
-  </mat-tab>
-
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <mat-icon class="example-tab-icon"
-                [fontSet]="selectedIndex == 1 ? '' : 'material-symbols-outlined'"
-      >
-        playlist_play
-      </mat-icon>
-      Playlists
-    </ng-template>
-    @if (selectedIndex == 1) {
-      <ng-container>
-        <app-playlist></app-playlist>
-      </ng-container>
-    }
-  </mat-tab>
-
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <mat-icon class="example-tab-icon"
-                [fontSet]="selectedIndex == 2 ? '' : 'material-symbols-outlined'"
-      >
-        thumb_up
-      </mat-icon>
-      Liked Videos
-    </ng-template>
-    @if (selectedIndex == 2) {
-      <ng-container>
-        <app-liked-videos></app-liked-videos>
-      </ng-container>
-    }
-  </mat-tab>
-
-</mat-tab-group>

@@ -17,13 +17,7 @@ export class DialogVideoComponent implements OnInit, OnDestroy, AfterViewInit {
   videoVisible = false;
   private previousScrollTop: number = 0;
   isExpanded = false;
-
-
-  items: Array<{
-    videoSrc: string;
-    imgSrc: string;
-    type: 'video' | 'image';
-  }> = [];
+  
 
   ngOnInit(): void {
     this.player = videojs(this.target.nativeElement, {

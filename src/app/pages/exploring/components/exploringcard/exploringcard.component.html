@@ -1,16 +1,51 @@
-<div class="video-card" [attr.data-id]="video.id">
+<!--<div class="video-card" >-->
+<!--  <div class="thumbnail">-->
+
+<!--    <img [src]="convertToSupabaseUrl(video.thumbnailPath, 'thumbnail')" alt="">-->
+<!--    <div class="like-overlay">-->
+<!--      <span class="heart">❤</span>-->
+<!--      <span class="count">{{ '0'}}</span>-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--  <div class="video-info">-->
+<!--    <h4 class="video-title">{{ video.title }}</h4>-->
+<!--    <p class="video-meta">-->
+<!--      <span class="username">{{ video.profile?.username }}</span> •-->
+<!--      <span class="date">{{ video.createdAt | date:'mediumDate' }}</span> •-->
+<!--      <span class="views">{{ video.viewCount }} views</span>-->
+<!--    </p>-->
+<!--    @if (this.isHistoryPage) {-->
+<!--      <button mat-icon-button color="warn" (click)="removeFromHistory(video.id)" aria-label="Remove from history">-->
+<!--        <mat-icon>delete</mat-icon>-->
+<!--      </button>-->
+<!--    }-->
+
+<!--  </div>-->
+<!--</div>-->
+
+<div class="video-card">
   <div class="thumbnail">
-    <img [src]="video.thumbnail" alt="video thumbnail" />
+
+    <img [src]="convertToSupabaseUrl(video.thumbnailPath, 'thumbnail')" (click)="openDialog(video)" alt="">
     <div class="like-overlay">
       <span class="heart">❤</span>
-      <span class="count">{{ video.likes }}</span>
+      <span class="count">{{ '0'}}</span>
     </div>
   </div>
+
   <div class="video-info">
     <h4 class="video-title">{{ video.title }}</h4>
     <p class="video-meta">
-      <span class="username">{{ video.username }}</span> •
-      <span class="date">{{ video.date }}</span>
+      <span class="username">{{ video.profile?.username }}</span> •
+      <span class="date">{{ video.createdAt | date:'mediumDate' }}</span> •
+      <span class="views">{{ video.viewCount }} views</span>
     </p>
+    @if (this.isHistoryPage) {
+      <button mat-icon-button color="warn" (click)="removeFromHistory(video.id)" aria-label="Remove from history">
+        <mat-icon>delete</mat-icon>
+      </button>
+    }
   </div>
 </div>
+

@@ -5,12 +5,22 @@
     <button mat-icon-button class="btn-close" aria-label="Close" (click)="closeDialog()">
       <mat-icon>close</mat-icon>
     </button>
-    <div class="frame-video" [ngStyle]="getCardBoxStyle(videoDetail)">
+    <div class="frame-video" [ngStyle]="getCardBoxStyle(video())">
 
 
       @if (videoId && videoId != '') {
-        <app-dialog-video [aspectRatio]="'9:16'"
-                          videoSrc="{{convertToSupabaseUrl(`${videoId}/master.m3u8`,'video')}}"></app-dialog-video>
+        <!--        <app-dialog-video [aspectRatio]="'9:16'"-->
+          <!--                          videoSrc="{{convertToSupabaseUrl(`${videoId}/master.m3u8`,'video')}}"></app-dialog-video>-->
+
+        <app-video
+          style="width: 100%; height: 100%;"
+          [videoId]="videoId"
+          aspectRatio="{{this.video().aspectRatio}}"
+          [thumbnailPath]="this.video().thumbnailPath"
+          (videoReady)="onVideoReady()"
+          videoSrc="{{convertToSupabaseUrl(`${videoId}/master.m3u8`,'video')}}"
+          [ngStyle]="{display: videoReadyStates ? 'block' : 'none'}">
+        </app-video>
       }
 
     </div>
@@ -26,38 +36,39 @@
             <!-- Avatar -->
             <div class="info">
               <img class="avatar"
-                   src="https://material.angular.dev/assets/img/examples/shiba2.jpg"
+                   [src]="this.userAvatar"
                    alt="avatar">
 
               <!-- Info -->
               <div class="info-username">
-                <span class="username">User Name </span>
-                <span class="followers"> Name</span>
+                <span class="username">{{ this.username }} </span>
               </div>
 
             </div>
 
             <!-- Button -->
-            <div class="button-follow" (click)="toggleFollow()">
-              @if (isFollowing) {
-                <button mat-button class="following-btn">
-                  ✓ Following
-                </button>
-              } @else {
-                <button mat-button class="follow-btn">
-                  + Follow
-                </button>
-              }
-            </div>
+            @if (!isCurrentUserSignal()) {
+              <div class="button-follow" (click)="toggleFollow()">
+                @if (isFollowing) {
+                  <button mat-button class="following-btn">
+                    ✓ Following
+                  </button>
+                } @else {
+                  <button mat-button class="follow-btn">
+                    + Follow
+                  </button>
+                }
+              </div>
+            }
 
 
           </div>
 
         </div>
         <div class="title">
-          <span class="title-text">Title of the post </span>
+          <span class="title-text">{{ this.title }} </span>
           <span class="description" [ngClass]="{ 'collapsed': !isExpanded }"
-                [ngStyle]="{'maxWidth': isExpanded ? '' : '100%'}">Trong cửa sổ chi tiết này, người dùng có thể xem toàn bộ thông tin liên quan đến bài viết, bình luận hoặc dữ liệu được chọn từ trang chính. Nội dung được thiết kế để hiển thị rõ ràng, có bố cục cân đối, dễ dàng tương tác. Ở góc trên bên trái là nút đóng có biểu tượng dấu ✖, giúp người dùng nhanh chóng quay lại màn hình trước đó. Khu vực trung tâm của dialog có thể chứa ảnh đại diện, tên tác giả, ngày đăng, cùng với nội dung văn bản dài. Phần phía dưới thường được dành để hiển thị danh sách bình luận hoặc các hành động phụ như thêm vào mục yêu thích, lưu nhãn, hay chia sẻ. Ngoài ra, mỗi bình luận cũng được sắp xếp theo thời gian, có avatar, tên người dùng và đoạn nội dung riêng biệt, tạo cảm giác thân thiện và dễ theo dõi. Toàn bộ dialog được bao bọc trong một không gian gọn gàng, kết hợp màu sắc hài hòa, mang lại trải nghiệm vừa trực quan vừa thoải mái, đồng thời vẫn giữ tính chuyên nghiệp.Trong cửa sổ chi tiết này, người dùng có thể xem toàn bộ thông tin liên quan đến bài viết, bình luận hoặc dữ liệu được chọn từ trang chính. Nội dung được thiết kế để hiển thị rõ ràng, có bố cục cân đối, dễ dàng tương tác. Ở góc trên bên trái là nút đóng có biểu tượng dấu ✖, giúp người dùng nhanh chóng quay lại màn hình trước đó. Khu vực trung tâm của dialog có thể chứa ảnh đại diện, tên tác giả, ngày đăng, cùng với nội dung văn bản dài. Phần phía dưới thường được dành để hiển thị danh sách bình luận hoặc các hành động phụ như thêm vào mục yêu thích, lưu nhãn, hay chia sẻ. Ngoài ra, mỗi bình luận cũng được sắp xếp theo thời gian, có avatar, tên người dùng và đoạn nội dung riêng biệt, tạo cảm giác thân thiện và dễ theo dõi. Toàn bộ dialog được bao bọc trong một không gian gọn gàng, kết hợp màu sắc hài hòa, mang lại trải nghiệm vừa trực quan vừa thoải mái, đồng thời vẫn giữ tính chuyên nghiệp.</span>
+                [ngStyle]="{'maxWidth': isExpanded ? '' : '100%'}">{{ this.description }}</span>
         </div>
         <button class="toggle-btn" (click)="isExpanded = !isExpanded">
           {{ isExpanded ? 'Thu gọn' : 'Xem thêm' }}

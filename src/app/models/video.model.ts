@@ -22,6 +22,10 @@ export interface VideoModel {
     username: string;
     avatarPath: string | null;
   }
+  likeCount?: number;
+  commentCount?: number;
+  isLikedByCurrentUser?: boolean;
+  isSavedByCurrentUser?: boolean;
 }
 
 export interface UploadVideoModel {

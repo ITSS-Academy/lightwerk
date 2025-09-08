@@ -16,9 +16,16 @@ import {VideoComponent} from "../video/video.component";
 import {VideoModel} from '../../models/video.model';
 import {MatIcon} from '@angular/material/icon';
 import {convertToSupabaseUrl} from '../../utils/img-converter';
-import {Observable, Subscription} from 'rxjs';
-import {CommentModel} from '../../models/comment.model';
+import * as VideoActions from '../../ngrx/actions/video.actions';
 import {Store} from '@ngrx/store';
+import {VideoState} from '../../ngrx/states/video.state';
+import {Observable, Subscription, combineLatest} from 'rxjs';
+import * as LikeVideoActions from '../../ngrx/actions/like-video.actions';
+import {LikeVideoState} from '../../ngrx/states/like-video.state';
+import {deleteLikeVideo} from '../../ngrx/actions/like-video.actions';
+import {RouterLink} from '@angular/router';
+import {map} from 'rxjs/operators';
+import {CommentModel} from '../../models/comment.model';
 import {CommentState} from '../../ngrx/states/comment.state';
 import * as CommentAction from '../../ngrx/actions/comment.actions';
 import {FormsModule} from '@angular/forms';
@@ -26,33 +33,27 @@ import {FormsModule} from '@angular/forms';
 @Component({
   selector: 'app-video-list',
   imports: [
-
+    MatFabButton,
     MatFormField,
     MatIcon,
     MatIconButton,
     MatInput,
     MatLabel,
     MatSuffix,
-
-    AsyncPipe,
     FormsModule,
-    NgStyle,
     VideoComponent,
-    MatFabButton
+    NgStyle,
+    AsyncPipe,
+    RouterLink
   ],
   templateUrl: './video-list.component.html',
   styleUrl: './video-list.component.scss'
 })
-export class VideoListComponent implements AfterViewInit, OnDestroy, OnInit {
+export class VideoListComponent implements AfterViewInit, OnInit, OnDestroy {
   isExpanded = false;
   showCommentExpanded = false;
   isFavoriteActive = false
   isSavetagActive = false
-  subscriptions: Subscription[] = [];
-  //create a comment with ngrx
-  comments$!: Observable<CommentModel[]>;
-  comments!: CommentModel[];
-  commentContent: string = '';
 
   pageContainerRef!: ElementRef;
   @Output() getMoreEvent = new EventEmitter<void>();
@@ -95,13 +96,13 @@ export class VideoListComponent implements AfterViewInit, OnDestroy, OnInit {
           console.log('Entering fullscreen mode', this.previousScrollTop);
           containerEl.style.scrollSnapType = 'none';
           this.isFullscreen = true;
-          this.videoComponent.adjustControlButtons(true)
+          // this.videoComponent.adjustControlButtons(true)
         } else {
           containerEl.style.scrollSnapType = 'y mandatory';
           containerEl.scrollTop = this.previousScrollTop;
           console.log('Exiting fullscreen mode', this.previousScrollTop);
           this.isFullscreen = false;
-          this.videoComponent.adjustControlButtons(false)
+          // this.videoComponent.adjustControlButtons(false)
         }
       });
 
@@ -118,19 +119,60 @@ export class VideoListComponent implements AfterViewInit, OnDestroy, OnInit {
   private previousScrollTop: number = 0;
   currentVideoIndex: number = 0;
   isFullscreen: boolean = false;
+  isGettingLikeComment: boolean = true;
+  videoDetail!: VideoModel
+  isLiking$: Observable<boolean>;
 
   observer!: IntersectionObserver
 
   videoReadyStates: boolean[] = [];
+  subscription: Subscription[] = [];
+  comments$!: Observable<CommentModel[]>;
+  comments!: CommentModel[];
+  commentContent: string = '';
 
   constructor(private cdr: ChangeDetectorRef,
-              private store: Store<{ comment: CommentState }>
+              private store: Store<{
+                video: VideoState,
+                likeVideo: LikeVideoState
+                comment: CommentState
+              }>,
   ) {
+
+    this.isLiking$ = combineLatest([
+      this.store.select(state => state.likeVideo.isAdding),
+      this.store.select(state => state.likeVideo.isDeleting)
+    ]).pipe(
+      map(([isAdding, isDeleting]) => isAdding || isDeleting)
+    );
     this.comments$ = this.store.select(state => state.comment.comments);
   }
 
+
   ngOnInit() {
-    this.subscriptions.push(
+    this.store.dispatch(CommentAction.getAllComments({videoId: this.cards[0]?.id!}));
+
+    this.subscription.push(this.store.select(state => state.video.videoDetail).subscribe(video => {
+        this.store.select(state => state.video.videoDetail).subscribe(video => {
+          this.videoDetail = video
+        })
+      }),
+      this.store.select(state => state.likeVideo.isAddSuccess).subscribe(likeVideo => {
+        if (likeVideo) {
+          console.log(this.currentVideoIndex)
+          this.store.dispatch(VideoActions.getLikeCount({videoId: this.cards && this.cards.length > 0 ? this.cards[this.currentVideoIndex].id : ''}))
+        }
+      }),
+      this.store.select(state => state.video.isGettingLikeComment).subscribe(isGetting => {
+        this.isGettingLikeComment = isGetting
+        this.cdr.detectChanges();
+      }),
+      this.store.select(state => state.likeVideo.isDeleteSuccess).subscribe(unlikeVideo => {
+        if (unlikeVideo) {
+          console.log(this.currentVideoIndex)
+          this.store.dispatch(VideoActions.getLikeCount({videoId: this.cards && this.cards.length > 0 ? this.cards[this.currentVideoIndex].id : ''}))
+        }
+      }),
       this.comments$.subscribe((comment: CommentModel[]) => {
         console.log(comment);
         if (comment.length) {
@@ -138,19 +180,21 @@ export class VideoListComponent implements AfterViewInit, OnDestroy, OnInit {
           console.log(comment);
         }
       }),
-    );
-    this.store.dispatch(CommentAction.getAllComments({videoId: this.cards[0]?.id!}));
-    this.updateContainerSize();
+    )
+
   }
+
 
   ngOnDestroy() {
     if (this.observer) this.observer.disconnect();
-    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   ngAfterViewInit() {
     this.cdr.detectChanges();
     // Initialize videoReadyStates for all cards
+    this.store.dispatch(VideoActions.getLikedVideos({
+      videoId: this.cards && this.cards.length > 0 ? this.cards[0].id : ''
+    }))
     this.videoReadyStates = this.cards ? Array(this.cards.length).fill(false) : [];
   }
 
@@ -211,6 +255,7 @@ export class VideoListComponent implements AfterViewInit, OnDestroy, OnInit {
           const index = Array.from(this.cardsContainerRef.nativeElement.children).indexOf(entry.target);
           if (index !== -1 && index !== this.currentVideoIndex) {
             this.currentVideoIndex = index;
+            this.store.dispatch(VideoActions.getLikedVideos({videoId: this.cards[this.currentVideoIndex].id}));
 
             if (this.currentVideoIndex == this.cards.length - 2) {
               console.log('Emitting getMoreEvent');
@@ -245,7 +290,6 @@ export class VideoListComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   @Input() cards!: VideoModel[]
-
   videos = [
     {
       videoSrc: 'asdfas',
@@ -279,5 +323,15 @@ export class VideoListComponent implements AfterViewInit, OnDestroy, OnInit {
     this.commentContent = '';
   }
 
-}
+  toggleLike() {
+    const videoId = this.cards && this.cards.length > 0 ? this.cards[this.currentVideoIndex].id : ''
+    this.store.dispatch(LikeVideoActions.createLikeVideo({videoId}));
+  }
 
+  unlikeVideo() {
+    const videoId = this.cards && this.cards.length > 0 ? this.cards[this.currentVideoIndex].id : ''
+    this.store.dispatch(LikeVideoActions.deleteLikeVideo({videoId}));
+  }
+
+  protected readonly Math = Math;
+}

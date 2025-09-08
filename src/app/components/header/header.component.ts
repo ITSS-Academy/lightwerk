@@ -8,6 +8,7 @@ import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 import {LoginDialogComponent} from '../login-dialog/login-dialog.component';
 import {AuthService} from '../../services/auth/auth.service';
 import supabase from '../../utils/supabase';
+import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-header',
@@ -23,6 +24,7 @@ import supabase from '../../utils/supabase';
     MatMenuModule,
     LoginDialogComponent,
     RouterLink,
+    FormsModule,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
@@ -30,6 +32,7 @@ import supabase from '../../utils/supabase';
 export class HeaderComponent {
   @Output() toggleMenuEvent = new EventEmitter();
 
+  searchQuery: string = ''
   headerTitle: string = '';
   canOpenCreateMenu = false;
   @ViewChild('createMenuTrigger', {static: false}) createMenuTrigger?: MatMenuTrigger;
@@ -54,7 +57,7 @@ export class HeaderComponent {
     event.preventDefault();
     event.stopPropagation();
     if (!(await this.authService.isLoggedIn())) {
-      this.dialog.open(LoginDialogComponent, );
+      this.dialog.open(LoginDialogComponent,);
       return;
     }
     this.canOpenCreateMenu = true;
@@ -75,5 +78,9 @@ export class HeaderComponent {
         this.router.navigate(['/']);
       }
     });
+  }
+
+  onSearch() {
+
   }
 }

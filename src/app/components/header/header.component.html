@@ -1,6 +1,6 @@
 <mat-toolbar class="mat-elevation-z2">
   <div class="header-container">
-    <div>
+    <div style="display: flex; align-items: center; gap: 18px; width: 40%">
       <button mat-icon-button (click)="this.toggleMenu();">
         <mat-icon>
           menu
@@ -8,7 +8,24 @@
       </button>
 
       <h1>{{ this.headerTitle }}</h1>
+
+      @if (headerTitle == 'Search') {
+        <form class="search-bar" (submit)="onSearch()">
+          <input
+            type="text"
+            [(ngModel)]="searchQuery"
+            name="search"
+            class="search-input"
+            placeholder="Search"
+          />
+          <button type="submit" class="search-btn" mat-icon-button>
+            <mat-icon>search</mat-icon>
+          </button>
+        </form>
+      }
+
     </div>
+
 
     <div>
       <button mat-flat-button class="create-btn"

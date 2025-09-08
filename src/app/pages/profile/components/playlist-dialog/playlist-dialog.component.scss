@@ -1,6 +1,8 @@
 .playlist-dialog {
   width: 100%;
-  height: 100%;
+  min-height: 600px;
+  max-width: 98vw;
+  max-height: 98vh;
   background: #fff;
   border-radius: 16px;
   display: flex;
@@ -38,10 +40,13 @@
 .playlist-dialog .dialog-form {
   flex: 1;
   display: flex;
-  flex-direction: row;
-  gap: 16px;
-  padding: 16px 20px;
-  overflow-y: auto;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 32px 32px 16px 32px;
+  gap: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .playlist-dialog .dialog-detail {
@@ -50,14 +55,18 @@
   gap: 12px;
 }
 
+.playlist-dialog .dialog-header-name {
+  width: 100%;
+}
+
 .playlist-dialog .dialog-header-name mat-form-field {
   width: 100%;
 }
 
 .playlist-dialog .dialog-header-visibility {
-  display: flex;
+  width: 100%;
   justify-content: flex-start;
-  gap: 20px;
+  gap: 32px;
   align-items: center;
 }
 
@@ -74,6 +83,7 @@
   padding: 12px;
   position: relative;
   transition: 0.3s;
+  margin-bottom: 0;
 }
 
 .playlist-dialog .thumbnail:hover {
@@ -153,4 +163,11 @@
   color: red;
   font-size: 12px;
   margin-top: 4px;
+}
+
+.dialog-column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
 }

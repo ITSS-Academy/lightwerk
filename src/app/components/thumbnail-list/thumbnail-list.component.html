@@ -1,0 +1,12 @@
+@if ((videos$ | async); as videos){
+
+    <main class="video-grid">
+      @for (video of videos; track $index) {
+        <app-exploring-card  [video]="video"></app-exploring-card>
+      } @empty {
+        <p class="loading">No videos available</p>
+      }
+    </main>
+
+}
+

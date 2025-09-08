@@ -130,9 +130,12 @@ export class VideoService {
   getLatestVideos(page: number,) {
     return from(this.getAccessToken()).pipe(
       mergeMap((data) => {
-        if (data.error || !data.data.session) {
-          return throwError(() => new Error('No access token'));
+        const headers = new Headers();
+
+        if (!data.error && data.data.session) {
+          headers.append('Authorization', `${data.data.session.access_token}`);
         }
+
         return this.http.get<{
           videos: VideoModel[]
           pagination: {
@@ -141,9 +144,7 @@ export class VideoService {
             totalCount: number
           }
         }>(`${environment.api_base_url}/video/latest?page=${page}&limit=10`, {
-          headers: {
-            Authorization: `${data.data.session.access_token}`
-          }
+          headers: headers as any
         });
       })
     )
@@ -184,5 +185,49 @@ export class VideoService {
         });
       })
     )
+  }
+
+  async getVideosByCategory(categoryId: string, page: number) {
+    const { data, error,count } = await supabase
+      .from('video',)
+      .select('*',{ count: 'exact' })
+      .eq('categoryId', categoryId)
+      .eq('isPublic', true)
+      .order('createdAt', { ascending: false })
+      .range((page - 1) * 10, page * 10 - 1);
+
+    if (error) {
+      console.error('Error fetching videos by category:', error);
+      throw new Error('Failed to fetch videos by category');
+    }
+
+    return {
+      videos: data as VideoModel[],
+      pagination: {
+        limit: 10,
+        page,
+        totalCount: count || 0
+      }
+    }
+  }
+
+  async getLikeCommentCount(videoId: string) {
+    let headers = {};
+    const {data, error} = await supabase.auth.getSession();
+    if (!error && data.session) {
+      headers = {
+        Authorization: `${data.session.access_token}`
+      }
+    }
+
+    const res = await this.http.get<{
+      likesCount: number,
+      isLiked: boolean,
+      isSave: boolean,
+      commentsCount: number
+    }>(`${environment.api_base_url}/video/likes-comments-playlists/${videoId}`, {
+      headers: headers
+    }).toPromise();
+    return res
   }
 }

@@ -3,6 +3,7 @@
     <div class="sidebar-logo" [ngClass]="{ 'collapsed': collapsed }">
       <img src="logo.svg" alt="Logo"/>
     </div>
+
     <mat-nav-list>
       @for (section of sections; track $index) {
         @if (!collapsed && section.header) {
@@ -11,46 +12,91 @@
         @if (collapsed && section.header != "Library") {
 
           @for (route of section.routes; track route) {
-            <a
-              (click)="removeFocus($event)"
-              [ngClass]="{ 'collapsed': collapsed }"
-              mat-list-item [routerLink]="route.path" routerLinkActive #rla="routerLinkActive"
-              [activated]="rla.isActive">
-              <mat-icon
-                matListItemIcon
-                [fontSet]="rla.isActive ? '' : 'material-symbols-outlined'"
-              >
-                {{ route.icon }}
-              </mat-icon>
-              @if (!collapsed) {
-                <span matListItemTitle
-                      [style.display]="collapsed ? 'none' : ''"
-                > {{ route.label }} </span>
-              }
-            </a>
+            @if (route.path == '/search') {
+              <a
+                (click)="removeFocus($event); this.searchClick.emit();searchclick1() "
+                [ngClass]="{ 'collapsed': collapsed }"
+                mat-list-item
+                [activated]="isSearchActive">
+                <mat-icon
+                  matListItemIcon
+                  [fontSet]="isSearchActive ? '' : 'material-symbols-outlined'"
+                >
+                  {{ route.icon }}
+                </mat-icon>
+                @if (!collapsed) {
+                  <span matListItemTitle
+                        [style.display]="collapsed ? 'none' : ''"
+                  > {{ route.label }} </span>
+                }
+              </a>
+            } @else {
+              <a
+                (click)="removeFocus($event); this.notSearchClick.emit()"
+                [ngClass]="{ 'collapsed': collapsed }"
+                mat-list-item [routerLink]="route.path" routerLinkActive #rla="routerLinkActive"
+                [activated]="rla.isActive">
+                <mat-icon
+                  matListItemIcon
+                  [fontSet]="rla.isActive ? '' : 'material-symbols-outlined'"
+                >
+                  {{ route.icon }}
+                </mat-icon>
+                @if (!collapsed) {
+                  <span matListItemTitle
+                        [style.display]="collapsed ? 'none' : ''"
+                  > {{ route.label }} </span>
+                }
+              </a>
+            }
+
 
           }
         }
 
         @if (!collapsed) {
-          @for (route of section.routes; track route) {
-            <a
-              (click)="removeFocus($event)"
-              [ngClass]="{ 'collapsed': collapsed }"
-              mat-list-item [routerLink]="route.path" routerLinkActive #rla="routerLinkActive"
-              [activated]="rla.isActive">
-              <mat-icon
-                matListItemIcon
-                [fontSet]="rla.isActive ? '' : 'material-symbols-outlined'"
-              >
-                {{ route.icon }}
-              </mat-icon>
-              @if (!collapsed) {
-                <span matListItemTitle
-                      [style.display]="collapsed ? 'none' : ''"
-                > {{ route.label }} </span>
+          @if (section.header == "Library" && !this.userId || this.userId == undefined) {
+          } @else {
+            @for (route of section.routes; track route) {
+              @if (route.path == '/search') {
+                <a
+                  (click)="removeFocus($event); this.searchClick.emit();searchclick1() "
+                  [ngClass]="{ 'collapsed': collapsed }"
+                  mat-list-item
+                  [activated]="isSearchActive">
+                  <mat-icon
+                    matListItemIcon
+                    [fontSet]="isSearchActive ? '' : 'material-symbols-outlined'"
+                  >
+                    {{ route.icon }}
+                  </mat-icon>
+                  @if (!collapsed) {
+                    <span matListItemTitle
+                          [style.display]="collapsed ? 'none' : ''"
+                    > {{ route.label }} </span>
+                  }
+                </a>
+              } @else {
+                <a
+                  (click)="removeFocus($event); notSearchClick.emit()"
+                  [ngClass]="{ 'collapsed': collapsed }"
+                  mat-list-item [routerLink]="route.path" routerLinkActive #rla="routerLinkActive"
+                  [activated]="rla.isActive">
+                  <mat-icon
+                    matListItemIcon
+                    [fontSet]="rla.isActive ? '' : 'material-symbols-outlined'"
+                  >
+                    {{ route.icon }}
+                  </mat-icon>
+                  @if (!collapsed) {
+                    <span matListItemTitle
+                          [style.display]="collapsed ? 'none' : ''"
+                    > {{ route.label }} </span>
+                  }
+                </a>
               }
-            </a>
+
+            }
           }
         }
 
@@ -63,8 +109,10 @@
     <a
       [ngClass]="{ 'collapsed': collapsed }"
       mat-list-item
-      [routerLink]="'/profile/1/videos'" routerLinkActive="/profile/1/videos" #rla="routerLinkActive"
+      [routerLink]="['/profile', userId(), 'videos']"
+      [routerLinkActive]="'active'" #rla="routerLinkActive"
       [activated]="rla.isActive"
+      (click)="removeFocus($event);notSearchClick.emit()"
     >
       <img matListItemIcon class="avatar" src="avatar.png" alt="">
       @if (!collapsed) {
@@ -101,4 +149,3 @@
 <!--    }-->
 <!--  </a>-->
 <!--}-->
-

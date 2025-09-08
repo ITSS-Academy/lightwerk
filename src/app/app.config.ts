@@ -16,6 +16,8 @@ import {profileReducer} from './ngrx/reducers/profile.reducer';
 import * as ProfileEffects from './ngrx/effects/profile.effects';
 import {likeVideoReducer} from './ngrx/reducers/like-video.reducer';
 import * as LikeVideoEffects from './ngrx/effects/like-video.effects';
+import {historyReducer} from './ngrx/reducers/history.reducer';
+import * as HistoryEffects from './ngrx/effects/history.effects';
 import {playlistReducer} from './ngrx/reducers/playlist.reducer';
 import * as PlayListEffects from './ngrx/effects/playlist.effect';
 import {followingReducer} from './ngrx/reducers/following.reducer';
@@ -32,12 +34,13 @@ export const appConfig: ApplicationConfig = {
         category: categoryReducer,
         likeVideo: likeVideoReducer,
         profile: profileReducer,
+        history: historyReducer,
         following: followingReducer,
         playlist: playlistReducer,
         comment: commentReducer
       },
     ),
-    provideEffects(AuthEffects, VideoEffects, CategoryEffects, ProfileEffects, CommentEffects, LikeVideoEffects, PlayListEffects, FollowingEffects),
+    provideEffects(AuthEffects, VideoEffects, CategoryEffects, ProfileEffects, LikeVideoEffects, PlayListEffects, FollowingEffects,HistoryEffects,CommentEffects),
     provideHttpClient()]
 };
 
