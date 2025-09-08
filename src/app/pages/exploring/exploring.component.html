@@ -17,11 +17,11 @@
     </mat-chip-set>
   </div>
 
-  <div class="exploring-container" #scrollContainer>
-    @if (isLoading$ | async) {
-      <p class="loading">Loading...</p>
-    } @else {
-      <app-thumbnail-list [videos$]="this.videosFiltered$ "></app-thumbnail-list>
+<div class="exploring-container" #scrollContainer>
+  @if (isLoading$ | async) {
+    <p class="loading">Loading...</p>
+  } @else  {
+    <app-thumbnail-list [videos$]="this.videos$ "></app-thumbnail-list>
 
     }
   </div>

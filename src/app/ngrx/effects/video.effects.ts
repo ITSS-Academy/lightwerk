@@ -102,6 +102,26 @@ export const getVideoDetail = createEffect(
   {functional: true}
 );
 
+export const getVideosByCategory = createEffect(
+  (actions$ = inject(Actions), videoService = inject(VideoService)) => {
+    return actions$.pipe(
+      ofType(VideoActions.getVideosByCategory),
+      exhaustMap((action) =>
+        from(videoService.getVideosByCategory(action.categoryId,action.page)).pipe(
+          map((res) => VideoActions.getVideosByCategorySuccess({
+            videos: res.videos,
+            totalItems: res.pagination.totalCount
+          })),
+          catchError((error: any) =>
+            of(VideoActions.getVideosByCategoryFailure({error: error}))
+          )
+        )
+      )
+    );
+  },
+  {functional: true}
+);
+
 export const getLikedVideos = createEffect(
   (actions$ = inject(Actions), videoService = inject(VideoService)) => {
     return actions$.pipe(
@@ -131,7 +151,7 @@ export const incrementViewCount = createEffect(
       switchMap((action) =>
         from(likeVideoService.getLikeCountAndIsLike(action.videoId)).pipe(
           map((res) => VideoActions.getLikeCountSuccess({
-            likesCount: res.likeCount,
+            likesCount: res.likeCount!,
             isLiked: res.isLike
           })),
           catchError((error: any) =>

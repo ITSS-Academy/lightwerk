@@ -25,6 +25,10 @@ export interface VideoState {
   isGettingVideoDetailSuccess: boolean,
   isGettingVideoDetailError: any,
 
+  isCategoryById: boolean,
+  isCategoryByIdSuccess: boolean,
+  isCategoryByIdError: any,
+
   isGettingLikeComment: boolean
   isGettingLikeCommentSuccess: boolean
   isGettingLikeCommentError: any,

@@ -50,6 +50,19 @@ export const getVideoDetailFailure = createAction('[Video] Get Video Detail Fail
   { error: any }
 >())
 
+export const getVideosByCategory = createAction('[Video] Get Videos By Category', props<{
+  categoryId: string,
+  page: number,
+}>())
+
+export const getVideosByCategorySuccess = createAction('[Video] Get Videos By Category Success', props<{
+  videos: VideoModel[],
+  totalItems: number
+}>())
+
+export const getVideosByCategoryFailure = createAction('[Video] Get Videos By Category Failure', props<{
+  error: any,
+}>())
 export const clearVideoDetail = createAction('[Video] Clear Video Detail')
 
 export const getLikedVideos = createAction('[Video] Get Liked Videos', props<{
