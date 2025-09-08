@@ -23,6 +23,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   sections: any[] = [];
 
   @Output() searchClick = new EventEmitter<void>();
+  @Output() notSearchClick = new EventEmitter<void>();
 
   constructor(private router: Router) {
   }

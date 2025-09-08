@@ -18,14 +18,9 @@ mat-card-content p {
 
 
 .grid-list {
-  display: grid;
-  grid-gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 24px;
-  //padding: 20px;
-  //max-width: 1200px;
-  margin: 0 auto;
-
+  width: 100%;
+  height: 100%;
+  
 }
 
 

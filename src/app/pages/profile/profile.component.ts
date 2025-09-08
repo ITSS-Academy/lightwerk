@@ -14,6 +14,7 @@ import {FollowDialogComponent} from './components/follow-dialog/follow-dialog.co
 import {Store} from '@ngrx/store';
 import {ProfileState} from '../../ngrx/states/profile.state';
 import * as ProfileActions from '../../ngrx/actions/profile.actions';
+import {MatButtonToggle, MatButtonToggleGroup} from '@angular/material/button-toggle';
 
 interface UserModel {
   id: string;

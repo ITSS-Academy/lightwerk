@@ -9,23 +9,17 @@ export const getAllLikeVideosSuccess = createAction('[LikeVideo] Get All Like Vi
 export const getAllLikeVideosFailure = createAction('[LikeVideo] Get All Like Videos Failure', props<{
   error: any
 }>());
-export const clearLikeVideoState = createAction('[LikeVideo] Clear Like Video State', props<{
-  profileId: string
+export const deleteLikeVideo = createAction('[LikeVideo] Clear Like Video State', props<{
   videoId: string
 }>());
-export const clearLikeVideoStateSuccess = createAction('[LikeVideo] Clear Like Video State Success', props<{
-  countAfterDelete: number
-}>());
-export const clearLikeVideoStateFailure = createAction('[LikeVideo] Clear Like Video State Failure', props<{
+export const deleteLikeVideoSuccess = createAction('[LikeVideo] Clear Like Video State Success');
+export const deleteLikeVideoFailure = createAction('[LikeVideo] Clear Like Video State Failure', props<{
   error: any
 }>());
-export const createLikeVideoState = createAction('[LikeVideo] Create Like Video State', props<{
-  profileId: string
+export const createLikeVideo = createAction('[LikeVideo] Create Like Video State', props<{
   videoId: string
 }>());
-export const createLikeVideoStateSuccess = createAction('[LikeVideo] Create Like Video State Success', props<{
-  countAfterCreate: number
-}>());
-export const createLikeVideoStateFailure = createAction('[LikeVideo] Create Like Video State Failure', props<{
+export const createLikeVideoSuccess = createAction('[LikeVideo] Create Like Video State Success',);
+export const createLikeVideoFailure = createAction('[LikeVideo] Create Like Video State Failure', props<{
   error: any
 }>());

@@ -2,7 +2,8 @@ import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {inject} from '@angular/core';
 import {VideoService} from '../../services/video/video.service';
 import * as VideoActions from '../actions/video.actions';
-import {catchError, exhaustMap, map, of, switchMap} from 'rxjs';
+import {catchError, exhaustMap, from, map, of, switchMap} from 'rxjs';
+import {LikeVideoService} from '../../services/like-video/like-video.service';
 
 export const uploadVideo = createEffect(
   (actions$ = inject(Actions), videoService = inject(VideoService)) => {
@@ -99,4 +100,46 @@ export const getVideoDetail = createEffect(
     );
   },
   {functional: true}
+);
+
+export const getLikedVideos = createEffect(
+  (actions$ = inject(Actions), videoService = inject(VideoService)) => {
+    return actions$.pipe(
+      ofType(VideoActions.getLikedVideos),
+      switchMap((action) =>
+        from(videoService.getLikeCommentCount(action.videoId)).pipe(
+          map((res) => VideoActions.getLikedVideosSuccess({
+            likesCount: res!.likesCount!,
+            isLiked: res!.isLiked!,
+            isSave: res!.isSave,
+            commentsCount: res!.commentsCount
+          })),
+          catchError((error: any) =>
+            of(VideoActions.getLikedVideosFailure({error: error}))
+          )
+        )
+      )
+    );
+  }
+  , {functional: true}
+);
+
+export const incrementViewCount = createEffect(
+  (actions$ = inject(Actions), likeVideoService = inject(LikeVideoService)) => {
+    return actions$.pipe(
+      ofType(VideoActions.getLikeCount),
+      switchMap((action) =>
+        from(likeVideoService.getLikeCountAndIsLike(action.videoId)).pipe(
+          map((res) => VideoActions.getLikeCountSuccess({
+            likesCount: res.likeCount,
+            isLiked: res.isLike
+          })),
+          catchError((error: any) =>
+            of(VideoActions.getLikeCountFailure({error: error}))
+          )
+        )
+      )
+    );
+  }
+  , {functional: true}
 );

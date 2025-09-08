@@ -31,6 +31,7 @@ import * as PlaylistActions from '../../../../ngrx/actions/playlist.actions';
     MatIcon,
     MatRadioGroup,
     MatRadioButton,
+    MatError,
   ],
   templateUrl: './playlist-dialog.component.html',
   styleUrl: './playlist-dialog.component.scss'
@@ -51,7 +52,6 @@ export class PlaylistDialogComponent implements OnInit, OnDestroy {
     this.form = new FormGroup({
       name: new FormControl(data?.name || '', [
         Validators.required,
-        Validators.pattern(/^[a-zA-Z0-9.]+$/)
       ]),
       isPrivate: new FormControl(data?.isPrivate ?? true)
     });

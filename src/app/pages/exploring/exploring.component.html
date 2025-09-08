@@ -1,26 +1,29 @@
-<div class="box">
-  <mat-chip-set>
-    <mat-chip
-      (click)="toggleChip(null)"
-      [class.selected]="!selectedChip">
-      ALL
-    </mat-chip>
-
-    @for (cat of categories$ | async; track cat.id) {
+<div style="display: flex; flex-direction: column; height: 100%;">
+  <div class="box">
+    <mat-chip-set>
       <mat-chip
-        (click)="toggleChip(cat.id)"
-        [class.selected]="selectedChip === cat.id">
-        {{ cat.name }}
+        (click)="toggleChip(null)"
+        [class.selected]="!selectedChip">
+        ALL
       </mat-chip>
+
+      @for (cat of categories$ | async; track cat.id) {
+        <mat-chip
+          (click)="toggleChip(cat.id)"
+          [class.selected]="selectedChip === cat.id">
+          {{ cat.name }}
+        </mat-chip>
+      }
+    </mat-chip-set>
+  </div>
+
+  <div class="exploring-container" #scrollContainer>
+    @if (isLoading$ | async) {
+      <p class="loading">Loading...</p>
+    } @else {
+      <app-thumbnail-list [videos$]="this.videosFiltered$ "></app-thumbnail-list>
+
     }
-  </mat-chip-set>
-</div>
+  </div>
 
-<div class="exploring-container" #scrollContainer>
-  @if (isLoading$ | async) {
-    <p class="loading">Loading...</p>
-  } @else  {
-    <app-thumbnail-list [videos$]="this.videosFiltered$ "></app-thumbnail-list>
-
-  }
 </div>

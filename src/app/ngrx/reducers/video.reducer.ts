@@ -29,6 +29,17 @@ const initialState: VideoState = {
   isGettingVideoDetailSuccess: false,
   isGettingVideoDetailError: null,
 
+  isGettingLikeComment: false,
+  isGettingLikeCommentSuccess: false,
+  isGettingLikeCommentError: null,
+
+  isGettingCommented: false,
+  isGettingCommentedSuccess: false,
+  isGettingCommentedError: null,
+
+  isGettingLiked: false,
+  isGettingLikedSuccess: false,
+  isGettingLikedError: null,
 }
 
 export const videoReducer = createReducer(
@@ -180,6 +191,67 @@ export const videoReducer = createReducer(
       isGettingVideoDetailError: null,
     }
   }),
+
+  on(VideoActions.getLikedVideos, (state, {videoId}) => {
+    return {
+      ...state,
+      isGettingLikeComment: true,
+      isGettingLikeCommentSuccess: false,
+      isGettingLikeCommentError: null,
+    }
+  }),
+  on(VideoActions.getLikedVideosSuccess, (state, {likesCount, isLiked, isSave, commentsCount}) => {
+    return {
+      ...state,
+      videoDetail: <VideoModel>{
+        ...state.videoDetail,
+        likeCount: likesCount,
+        isLikedByCurrentUser: isLiked,
+        isSavedByCurrentUser: isSave,
+        commentCount: commentsCount,
+      },
+      isGettingLikeComment: false,
+      isGettingLikeCommentSuccess: true,
+      isGettingLikeCommentError: null,
+    }
+  }),
+  on(VideoActions.getLikedVideosFailure, (state, {error}) => {
+    return {
+      ...state,
+      isGettingLikeComment: false,
+      isGettingLikeCommentSuccess: false,
+      isGettingLikeCommentError: error,
+    }
+  }),
+  on(VideoActions.getLikeCount, (state, {videoId}) => {
+    return {
+      ...state,
+      isGettingLiked: true,
+      isGettingLikedSuccess: false,
+      isGettingLikedError: null,
+    }
+  }),
+  on(VideoActions.getLikeCountSuccess, (state, {likesCount, isLiked}) => {
+    return {
+      ...state,
+      videoDetail: <VideoModel>{
+        ...state.videoDetail,
+        likeCount: likesCount,
+        isLikedByCurrentUser: isLiked,
+      },
+      isGettingLiked: false,
+      isGettingLikedSuccess: true,
+      isGettingLikedError: null,
+    }
+  }),
+  on(VideoActions.getLikeCountFailure, (state, {error}) => {
+    return {
+      ...state,
+      isGettingLiked: false,
+      isGettingLikedSuccess: false,
+      isGettingLikedError: error,
+    }
+  })
 );
 
 
