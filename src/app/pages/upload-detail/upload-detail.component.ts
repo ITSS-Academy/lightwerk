@@ -18,6 +18,7 @@ import {VideoModel} from '../../models/video.model';
 import {VideoState} from '../../ngrx/states/video.state';
 import {filter} from 'rxjs/operators';
 import {convertToSupabaseUrl} from '../../utils/img-converter';
+import supabase from '../../utils/supabase';
 
 @Component({
   selector: 'app-upload-detail',
@@ -80,9 +81,17 @@ export class UploadDetailComponent implements OnInit, OnDestroy {
       this.filteredOptions$.subscribe(categories => {
         this.filteredCategories = categories;
       }),
-      this.isCreatVideoInfoSuccess$.subscribe(isSuccess => {
+      this.isCreatVideoInfoSuccess$.subscribe(async (isSuccess) => {
         if (isSuccess) {
-          this.router.navigate(['/profile/1/videos']).then();
+          const {data, error} = await supabase.auth.getUser();
+          if (error || !data.user) {
+            this.router.navigate(['/home']).then();
+            return;
+          }
+
+          const profileId = data.user.id;
+
+          this.router.navigate([`/profile/${profileId}/videos`]).then();
         }
       })
     );

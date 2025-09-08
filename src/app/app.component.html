@@ -1,30 +1,64 @@
-<mat-sidenav-container>
-  <mat-sidenav [opened]="!isSmallScreen ? true : !collapsed()"
+<mat-sidenav-container class="app-container">
+  <mat-sidenav class="app-sidebar"
+               [opened]="!isSmallScreen ? true : !collapsed()"
                (closedStart)="collapsed.set(true)"
                [mode]="sidebarMode()"
                [style.width]="this.sidebarWidth()"
                [style.transition]="!isSmallScreen? 'all 0.3s ease-in-out' : 'none'"
   >
-    <app-sidebar [collapsed]="collapsed()"></app-sidebar>
+    <app-sidebar [collapsed]="collapsed()" (notSearchClick)="onOtherClick()"
+                 (searchClick)="toggleSearchSidenav()"></app-sidebar>
   </mat-sidenav>
-  <mat-sidenav-content [style.margin-left]="this.calculateMargin()"
-                       [style.transition]="!isSmallScreen? 'all 0.3s ease-in-out' : 'none'">
-    <div style="height: 100%; width: 100%; display: flex; flex-direction: column; padding: 0 16px">
-      <app-header (toggleMenuEvent)="toggleSidebar()"></app-header>
 
 
-      @if (!(isLoggingIn$| async)) {
-        <div class="content" [ngClass]="{'with-background': this.headerTitle != 'Home'}">
-          <router-outlet></router-outlet>
+  <mat-sidenav-content
+    [style.margin-left]="this.calculateMargin()"
+    [style.transition]="!isSmallScreen? 'all 0.3s ease-in-out' : 'none'">
+    <mat-sidenav-container
+      style="height: 100%; width: 100%;"
+    >
+      <mat-sidenav #searchSidenav [opened]="false" position="start" mode="over" style="width: 320px">
+        <div style=" height: 100%; display: flex; flex-direction: column; padding: 8px 0;">
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 0 12px;">
+            <h2>Search</h2>
+            <button mat-icon-button (click)="searchSidenav.close()" aria-label="Close search">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+          <div>
+            <mat-form-field class="example-full-width" appearance="outline" style="width: 100%; padding: 0 12px;">
+              <mat-label>Search</mat-label>
+              <input matInput placeholder="Search..." (keyup.enter)="onSearch($event)">
+            </mat-form-field>
+
+          </div>
+          <div style="padding: 0 12px;">
+            <!-- nội dung search -->
+          </div>
         </div>
-      } @else {
-        <div
-          style="height: 100%; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-          <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+      </mat-sidenav>
+
+      <mat-sidenav-content>
+        <div style="height: 100%; width: 100%; display: flex; flex-direction: column; padding: 0 16px">
+          <app-header (toggleMenuEvent)="toggleSidebar()"></app-header>
 
 
+          @if (!(isLoggingIn$| async)) {
+            <div class="content" [ngClass]="{'with-background': this.headerTitle != 'Home'}">
+              <router-outlet></router-outlet>
+            </div>
+          } @else {
+            <div
+              style="height: 100%; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+              <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+
+
+            </div>
+          }
         </div>
-      }
-    </div>
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+
+
   </mat-sidenav-content>
 </mat-sidenav-container>

@@ -7,15 +7,24 @@ import {
   OnDestroy,
   Output,
   ViewChild,
-  EventEmitter
+  EventEmitter, OnInit
 } from '@angular/core';
-import {NgStyle} from "@angular/common";
+import {AsyncPipe, NgStyle} from "@angular/common";
 import {MatFabButton, MatIconButton} from "@angular/material/button";
 import {MatFormField, MatInput, MatLabel, MatSuffix} from "@angular/material/input";
 import {VideoComponent} from "../video/video.component";
 import {VideoModel} from '../../models/video.model';
 import {MatIcon} from '@angular/material/icon';
 import {convertToSupabaseUrl} from '../../utils/img-converter';
+import * as VideoActions from '../../ngrx/actions/video.actions';
+import {Store} from '@ngrx/store';
+import {VideoState} from '../../ngrx/states/video.state';
+import {Observable, Subscription, combineLatest} from 'rxjs';
+import * as LikeVideoActions from '../../ngrx/actions/like-video.actions';
+import {LikeVideoState} from '../../ngrx/states/like-video.state';
+import {deleteLikeVideo} from '../../ngrx/actions/like-video.actions';
+import {RouterLink} from '@angular/router';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-video-list',
@@ -28,12 +37,14 @@ import {convertToSupabaseUrl} from '../../utils/img-converter';
     MatLabel,
     MatSuffix,
     VideoComponent,
-    NgStyle
+    NgStyle,
+    AsyncPipe,
+    RouterLink
   ],
   templateUrl: './video-list.component.html',
   styleUrl: './video-list.component.scss'
 })
-export class VideoListComponent implements AfterViewInit, OnDestroy {
+export class VideoListComponent implements AfterViewInit, OnInit, OnDestroy {
   isExpanded = false;
   showCommentExpanded = false;
   isFavoriteActive = false
@@ -80,13 +91,13 @@ export class VideoListComponent implements AfterViewInit, OnDestroy {
           console.log('Entering fullscreen mode', this.previousScrollTop);
           containerEl.style.scrollSnapType = 'none';
           this.isFullscreen = true;
-          this.videoComponent.adjustControlButtons(true)
+          // this.videoComponent.adjustControlButtons(true)
         } else {
           containerEl.style.scrollSnapType = 'y mandatory';
           containerEl.scrollTop = this.previousScrollTop;
           console.log('Exiting fullscreen mode', this.previousScrollTop);
           this.isFullscreen = false;
-          this.videoComponent.adjustControlButtons(false)
+          // this.videoComponent.adjustControlButtons(false)
         }
       });
 
@@ -103,12 +114,52 @@ export class VideoListComponent implements AfterViewInit, OnDestroy {
   private previousScrollTop: number = 0;
   currentVideoIndex: number = 0;
   isFullscreen: boolean = false;
+  isGettingLikeComment: boolean = true;
+  videoDetail!: VideoModel
+  isLiking$: Observable<boolean>;
 
   observer!: IntersectionObserver
 
   videoReadyStates: boolean[] = [];
+  subscription: Subscription[] = [];
 
-  constructor(private cdr: ChangeDetectorRef) {
+  constructor(private cdr: ChangeDetectorRef,
+              private store: Store<{
+                video: VideoState,
+                likeVideo: LikeVideoState
+              }>,
+  ) {
+    this.isLiking$ = combineLatest([
+      this.store.select(state => state.likeVideo.isAdding),
+      this.store.select(state => state.likeVideo.isDeleting)
+    ]).pipe(
+      map(([isAdding, isDeleting]) => isAdding || isDeleting)
+    );
+  }
+
+  ngOnInit() {
+    this.subscription.push(this.store.select(state => state.video.videoDetail).subscribe(video => {
+        this.store.select(state => state.video.videoDetail).subscribe(video => {
+          this.videoDetail = video
+        })
+      }),
+      this.store.select(state => state.likeVideo.isAddSuccess).subscribe(likeVideo => {
+        if (likeVideo) {
+          this.store.dispatch(VideoActions.getLikeCount({videoId: this.cards && this.cards.length > 0 ? this.cards[this.currentVideoIndex].id : ''}))
+        }
+      }),
+      this.store.select(state => state.video.isGettingLikeComment).subscribe(isGetting => {
+        this.isGettingLikeComment = isGetting
+        this.cdr.detectChanges();
+      }),
+      this.store.select(state => state.likeVideo.isDeleteSuccess).subscribe(unlikeVideo => {
+        if (unlikeVideo) {
+          this.store.dispatch(VideoActions.getLikeCount({videoId: this.cards && this.cards.length > 0 ? this.cards[this.currentVideoIndex].id : ''}))
+        }
+      }),
+    )
+
+
   }
 
 
@@ -119,6 +170,9 @@ export class VideoListComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     this.cdr.detectChanges();
     // Initialize videoReadyStates for all cards
+    this.store.dispatch(VideoActions.getLikedVideos({
+      videoId: this.cards && this.cards.length > 0 ? this.cards[0].id : ''
+    }))
     this.videoReadyStates = this.cards ? Array(this.cards.length).fill(false) : [];
   }
 
@@ -179,6 +233,7 @@ export class VideoListComponent implements AfterViewInit, OnDestroy {
           const index = Array.from(this.cardsContainerRef.nativeElement.children).indexOf(entry.target);
           if (index !== -1 && index !== this.currentVideoIndex) {
             this.currentVideoIndex = index;
+            this.store.dispatch(VideoActions.getLikedVideos({videoId: this.cards[this.currentVideoIndex].id}));
 
             if (this.currentVideoIndex == this.cards.length - 2) {
               console.log('Emitting getMoreEvent');
@@ -213,7 +268,6 @@ export class VideoListComponent implements AfterViewInit, OnDestroy {
   }
 
   @Input() cards!: VideoModel[]
-
   videos = [
     {
       videoSrc: 'asdfas',
@@ -312,4 +366,16 @@ export class VideoListComponent implements AfterViewInit, OnDestroy {
     this.videoReadyStates[index] = true;
     this.cdr.detectChanges();
   }
+
+  toggleLike() {
+    const videoId = this.cards && this.cards.length > 0 ? this.cards[this.currentVideoIndex].id : ''
+    this.store.dispatch(LikeVideoActions.createLikeVideo({videoId}));
+  }
+
+  unlikeVideo() {
+    const videoId = this.cards && this.cards.length > 0 ? this.cards[this.currentVideoIndex].id : ''
+    this.store.dispatch(LikeVideoActions.deleteLikeVideo({videoId}));
+  }
+
+  protected readonly Math = Math;
 }

@@ -130,9 +130,12 @@ export class VideoService {
   getLatestVideos(page: number,) {
     return from(this.getAccessToken()).pipe(
       mergeMap((data) => {
-        if (data.error || !data.data.session) {
-          return throwError(() => new Error('No access token'));
+        const headers = new Headers();
+
+        if (!data.error && data.data.session) {
+          headers.append('Authorization', `${data.data.session.access_token}`);
         }
+
         return this.http.get<{
           videos: VideoModel[]
           pagination: {
@@ -141,9 +144,7 @@ export class VideoService {
             totalCount: number
           }
         }>(`${environment.api_base_url}/video/latest?page=${page}&limit=10`, {
-          headers: {
-            Authorization: `${data.data.session.access_token}`
-          }
+          headers: headers as any
         });
       })
     )
@@ -208,5 +209,25 @@ export class VideoService {
         totalCount: count || 0
       }
     }
+  }
+
+  async getLikeCommentCount(videoId: string) {
+    let headers = {};
+    const {data, error} = await supabase.auth.getSession();
+    if (!error && data.session) {
+      headers = {
+        Authorization: `${data.session.access_token}`
+      }
+    }
+
+    const res = await this.http.get<{
+      likesCount: number,
+      isLiked: boolean,
+      isSave: boolean,
+      commentsCount: number
+    }>(`${environment.api_base_url}/video/likes-comments-playlists/${videoId}`, {
+      headers: headers
+    }).toPromise();
+    return res
   }
 }

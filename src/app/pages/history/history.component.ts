@@ -65,8 +65,7 @@ export class HistoryComponent implements OnInit, OnDestroy {
     this.videos$ = this.store.select(state => state.history.historyVideos).pipe(
       map(historyVideos => historyVideos.map(h => h.video))
     );
-
-    // isLoading$ nếu có trong store, mặc định false nếu chưa có
+// isLoading$ nếu có trong store, mặc định false nếu chưa có
     this.isLoading$ = this.store.select(state => state.history.isLoading || false);
   }
 

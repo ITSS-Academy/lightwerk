@@ -63,3 +63,30 @@ export const getVideosByCategorySuccess = createAction('[Video] Get Videos By Ca
 export const getVideosByCategoryFailure = createAction('[Video] Get Videos By Category Failure', props<{
   error: any,
 }>())
+export const clearVideoDetail = createAction('[Video] Clear Video Detail')
+
+export const getLikedVideos = createAction('[Video] Get Liked Videos', props<{
+  videoId: string
+}>())
+export const getLikedVideosSuccess = createAction('[Video] Get Liked Videos Success', props<{
+  likesCount: number,
+  isLiked: boolean
+  isSave: boolean
+  commentsCount: number
+}>())
+
+export const getLikedVideosFailure = createAction('[Video] Get Liked Videos Failure', props<{
+  error: any
+}>())
+
+export const getLikeCount = createAction('[Video] Get Like Count', props<{
+  videoId: string
+}>())
+export const getLikeCountSuccess = createAction('[Video] Get Like Count Success', props<{
+  likesCount: number,
+  isLiked: boolean
+}>())
+export const getLikeCountFailure = createAction('[Video] Get Like Count Failure', props<{
+  error: any
+}>())
+

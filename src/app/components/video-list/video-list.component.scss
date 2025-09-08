@@ -262,6 +262,7 @@
 
 .btn-wrapper {
   height: fit-content;
+  align-items: center;
   padding: 10px 0 0 10px;
   align-self: flex-end;
   display: flex;
@@ -271,11 +272,34 @@
   button {
     box-shadow: none;
     border-radius: 100%;
-    //background-color: #f8faf4;
     background-color: var(--mat-sys-surface);
-
     border: 1px solid var(--mat-sys-outline-variant);
     color: var(--mat-sys-on-surface-variant);
+    transition: background 0.2s, color 0.2s, opacity 0.2s;
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  button:disabled,
+  button[disabled] {
+    background-color: #f3f3f3 !important;
+    color: #bdbdbd !important;
+    border-color: #e0e0e0 !important;
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+    box-shadow: none !important;
+  }
+
+  span {
+    transition: color 0.2s, opacity 0.2s;
+    color: var(--mat-sys-on-surface-variant);
+    opacity: 1;
+  }
+
+  .is-getting-like-comment {
+    color: #bdbdbd !important;
+    opacity: 0.6 !important;
   }
 
   .heart.active {

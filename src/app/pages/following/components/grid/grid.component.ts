@@ -5,6 +5,10 @@ import {MatDialog} from '@angular/material/dialog';
 import {DetailDialogComponent} from '../../../../components/detail-dialog/detail-dialog.component';
 import {GridCardComponent} from './components/grid-card/grid-card.component';
 import {VideoModel} from '../../../../models/video.model';
+import {ThumbnailListComponent} from '../../../../components/thumbnail-list/thumbnail-list.component';
+import {Observable} from 'rxjs';
+import {Store} from '@ngrx/store';
+import {FollowingState} from '../../../../ngrx/states/following.state';
 
 @Component({
   selector: 'app-grid',
@@ -14,6 +18,7 @@ import {VideoModel} from '../../../../models/video.model';
     MatCardImage,
     MatIconModule,
     GridCardComponent,
+    ThumbnailListComponent,
   ],
   templateUrl: './grid.component.html',
   styleUrl: './grid.component.scss'
@@ -21,14 +26,22 @@ import {VideoModel} from '../../../../models/video.model';
 export class GridComponent {
   readonly dialog = inject(MatDialog);
 
-  openDialog(videoId: string) {
+  followingVideos$: Observable<VideoModel[]>
+
+  constructor(private store: Store<{
+    following: FollowingState
+  }>) {
+    this.followingVideos$ = this.store.select(state => state.following.videos)
+  }
+
+  openDialog(video: VideoModel) {
     const dialogRef = this.dialog.open(DetailDialogComponent, {
       width: '100vw',
       height: '100vh',
       maxWidth: '100%',
       maxHeight: '100vh',
       panelClass: 'full-screen-dialog',
-      data: {id: videoId}
+      data: {video: video}
     });
     console.log('Dialog opened');
 

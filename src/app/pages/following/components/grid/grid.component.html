@@ -1,6 +1,4 @@
 <div class="grid-list">
-  @for (video of videoList; track video.id) {
+  <app-thumbnail-list [videos$]="followingVideos$"></app-thumbnail-list>
 
-    <app-grid-card [video]="video" (click)="openDialog(video.id)"></app-grid-card>
-  }
 </div>

@@ -5,6 +5,9 @@ import {MatIcon} from '@angular/material/icon';
 import {MatDialog} from '@angular/material/dialog';
 import {PlaylistDialogComponent} from '../playlist-dialog/playlist-dialog.component';
 import {PlaylistCardComponent} from '../playlist-card/playlist-card.component';
+import {
+  MakePublicDialogComponent
+} from '../../../playlist-detail/components/make-public-dialog/make-public-dialog.component';
 import {Observable, Subscription} from 'rxjs';
 import {PlaylistState} from '../../../../ngrx/states/playlist.state';
 import {Store} from '@ngrx/store';
@@ -59,8 +62,10 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 
   openDialog(): void {
     const dialogRef = this.dialog.open(PlaylistDialogComponent, {
-      width: '700px',
-      height: '400px',
+      width: '600px',
+      height: '700px',
+      maxWidth: '98vw',
+      maxHeight: '98vh',
       data: {name: this.name, isPrivate: this.isPrivate},
     });
 
@@ -78,8 +83,14 @@ export class PlaylistComponent implements OnInit, OnDestroy {
     })
   }
 
+  openPrivacyDialog(): void {
+    const dialogRef = this.dialog.open(MakePublicDialogComponent, {
+      width: '400px',
+      data: {isPrivate: this.isPrivate}
+    });
+    dialogRef.afterClosed().subscribe((result: boolean) => {
+      this.isPrivate = result;
+    });
+  }
 
 }
-
-
-
