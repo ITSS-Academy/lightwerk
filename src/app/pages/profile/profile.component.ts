@@ -14,6 +14,8 @@ import {FollowDialogComponent} from './components/follow-dialog/follow-dialog.co
 import {Store} from '@ngrx/store';
 import {ProfileState} from '../../ngrx/states/profile.state';
 import * as ProfileActions from '../../ngrx/actions/profile.actions';
+import {ProfileModel} from '../../models/profile.model';
+import {Observable} from 'rxjs';
 
 interface UserModel {
   id: string;
@@ -47,6 +49,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
   isLoading$!: import("rxjs").Observable<boolean>;
   totalCount$!: import("rxjs").Observable<number>;
 
+  followers: ProfileModel[] = [];
+  following: ProfileModel[] = [];
+  followersList$!: Observable<ProfileModel[]>;
+  followingList$!: Observable<ProfileModel[]>;
+
 
   constructor(
     private route: ActivatedRoute,
@@ -70,6 +77,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
       orderBy: 'desc',
       page: 0
     }));
+
+    this.followersList$ = this.store.select(state => state.profile.followersList);
+    this.followingList$ = this.store.select(state => state.profile.followingList);
   }
 
   openDialog(): void {
@@ -132,6 +142,18 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    const userId = "123";
+    this.store.dispatch(ProfileActions.getFollowersList({userId}));
+    this.store.dispatch(ProfileActions.getFollowingList({userId}));
+
+    this.subscription.push(
+      this.followersList$.subscribe(list => {
+        this.followers = list;
+      }),
+      this.followingList$.subscribe(list => {
+        this.following = list;
+      })
+    );
   }
 
   ngOnDestroy() {
@@ -144,62 +166,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
     const route = this.tabRoutes[idx];
     this.router.navigate([route], {relativeTo: this.route});
   }
-
-  followers: UserModel[] = [
-    {
-      id: "1",
-      username: "User_1",
-      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
-    },
-    {
-      id: "2",
-      username: "User_2",
-      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
-    },
-    {
-      id: "3",
-      username: "User_3",
-      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
-    },
-    {
-      id: "4",
-      username: "User_4",
-      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
-    },
-    {
-      id: "5",
-      username: "User_5",
-      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
-    },
-  ];
-
-  following: UserModel[] = [
-    {
-      id: "1",
-      username: "User_1",
-      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
-    },
-    {
-      id: "2",
-      username: "User_2",
-      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
-    },
-    {
-      id: "3",
-      username: "User_3",
-      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
-    },
-    {
-      id: "4",
-      username: "User_4",
-      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
-    },
-    {
-      id: "5",
-      username: "User_5",
-      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
-    },
-  ];
 
 
 }
