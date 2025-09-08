@@ -31,7 +31,7 @@ export class VideoComponent implements OnInit {
       profile: ProfileState
     }>) {
 
-    this.videoList$ = this.store.select('profile', 'userVideos');
+    this.videoList$ = this.store.select(state => state.profile.userVideos);
 
   }
 

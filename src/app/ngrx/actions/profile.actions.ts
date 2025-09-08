@@ -74,3 +74,7 @@ export const getFollowersListSuccess = createAction(
 export const getFollowersListFailure = createAction(
   "[Profile] Get followers list failure", props<{ error: any }>()
 )
+
+export const clearProfileState = createAction(
+  '[Profile] Clear profile state'
+);

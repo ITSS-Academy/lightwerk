@@ -21,14 +21,14 @@ import {VideoModel} from '../../../../models/video.model';
 export class GridComponent {
   readonly dialog = inject(MatDialog);
 
-  openDialog(videoId: string) {
+  openDialog(video: VideoModel) {
     const dialogRef = this.dialog.open(DetailDialogComponent, {
       width: '100vw',
       height: '100vh',
       maxWidth: '100%',
       maxHeight: '100vh',
       panelClass: 'full-screen-dialog',
-      data: {id: videoId}
+      data: {video: video}
     });
     console.log('Dialog opened');
 

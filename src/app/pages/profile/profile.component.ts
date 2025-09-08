@@ -137,6 +137,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.subscription.forEach(sub => sub.unsubscribe());
     this.subscription = [];
+    this.store.dispatch(ProfileActions.clearProfileState());
   }
 
   onTabChange(idx: number) {

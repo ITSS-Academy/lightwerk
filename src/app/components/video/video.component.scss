@@ -12,6 +12,14 @@ $border-radius: 0 !default;
   border-radius: $border-radius;
   background-color: var(--mat-sys-surface);
 
+  .vjs-top-left-dock, .vjs-control-bar {
+    display: flex;
+    opacity: 0; /* ẩn ban đầu */
+    visibility: hidden; /* không bắt sự kiện */
+    transform: scale(0.9); /* thu nhỏ tí cho hiệu ứng */
+    transition: opacity .3s ease, transform .3s ease, visibility 0s linear .3s;
+  }
+
   .vjs-big-play-button {
     width: 2em;
     height: 2em;
@@ -27,6 +35,13 @@ $border-radius: 0 !default;
 
   &:hover,
   &:focus {
+    .vjs-top-left-dock, .vjs-control-bar {
+      opacity: 1;
+      visibility: visible;
+      transform: scale(1);
+      transition: opacity .3s ease, transform .3s ease, visibility 0s;
+    }
+
     .vjs-big-play-button {
       backdrop-filter: blur(4px);
       background-color: rgba(40, 40, 40, .6);
@@ -68,7 +83,7 @@ $border-radius: 0 !default;
   }
 
   .vjs-control-bar > *:not(.vjs-volume-panel) {
-    display: none !important;
+    //display: none !important;
   }
 
   button.vjs-icon-cog {
@@ -227,15 +242,13 @@ $border-radius: 0 !default;
 
 ::ng-deep.vjs-top-left-dock .vjs-volume-panel {
   align-items: center;
-}
-
-
-::ng-deep.vjs-top-left-dock .vjs-volume-panel {
   width: fit-content;
   /* background: rgba(0, 0, 0, 0.6); */
   height: 50px;
   outline: none;
+  gap: 1px
 }
+
 
 //::ng-deep.vjs-volume-panel:hover .vjs-volume-control {
 //  width: 100px !important;
@@ -285,7 +298,7 @@ $border-radius: 0 !default;
 :host ::ng-deep .vjs-top-left-dock .vjs-volume-panel:focus .vjs-volume-control,
 :host ::ng-deep .vjs-top-left-dock .vjs-volume-panel:focus-within .vjs-volume-control {
   width: 100px !important;
-  padding-right: 10px !important;
+  padding: 0 10px 0 3px !important;
   background: rgba(0, 0, 0, 0.6) !important;
   height: 100% !important;
   border-radius: 0 25px 25px 0;
@@ -299,4 +312,12 @@ $border-radius: 0 !default;
 :host ::ng-deep .vjs-top-left-dock .vjs-volume-panel:focus-within .vjs-mute-control {
   //background: rgba(0, 0, 0, 0.8);
   border-radius: 50% 0 0 50%;
+}
+
+::ng-deep .vjs-layout-x-small .vjs-volume-control {
+  display: inherit !important;
+}
+
+::ng-deep .video-js.vjs-layout-small .vjs-volume-control {
+  display: inherit !important;
 }

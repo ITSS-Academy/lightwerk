@@ -5,7 +5,7 @@ import {
   ElementRef,
   HostListener, inject, model,
   OnDestroy,
-  OnInit,
+  OnInit, signal,
   ViewChild
 } from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
@@ -13,7 +13,7 @@ import {MatButton, MatIconButton} from '@angular/material/button';
 import {MatCard, MatCardAvatar, MatCardHeader, MatCardTitleGroup} from '@angular/material/card';
 import {MatIconModule} from '@angular/material/icon';
 import {MatFormField, MatHint, MatInput, MatLabel, MatSuffix} from '@angular/material/input';
-import {NgClass, NgStyle} from '@angular/common';
+import {AsyncPipe, NgClass, NgStyle} from '@angular/common';
 import {DialogVideoComponent} from '../dialog-video/dialog-video.component';
 import {convertToSupabaseUrl} from '../../utils/img-converter';
 import {Observable, Subscription} from 'rxjs';
@@ -22,16 +22,19 @@ import {Store} from '@ngrx/store';
 import * as VideoActions from '../../ngrx/actions/video.actions';
 import {VideoModel} from '../../models/video.model';
 import {VideoState} from '../../ngrx/states/video.state';
+import {VideoComponent} from '../video/video.component';
+import supabase from '../../utils/supabase';
 
 @Component({
   selector: 'app-detail-dialog',
-  imports: [MatDialogModule, MatButton, MatCard, MatCardAvatar, MatCardHeader, MatCardTitleGroup, MatIconModule, MatFormField, MatFormField, MatInput, MatSuffix, MatFormField, MatLabel, MatHint, MatIconButton, NgClass, NgStyle, DialogVideoComponent],
+  imports: [MatDialogModule, MatButton, MatCard, MatCardAvatar, MatCardHeader, MatCardTitleGroup, MatIconModule, MatFormField, MatFormField, MatInput, MatSuffix, MatFormField, MatLabel, MatHint, MatIconButton, NgClass, NgStyle, DialogVideoComponent, VideoComponent, AsyncPipe],
   templateUrl: './detail-dialog.component.html',
   styleUrl: './detail-dialog.component.scss'
 })
 export class DetailDialogComponent implements AfterViewInit, OnInit, OnDestroy {
-  readonly data = inject<{ id: string }>(MAT_DIALOG_DATA);
-  id = model(this.data.id);
+
+  readonly data = inject<{ video: VideoModel }>(MAT_DIALOG_DATA);
+  video = model(this.data.video);
 
   isExpanded = false;
   isFavoriteActive = false
@@ -42,9 +45,10 @@ export class DetailDialogComponent implements AfterViewInit, OnInit, OnDestroy {
   title: string = ''
   description: string = ''
   username: string = ''
+  userAvatar: string = ''
 
   videoDetail$: Observable<VideoModel>
-
+  isCurrentUserSignal = signal<boolean>(true);
 
   @ViewChild('pageContainer', {static: true}) pageContainerRef!: ElementRef;
   viewportWidth = 0;
@@ -58,6 +62,7 @@ export class DetailDialogComponent implements AfterViewInit, OnInit, OnDestroy {
   ) {
     this.videoDetail$ = this.store.select(state => state.video.videoDetail)
     console.log('DetailDialogComponent loaded');
+    this.store.dispatch(VideoActions.getVideoDetail({videoId: this.video().id}))
   }
 
   ngOnInit() {
@@ -66,19 +71,30 @@ export class DetailDialogComponent implements AfterViewInit, OnInit, OnDestroy {
       this.dialogRef.afterOpened().subscribe(() => {
         this.updateContainerSize()
       }),
-      this.videoDetail$.subscribe(detail => {
-        if (detail) {
+      this.videoDetail$.subscribe(async detail => {
+        if (detail.id) {
           console.log(detail.id)
           this.videoId = detail.id;
           this.title = detail.title || '';
           this.description = detail.description || '';
           this.username = detail.profile?.username || '';
+          this.userAvatar = detail.profile?.avatarPath || '';
 
+          // Check if current user is the video's owner
+          const {data, error} = await supabase.auth.getSession();
+          if (!error) {
+            console.log(data.session?.user?.id == detail.profileId);
+            console.log(detail.profileId);
+            this.isCurrentUserSignal.set(data.session?.user?.id == detail.profileId);
+          } else {
+            this.isCurrentUserSignal.set(false);
+          }
         }
       })
     );
 
-    this.store.dispatch(VideoActions.getVideoDetail({videoId: this.id()}))
+    console.log(this.video())
+    this.store.dispatch(VideoActions.getVideoDetail({videoId: this.video().id}))
 
   }
 
@@ -294,5 +310,12 @@ export class DetailDialogComponent implements AfterViewInit, OnInit, OnDestroy {
     this.isExpanded = !this.isExpanded;
   }
 
+  onVideoReady() {
+    this.videoReadyStates = true;
+  }
+
   protected readonly convertToSupabaseUrl = convertToSupabaseUrl;
+  videoReadyStates: boolean = false;
+
+
 }

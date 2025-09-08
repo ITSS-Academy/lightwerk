@@ -31,7 +31,7 @@ export class VideoCardComponent {
       maxWidth: '100%',
       maxHeight: '100vh',
       panelClass: 'full-screen-dialog',
-      data: {id: this.video.id}
+      data: {video: this.video}
     });
     console.log('Dialog opened');
 

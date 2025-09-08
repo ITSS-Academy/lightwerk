@@ -35,6 +35,8 @@
 
   </video>
   <div class="video-title-wrapper"
+       (mouseenter)="focusVideo($event)"
+       (mouseleave)="blurVideo($event)"
        [ngClass]="{ 'expanded': isExpanded }"
        style=" width: 100%; position: absolute; padding: 0 10px; bottom: 30px; left: 0; z-index: 100">
     <div class="video-title" [ngClass]="{ 'collapsed': !isExpanded }"

@@ -71,7 +71,8 @@ export const videoReducer = createReducer(
       isGetSuccess: false,
     }
   }),
-  on(VideoActions.getVideoInfoSuccess, (state, {video}) => {
+  on(VideoActions.getVideoInfoSuccess, (state, {type, video}) => {
+    console.log(type, video);
     return {
       ...state,
       videoDetail: video,
@@ -80,7 +81,8 @@ export const videoReducer = createReducer(
       isGetSuccess: true,
     }
   }),
-  on(VideoActions.getVideoInfoFailure, (state, {error}) => {
+  on(VideoActions.getVideoInfoFailure, (state, {type, error}) => {
+    console.log(type, error);
     return {
       ...state,
       isGetting: false,
@@ -152,6 +154,7 @@ export const videoReducer = createReducer(
     }
   }),
   on(VideoActions.getVideoDetailSuccess, (state, {video}) => {
+    console.log(video);
     return {
       ...state,
       videoDetail: video,

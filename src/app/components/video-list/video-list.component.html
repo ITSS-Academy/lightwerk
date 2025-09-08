@@ -14,7 +14,7 @@
             >
 
               <div style="display: flex; flex-direction: row; gap: 8px; width: fit-content; height: fit-content">
-               
+
 
                 <div class="card" [ngStyle]="getCardBoxStyle(card)">
                   <div class="card-media">
@@ -27,6 +27,7 @@
                       <app-video
                         [videoId]="card.id"
                         aspectRatio="{{card.aspectRatio}}"
+                        [thumbnailPath]="card.thumbnailPath"
                         videoSrc="{{convertToSupabaseUrl(`${card.id}/master.m3u8`,'video')}}"
                         (videoReady)="onVideoReady($index)"
                         [ngStyle]="{display: videoReadyStates[currentVideoIndex] ? 'block' : 'none'}">

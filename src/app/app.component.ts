@@ -1,4 +1,4 @@
-import {Component, computed, signal} from '@angular/core';
+import {Component, computed, signal, ViewChild} from '@angular/core';
 import {BreakpointObserver} from '@angular/cdk/layout';
 import {ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 import {SidebarComponent} from './components/sidebar/sidebar.component';
@@ -12,10 +12,23 @@ import {Observable} from 'rxjs';
 import {logout, storeAuth} from './ngrx/actions/auth.actions';
 import {AuthModel} from './models/auth.model';
 import {AsyncPipe, NgClass} from '@angular/common';
+import {MatInputModule} from '@angular/material/input';
+import {MatButtonModule} from '@angular/material/button';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, SidebarComponent, MaterialAngularModule, RouterLink, RouterLinkActive, HeaderComponent, AsyncPipe, NgClass],
+  imports: [RouterOutlet,
+    SidebarComponent,
+    MaterialAngularModule,
+    MatInputModule,
+    MatButtonModule,
+    RouterLink,
+    RouterLinkActive,
+    HeaderComponent,
+    MatFormFieldModule,
+    AsyncPipe,
+    NgClass],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -30,6 +43,8 @@ export class AppComponent {
 
   isLoggingIn$: Observable<boolean>
   headerTitle: string = '';
+
+  @ViewChild('searchSidenav') searchSidenav!: any;
 
   constructor(private breakpointObserver: BreakpointObserver, private store: Store<{ auth: AuthState }>,
               private router: Router, private activatedRoute: ActivatedRoute,) {
@@ -70,5 +85,18 @@ export class AppComponent {
 
   toggleSidebar() {
     this.collapsed.set(!this.collapsed())
+  }
+
+  toggleSearchSidenav() {
+    if (this.searchSidenav?.opened) {
+      this.searchSidenav.close();
+    } else {
+      this.searchSidenav.open();
+    }
+  }
+
+  onSearch(event: Event) {
+    this.toggleSearchSidenav();
+    this.router.navigate(['/search'], {queryParams: {q: (event.target as HTMLInputElement).value}}).then();
   }
 }

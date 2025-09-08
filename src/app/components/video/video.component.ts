@@ -15,6 +15,7 @@ import videojs from 'video.js';
 import {FormsModule} from '@angular/forms';
 import "videojs-hotkeys";
 import {NgClass, NgStyle} from '@angular/common';
+import {convertToSupabaseUrl} from '../../utils/img-converter';
 
 
 @Component({
@@ -49,8 +50,12 @@ export class VideoComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit(): void {
     this.player = videojs(this.target.nativeElement, {
       controls: true,
+      controlBar: {children: ['playToggle', 'volumePanel', 'progressControl']},
+      inactivityTimeout: 0,
       autoplay: false,
+      poster: convertToSupabaseUrl(this.thumbnailPath, 'thumbnail'),
       preload: 'auto',
+      userActions: {doubleClick: false},
       responsive: true,
       fluid: true,
       aspectRatio: this.aspectRatio,
@@ -86,12 +91,14 @@ export class VideoComponent implements OnInit, OnDestroy, AfterViewInit {
 
       const dock = document.createElement('div');
       dock.style.position = 'absolute';
-      dock.style.top = '10px';
+      dock.style.top = '0';
       dock.style.left = '0';
+      dock.style.padding = '8px';
       dock.style.width = '100%';
-      dock.style.display = 'flex';
+      // dock.style.display = '';
       dock.style.gap = '8px';
       dock.className = 'vjs-top-left-dock';
+
       this.player.el().appendChild(dock);
 
       // Lấy playToggle và volumePanel từ controlBar
@@ -113,7 +120,11 @@ export class VideoComponent implements OnInit, OnDestroy, AfterViewInit {
       // dock.appendChild(this.player.controlBar.playToggle.el());
       // dock.appendChild(player.controlBar.volumePanel.el());
 
-
+      this.player.on('fullscreenchange', () => {
+        if (this.player.isFullscreen()) {
+          this.player.exitFullscreen()
+        }
+      });
     })
     // Tùy chỉnh tốc độ mặc định
     this.player.playbackRate(1.0);
@@ -180,4 +191,12 @@ export class VideoComponent implements OnInit, OnDestroy, AfterViewInit {
     this.isExpanded = !this.isExpanded;
   }
 
+  focusVideo($event: Event) {
+    this.player.focus();
+  }
+
+  blurVideo($event: Event) {
+    (this.player.el() as HTMLElement).blur();
+
+  }
 }

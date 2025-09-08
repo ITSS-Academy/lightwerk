@@ -3,6 +3,7 @@ import {VideoModel} from '../../models/video.model';
 import {createReducer, on} from '@ngrx/store';
 import * as ProfileActions from '../actions/profile.actions';
 import {ProfileModel} from '../../models/profile.model';
+import {clearProfileState} from '../actions/profile.actions';
 
 export const initialState: ProfileState = {
   userVideos: <VideoModel[]>[],
@@ -171,4 +172,5 @@ export const profileReducer = createReducer(
     error: null,
     isLoading: false,
   })),
+  on(ProfileActions.clearProfileState, () => initialState),
 )
