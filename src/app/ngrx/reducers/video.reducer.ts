@@ -29,6 +29,10 @@ const initialState: VideoState = {
   isGettingVideoDetailSuccess: false,
   isGettingVideoDetailError: null,
 
+  isCategoryById: false,
+  isCategoryByIdSuccess: false,
+  isCategoryByIdError: null,
+
 }
 
 export const videoReducer = createReducer(
@@ -167,7 +171,37 @@ export const videoReducer = createReducer(
       isGettingVideoDetailSuccess: false,
       isGettingVideoDetailError: error,
     }
-  })
+  }),
+
+  on(VideoActions.getVideosByCategory, (state, {categoryId, page}) => {
+    return {
+      ...state,
+      isGettingLatest: true,
+      isGetLatestError: null,
+      isGetLatestSuccess: false,
+    }
+  }),
+
+  on(VideoActions.getVideosByCategorySuccess, (state, {videos, totalItems}) => {
+    return {
+      ...state,
+      canGetMoreLatest: state.latestVideos.length + videos.length < totalItems,
+      latestVideos: [...state.latestVideos, ...videos],
+      isGettingFirstLatest: false,
+      isGettingLatest: false,
+      isGetLatestError: null,
+      isGetLatestSuccess: true,
+    }
+  }),
+
+  on(VideoActions.getVideosByCategoryFailure, (state, {error}) => {
+    return {
+      ...state,
+      isGettingLatest: false,
+      isGetLatestError: error,
+      isGetLatestSuccess: false,
+    }
+  }),
 );
 
 

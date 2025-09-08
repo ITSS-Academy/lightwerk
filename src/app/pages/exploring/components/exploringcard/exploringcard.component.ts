@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, inject, Input, OnDestroy, OnInit} from '@angular/core';
 import { VideoModel } from '../../../../models/video.model';
 import {convertToSupabaseUrl} from '../../../../utils/img-converter';
 import {DatePipe} from '@angular/common';
@@ -9,6 +9,11 @@ import {Store} from '@ngrx/store';
 import {HistoryState} from '../../../../ngrx/states/history.state';
 import * as HistoryActions from '../../../../ngrx/actions/history.actions';
 import {Subscription} from 'rxjs';
+import {DetailDialogComponent} from '../../../../components/detail-dialog/detail-dialog.component';
+import {MatDialog} from '@angular/material/dialog';
+import {
+  DeleteVideoDialogComponent
+} from '../../../playlist-detail/components/delete-video-dialog/delete-video-dialog.component';
 
 @Component({
   selector: 'app-exploring-card',
@@ -22,6 +27,8 @@ import {Subscription} from 'rxjs';
   styleUrls: ['./exploringcard.component.scss']
 })
 export class ExploringCardComponent implements OnInit, OnDestroy{
+
+  readonly dialog = inject(MatDialog);
   @Input() video!: VideoModel; // chỉ dùng VideoModel
   isHistoryPage = false;
   protected readonly convertToSupabaseUrl = convertToSupabaseUrl;
@@ -52,4 +59,23 @@ export class ExploringCardComponent implements OnInit, OnDestroy{
   removeFromHistory(id: string) {
     this.store.dispatch(HistoryActions.deleteHistoryVideo({videoId:id}));
   }
+
+
+  openDialog(video: VideoModel) {
+    const dialogRef = this.dialog.open(DetailDialogComponent, {
+      width: '100vw',
+      height: '100vh',
+      maxWidth: '100%',
+      maxHeight: '100vh',
+      panelClass: 'full-screen-dialog',
+      data: {video: video}
+    });
+    console.log('Dialog opened');
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
+
 }
+

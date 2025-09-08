@@ -24,4 +24,8 @@ export interface VideoState {
   isGettingVideoDetail: boolean,
   isGettingVideoDetailSuccess: boolean,
   isGettingVideoDetailError: any,
+
+  isCategoryById: boolean,
+  isCategoryByIdSuccess: boolean,
+  isCategoryByIdError: any,
 }

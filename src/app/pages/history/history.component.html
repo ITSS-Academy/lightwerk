@@ -17,25 +17,6 @@
   </mat-form-field>
 </div>
 
-
-<!--@if (isLoading$ | async) {-->
-<!--  <p class="loading">Loading...</p>-->
-<!--} @else if ((videos$ | async)?.length === 0) {-->
-<!--  <p class="loading">No videos available</p>-->
-<!--} @else {-->
-<!--  <div class="thumbnail-grid">-->
-<!--    @for (video of videos$ | async; track video.id) {-->
-<!--      <div class="thumbnail-card">-->
-<!--        <img [src]="convertToSupabaseUrl(video.thumbnailPath, 'thumbnail')" alt="{{ video.title }}" class="thumbnail-img" />-->
-<!--        <div class="thumbnail-title">{{ video.title }}</div>-->
-<!--      </div>-->
-<!--    } @empty {-->
-<!--      <p class="loading">No videos available</p>-->
-<!--    }-->
-<!--  </div>-->
-<!--}-->
-
-
 <div>
   <app-thumbnail-list [videos$]="this.videos$ "></app-thumbnail-list>
 </div>
