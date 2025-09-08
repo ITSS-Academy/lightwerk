@@ -7,37 +7,52 @@ import {
   OnDestroy,
   Output,
   ViewChild,
-  EventEmitter
+  EventEmitter, OnInit
 } from '@angular/core';
-import {NgStyle} from "@angular/common";
+import {AsyncPipe, NgStyle} from "@angular/common";
 import {MatFabButton, MatIconButton} from "@angular/material/button";
 import {MatFormField, MatInput, MatLabel, MatSuffix} from "@angular/material/input";
 import {VideoComponent} from "../video/video.component";
 import {VideoModel} from '../../models/video.model';
 import {MatIcon} from '@angular/material/icon';
 import {convertToSupabaseUrl} from '../../utils/img-converter';
+import {Observable, Subscription} from 'rxjs';
+import {CommentModel} from '../../models/comment.model';
+import {Store} from '@ngrx/store';
+import {CommentState} from '../../ngrx/states/comment.state';
+import * as CommentAction from '../../ngrx/actions/comment.actions';
+import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-video-list',
   imports: [
-    MatFabButton,
+
     MatFormField,
     MatIcon,
     MatIconButton,
     MatInput,
     MatLabel,
     MatSuffix,
+
+    AsyncPipe,
+    FormsModule,
+    NgStyle,
     VideoComponent,
-    NgStyle
+    MatFabButton
   ],
   templateUrl: './video-list.component.html',
   styleUrl: './video-list.component.scss'
 })
-export class VideoListComponent implements AfterViewInit, OnDestroy {
+export class VideoListComponent implements AfterViewInit, OnDestroy, OnInit {
   isExpanded = false;
   showCommentExpanded = false;
   isFavoriteActive = false
   isSavetagActive = false
+  subscriptions: Subscription[] = [];
+  //create a comment with ngrx
+  comments$!: Observable<CommentModel[]>;
+  comments!: CommentModel[];
+  commentContent: string = '';
 
   pageContainerRef!: ElementRef;
   @Output() getMoreEvent = new EventEmitter<void>();
@@ -108,12 +123,29 @@ export class VideoListComponent implements AfterViewInit, OnDestroy {
 
   videoReadyStates: boolean[] = [];
 
-  constructor(private cdr: ChangeDetectorRef) {
+  constructor(private cdr: ChangeDetectorRef,
+              private store: Store<{ comment: CommentState }>
+  ) {
+    this.comments$ = this.store.select(state => state.comment.comments);
   }
 
+  ngOnInit() {
+    this.subscriptions.push(
+      this.comments$.subscribe((comment: CommentModel[]) => {
+        console.log(comment);
+        if (comment.length) {
+          this.comments = comment;
+          console.log(comment);
+        }
+      }),
+    );
+    this.store.dispatch(CommentAction.getAllComments({videoId: this.cards[0]?.id!}));
+    this.updateContainerSize();
+  }
 
   ngOnDestroy() {
     if (this.observer) this.observer.disconnect();
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   ngAfterViewInit() {
@@ -227,79 +259,6 @@ export class VideoListComponent implements AfterViewInit, OnDestroy {
     }
   ]
 
-  comments = [
-    {
-      id: 1,
-      name: "Mạnh Mèo",
-      avatar: "https://i.pravatar.cc/40?img=1",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 28, 2022"
-    },
-    {
-      id: 2,
-      name: "Anh Bi",
-      avatar: "https://i.pravatar.cc/40?img=2",
-      text: "Simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
-      date: "July 28, 2022"
-    },
-    {
-      id: 3,
-      name: "Bé My",
-      avatar: "https://i.pravatar.cc/40?img=3",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 29, 2022"
-    },
-    {
-      id: 4,
-      name: "Chị Đen",
-      avatar: "https://i.pravatar.cc/40?img=4",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 30, 2022"
-    },
-    {
-      id: 5,
-      name: "Anh Lu Lu",
-      avatar: "https://i.pravatar.cc/40?img=5",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 28, 2022"
-    },
-    {
-      id: 6,
-      name: "Mạnh Mèo",
-      avatar: "https://i.pravatar.cc/40?img=1",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 28, 2022"
-    },
-    {
-      id: 7,
-      name: "Anh Bi",
-      avatar: "https://i.pravatar.cc/40?img=2",
-      text: "Simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
-      date: "July 28, 2022"
-    },
-    {
-      id: 8,
-      name: "Bé My",
-      avatar: "https://i.pravatar.cc/40?img=3",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 29, 2022"
-    },
-    {
-      id: 9,
-      name: "Chị Đen",
-      avatar: "https://i.pravatar.cc/40?img=4",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 30, 2022"
-    },
-    {
-      id: 10,
-      name: "Anh Lu Lu",
-      avatar: "https://i.pravatar.cc/40?img=5",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 28, 2022"
-    }
-  ];
-
 
   toggleComments() {
     this.showCommentExpanded = !this.showCommentExpanded;
@@ -312,4 +271,13 @@ export class VideoListComponent implements AfterViewInit, OnDestroy {
     this.videoReadyStates[index] = true;
     this.cdr.detectChanges();
   }
+
+  createComment() {
+    if (!this.commentContent.trim()) return;
+    const videoId = this.cards[this.currentVideoIndex].id;
+    this.store.dispatch(CommentAction.createComment({content: this.commentContent, videoId: videoId}));
+    this.commentContent = '';
+  }
+
 }
+

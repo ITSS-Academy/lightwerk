@@ -91,6 +91,7 @@
     <!--    </div>-->
   </div>
 
+  <!-- Sidebar bình luận -->
   @if (showCommentExpanded) {
     <div class="comment-sidebar">
       <div class="comment-header">
@@ -101,31 +102,39 @@
         </button>
       </div>
 
+      <!-- Danh sách comment -->
       <div class="comment-list">
         @for (c of comments; track c.id) {
           <div class="comment">
             <div class="avatar">
-              <img [src]="c.avatar" alt="avatar"/>
+              <img src="{{c.profile?.avatarUrl}}" alt="{{c.profile?.avatarUrl}}"/>
             </div>
             <div class="comment-content">
-              <p><strong>{{ c.name }}</strong> {{ c.text }}</p>
-              <span class="date">{{ c.date }}</span>
+              <p><strong>{{ c.profile?.username }}</strong> {{ c.content }}</p>
+              <span class="date">{{ c.createdAt }}</span>
             </div>
           </div>
         }
       </div>
 
+      <!-- Form nhập comment -->
       <div class="frame-comment">
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="comment-input">
           <mat-label>Thêm bình luận</mat-label>
-          <input matInput placeholder="Viết gì đó..."/>
-          <button mat-icon-button matSuffix>
+          <input
+            matInput
+            placeholder="Viết gì đó..."
+            [(ngModel)]="commentContent"
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="createComment()"
+          >
             <mat-icon>send</mat-icon>
           </button>
         </mat-form-field>
       </div>
     </div>
   }
-
-
 </div>
