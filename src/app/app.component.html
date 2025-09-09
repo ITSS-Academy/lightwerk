@@ -6,7 +6,8 @@
                [style.width]="this.sidebarWidth()"
                [style.transition]="!isSmallScreen? 'all 0.3s ease-in-out' : 'none'"
   >
-    <app-sidebar [collapsed]="collapsed()" (searchClick)="toggleSearchSidenav()"></app-sidebar>
+    <app-sidebar [collapsed]="collapsed()" (notSearchClick)="onOtherClick()"
+                 (searchClick)="toggleSearchSidenav()"></app-sidebar>
   </mat-sidenav>
 
 

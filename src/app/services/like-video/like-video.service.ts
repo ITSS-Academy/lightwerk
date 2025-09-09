@@ -25,60 +25,90 @@ export class LikeVideoService {
   }
 
 
-  getLikeCount(videoId: string) {
-    return from(this.getAccessToken()).pipe(
-      mergeMap((data) => {
-        let headers = {};
-        if (!data.error && data.data.session) {
-          headers = {
-            Authorization: `${data.data.session.access_token}`
-          }
-        }
-        return this.http.get<{
-          count: number
-        }>(`${environment.api_base_url}/like-video/get-likes-video/${videoId}`, headers
-        );
-      })
-    )
+  async deleteLikeVideo(videoId: string,) {
+    const {
+      data: userData, error: userError
+    } = await supabase.auth.getUser()
+    if (userError) {
+      throw new Error('No profile id');
+    }
+
+    const profileId = userData.user?.id;
+    if (!profileId) {
+      throw new Error('No profile id');
+    }
+
+    const {data, error} = await supabase
+      .from('like_video')
+      .delete()
+      .eq('videoId', videoId)
+      .eq('profileId', profileId)
+      .select('*');
+    if (error) {
+      throw new Error('Failed to delete like video');
+    }
+    return data;
   }
 
-  deleteLikeVideo(videoId: string, profileId: string) {
-    return from(this.getAccessToken()).pipe(
-      mergeMap((data) => {
-        let headers = {};
-        if (!data.error && data.data.session) {
-          headers = {
-            Authorization: `${data.data.session.access_token}`
-          }
-        }
-        return this.http.delete<{
-          count: number
-        }>(`${environment.api_base_url}/like-video/delete-like-video/${videoId}/${profileId}`, {
-          headers: headers
-        });
-      })
-    )
+  async addLikeVideo(videoId: string,) {
+    const {
+      data: userData, error: userError
+    } = await supabase.auth.getUser()
+    if (userError) {
+      throw new Error('No profile id');
+    }
+
+    const profileId = userData.user?.id;
+    if (!profileId) {
+      throw new Error('No profile id');
+    }
+
+    console.log(videoId)
+
+    const {data, error} = await supabase
+      .from('like_video')
+      .insert([{videoId: videoId, profileId: profileId}])
+      .select('*');
+    if (error) {
+      throw new Error('Failed to add like video');
+    }
+    return data;
+
   }
 
-  addLikeVideo(videoId: string, profileId: string) {
-    return from(this.getAccessToken()).pipe(
-      mergeMap((data) => {
-        let headers = {};
-        if (!data.error && data.data.session) {
-          headers = {
-            Authorization: `${data.data.session.access_token}`
-          }
-        }
-        return this.http.post<{
-          count: number
-        }>(`${environment.api_base_url}/like-video`, {
-          videoId: videoId,
-          profileId: profileId
-        }, {
-          headers: headers
-        });
-      })
-    )
+  async getLikeCountAndIsLike(videoId: string) {
+    const {
+      data: userData, error: userError
+    } = await supabase.auth.getUser()
+    if (userError) {
+      throw new Error('No profile id');
+    }
+
+    console.log('userData')
+
+    const profileId = userData.user?.id;
+    if (!profileId) {
+      throw new Error('No profile id');
+    }
+
+    const {data, error} = await supabase
+      .from('like_video')
+      .select('*')
+      .eq('videoId', videoId)
+      .eq('profileId', profileId);
+    if (error) {
+      throw new Error('Failed to get like count');
+    }
+
+    const {count, error: countError} = await supabase
+      .from('like_video')
+      .select('*', {count: 'exact'})
+      .eq('videoId', videoId);
+    if (countError) {
+      throw new Error('Failed to get like count');
+    }
+    return {likeCount: count, isLike: data?.length > 0};
+
   }
 }
 

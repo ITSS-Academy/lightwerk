@@ -29,6 +29,21 @@ const initialState: VideoState = {
   isGettingVideoDetailSuccess: false,
   isGettingVideoDetailError: null,
 
+  isCategoryById: false,
+  isCategoryByIdSuccess: false,
+  isCategoryByIdError: null,
+
+  isGettingLikeComment: false,
+  isGettingLikeCommentSuccess: false,
+  isGettingLikeCommentError: null,
+
+  isGettingCommented: false,
+  isGettingCommentedSuccess: false,
+  isGettingCommentedError: null,
+
+  isGettingLiked: false,
+  isGettingLikedSuccess: false,
+  isGettingLikedError: null,
 }
 
 export const videoReducer = createReducer(
@@ -71,8 +86,7 @@ export const videoReducer = createReducer(
       isGetSuccess: false,
     }
   }),
-  on(VideoActions.getVideoInfoSuccess, (state, {type, video}) => {
-    console.log(type, video);
+  on(VideoActions.getVideoInfoSuccess, (state, {video}) => {
     return {
       ...state,
       videoDetail: video,
@@ -81,8 +95,7 @@ export const videoReducer = createReducer(
       isGetSuccess: true,
     }
   }),
-  on(VideoActions.getVideoInfoFailure, (state, {type, error}) => {
-    console.log(type, error);
+  on(VideoActions.getVideoInfoFailure, (state, {error}) => {
     return {
       ...state,
       isGetting: false,
@@ -171,6 +184,36 @@ export const videoReducer = createReducer(
       isGettingVideoDetailError: error,
     }
   }),
+
+  on(VideoActions.getVideosByCategory, (state, {categoryId, page}) => {
+    return {
+      ...state,
+      isGettingLatest: true,
+      isGetLatestError: null,
+      isGetLatestSuccess: false,
+    }
+  }),
+
+  on(VideoActions.getVideosByCategorySuccess, (state, {videos, totalItems}) => {
+    return {
+      ...state,
+      canGetMoreLatest: state.latestVideos.length + videos.length < totalItems,
+      latestVideos: [...state.latestVideos, ...videos],
+      isGettingFirstLatest: false,
+      isGettingLatest: false,
+      isGetLatestError: null,
+      isGetLatestSuccess: true,
+    }
+  }),
+
+  on(VideoActions.getVideosByCategoryFailure, (state, {error}) => {
+    return {
+      ...state,
+      isGettingLatest: false,
+      isGetLatestError: error,
+      isGetLatestSuccess: false,
+    }
+  }),
   on(VideoActions.clearVideoDetail, (state) => {
     return {
       ...state,
@@ -180,6 +223,70 @@ export const videoReducer = createReducer(
       isGettingVideoDetailError: null,
     }
   }),
+
+  on(VideoActions.getLikedVideos, (state, {videoId}) => {
+    return {
+      ...state,
+      isGettingLikeComment: true,
+      isGettingLikeCommentSuccess: false,
+      isGettingLikeCommentError: null,
+    }
+  }),
+  on(VideoActions.getLikedVideosSuccess, (state, {likesCount, isLiked, isSave, commentsCount}) => {
+    return {
+      ...state,
+      videoDetail: <VideoModel>{
+        ...state.videoDetail,
+        likeCount: likesCount,
+        isLikedByCurrentUser: isLiked,
+        isSavedByCurrentUser: isSave,
+        commentCount: commentsCount,
+      },
+      isGettingLikeComment: false,
+      isGettingLikeCommentSuccess: true,
+      isGettingLikeCommentError: null,
+    }
+  }),
+  on(VideoActions.getLikedVideosFailure, (state, {error}) => {
+    return {
+      ...state,
+      isGettingLikeComment: false,
+      isGettingLikeCommentSuccess: false,
+      isGettingLikeCommentError: error,
+    }
+  }),
+  on(VideoActions.getLikeCount, (state, {videoId,type}) => {
+    console.log(type);
+    return {
+      ...state,
+      isGettingLiked: true,
+      isGettingLikedSuccess: false,
+      isGettingLikedError: null,
+    }
+  }),
+  on(VideoActions.getLikeCountSuccess, (state, {likesCount, isLiked, type}) => {
+    console.log(type);
+    return {
+      ...state,
+      videoDetail: <VideoModel>{
+        ...state.videoDetail,
+        likeCount: likesCount,
+        isLikedByCurrentUser: isLiked,
+      },
+      isGettingLiked: false,
+      isGettingLikedSuccess: true,
+      isGettingLikedError: null,
+    }
+  }),
+  on(VideoActions.getLikeCountFailure, (state, {error,type}) => {
+    console.log(type);
+    return {
+      ...state,
+      isGettingLiked: false,
+      isGettingLikedSuccess: false,
+      isGettingLikedError: error,
+    }
+  })
 );
 
 
