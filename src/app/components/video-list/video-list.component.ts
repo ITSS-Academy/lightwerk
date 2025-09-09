@@ -9,7 +9,7 @@ import {
   ViewChild,
   EventEmitter, OnInit
 } from '@angular/core';
-import {AsyncPipe, NgStyle} from "@angular/common";
+import {AsyncPipe, DatePipe, NgStyle} from "@angular/common";
 import {MatFabButton, MatIconButton} from "@angular/material/button";
 import {MatFormField, MatInput, MatLabel, MatSuffix} from "@angular/material/input";
 import {VideoComponent} from "../video/video.component";
@@ -44,7 +44,8 @@ import {FormsModule} from '@angular/forms';
     VideoComponent,
     NgStyle,
     AsyncPipe,
-    RouterLink
+    RouterLink,
+    DatePipe
   ],
   templateUrl: './video-list.component.html',
   styleUrl: './video-list.component.scss'
@@ -130,6 +131,7 @@ export class VideoListComponent implements AfterViewInit, OnInit, OnDestroy {
   comments$!: Observable<CommentModel[]>;
   comments!: CommentModel[];
   commentContent: string = '';
+  isGettingLiked$: Observable<boolean>
 
   constructor(private cdr: ChangeDetectorRef,
               private store: Store<{
@@ -146,13 +148,15 @@ export class VideoListComponent implements AfterViewInit, OnInit, OnDestroy {
       map(([isAdding, isDeleting]) => isAdding || isDeleting)
     );
     this.comments$ = this.store.select(state => state.comment.comments);
+    this.isGettingLiked$ = this.store.select(state => state.video.isGettingLiked)
   }
 
 
   ngOnInit() {
     this.store.dispatch(CommentAction.getAllComments({videoId: this.cards[0]?.id!}));
 
-    this.subscription.push(this.store.select(state => state.video.videoDetail).subscribe(video => {
+    this.subscription.push(
+      this.store.select(state => state.video.videoDetail).subscribe(video => {
         this.store.select(state => state.video.videoDetail).subscribe(video => {
           this.videoDetail = video
         })
@@ -175,10 +179,7 @@ export class VideoListComponent implements AfterViewInit, OnInit, OnDestroy {
       }),
       this.comments$.subscribe((comment: CommentModel[]) => {
         console.log(comment);
-        if (comment.length) {
-          this.comments = comment;
-          console.log(comment);
-        }
+        this.comments = comment;
       }),
     )
 
@@ -187,6 +188,7 @@ export class VideoListComponent implements AfterViewInit, OnInit, OnDestroy {
 
   ngOnDestroy() {
     if (this.observer) this.observer.disconnect();
+    this.subscription.forEach(sub => sub.unsubscribe());
   }
 
   ngAfterViewInit() {
@@ -256,6 +258,7 @@ export class VideoListComponent implements AfterViewInit, OnInit, OnDestroy {
           if (index !== -1 && index !== this.currentVideoIndex) {
             this.currentVideoIndex = index;
             this.store.dispatch(VideoActions.getLikedVideos({videoId: this.cards[this.currentVideoIndex].id}));
+            this.store.dispatch(CommentAction.getAllComments({videoId: this.cards[this.currentVideoIndex]?.id!}));
 
             if (this.currentVideoIndex == this.cards.length - 2) {
               console.log('Emitting getMoreEvent');

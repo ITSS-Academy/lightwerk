@@ -84,6 +84,8 @@ export class LikeVideoService {
       throw new Error('No profile id');
     }
 
+    console.log('userData')
+
     const profileId = userData.user?.id;
     if (!profileId) {
       throw new Error('No profile id');
