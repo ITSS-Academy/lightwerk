@@ -78,3 +78,18 @@ export const getFollowersListFailure = createAction(
 export const clearProfileState = createAction(
   '[Profile] Clear profile state'
 );
+
+export const getProfile = createAction(
+  "[Profile] Get profile",
+  props<{
+    userId: string,
+  }>()
+);
+
+export const getProfileSuccess = createAction(
+  "[Profile] Get profile success", props<{ profile: ProfileModel }>()
+);
+
+export const getProfileFailure = createAction(
+  "[Profile] Get profile failure", props<{ error: any }>()
+);
