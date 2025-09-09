@@ -8,7 +8,9 @@ import {
   ViewChild,
   Renderer2,
   Output,
-  EventEmitter
+  EventEmitter,
+  OnChanges,
+  SimpleChanges
 } from '@angular/core';
 import Player from 'video.js/dist/types/player';
 import videojs from 'video.js';
@@ -29,15 +31,15 @@ import {convertToSupabaseUrl} from '../../utils/img-converter';
   templateUrl: './video.component.html',
   styleUrl: './video.component.scss'
 })
-export class VideoComponent implements OnInit, OnDestroy, AfterViewInit {
+export class VideoComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
   @ViewChild('target', {static: true}) target!: ElementRef;
   @Input() videoSrc!: string;
   @Input() aspectRatio!: string
   @Input() videoId!: string;
   @Input() thumbnailPath!: string;
+  @Input() videoIdActivate?: string;
   @Output() videoReady = new EventEmitter<void>();
   player!: Player;
-  videoVisible = false;
   private previousScrollTop: number = 0;
   isExpanded = false;
 
@@ -137,11 +139,30 @@ export class VideoComponent implements OnInit, OnDestroy, AfterViewInit {
         // this.adjustControlButtons(false)
       }
     })
+
   }
 
   ngOnDestroy(): void {
     if (this.player) {
       this.player.dispose();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if ('videoIdActivate' in changes && this.player) {
+      if (this.videoIdActivate !== undefined) {
+        if (this.videoIdActivate !== this.videoId) {
+          // Reset player if not activated
+          this.player.pause();
+          this.player.currentTime(0);
+          this.player.poster(convertToSupabaseUrl(this.thumbnailPath, 'thumbnail'));
+        } else {
+          // Activated: allow playback
+          // this.player.play();
+        }
+      } else {
+        // If not provided, do nothing special
+      }
     }
   }
 

@@ -1,3 +1,4 @@
+<script src="../../ngrx/actions/history.actions.ts"></script>
 <div style="display: flex; width: 100%; height: 100%">
   <div class="page-container">
     <!-- Render a list of cards with different aspect ratios -->
@@ -30,6 +31,7 @@
                         [thumbnailPath]="card.thumbnailPath"
                         videoSrc="{{convertToSupabaseUrl(`${card.id}/master.m3u8`,'video')}}"
                         (videoReady)="onVideoReady($index)"
+                        [videoIdActivate]="this.cards[currentVideoIndex].id"
                         [ngStyle]="{display: videoReadyStates[currentVideoIndex] ? 'block' : 'none'}">
                       </app-video>
                     } @else {
@@ -40,36 +42,50 @@
                     }
                   </div>
                 </div>
+
                 <div class="btn-wrapper">
-                  <button mat-fab aria-label="Example icon button with a delete icon" class="heart"
-                          [class.active]="isFavoriteActive"
-                          (click)="isFavoriteActive = !isFavoriteActive">
-                    @if (isFavoriteActive) {
+                  <button [disabled]="isGettingLikeComment || (isLiking$ | async) || (isGettingLiked$ | async)" mat-fab
+                          aria-label="Example icon button with a delete icon"
+                          class="heart"
+                          [class.active]="videoDetail.isLikedByCurrentUser && !isGettingLikeComment "
+                          (click)="videoDetail.isLikedByCurrentUser ? unlikeVideo() : toggleLike()">
+                    @if (videoDetail.isLikedByCurrentUser && !isGettingLikeComment) {
                       <mat-icon>favorite</mat-icon>
                     } @else {
                       <mat-icon>favorite_border</mat-icon>
                     }
                   </button>
+                  <span
+                    [class.is-getting-like-comment]="isGettingLikeComment || (isLiking$ | async) || (isGettingLiked$ | async)">
+                    {{ isGettingLikeComment ? '0' : videoDetail.likeCount }}
+                  </span>
 
-                  <button (click)="toggleComments()" mat-fab aria-label="Example icon button with a delete icon">
+                  <button [disabled]="isGettingLikeComment && !(isLiking$ | async)" (click)="toggleComments()" mat-fab
+                          aria-label="Example icon button with a delete icon">
                     <mat-icon
                       fontSet="material-symbols-outlined"
                     >comment
                     </mat-icon>
                   </button>
+                  <span [class.is-getting-like-comment]="isGettingLikeComment">
+                    {{ isGettingLikeComment ? '0' : videoDetail.commentCount }}
+                  </span>
 
-                  <button mat-fab aria-label="Example icon button with a delete icon" class="bookmark"
+                  <button [disabled]="isGettingLikeComment && !(isLiking$ | async)" mat-fab
+                          aria-label="Example icon button with a delete icon"
+                          class="bookmark"
                           [class.active]="isSavetagActive"
                           (click)="isSavetagActive = !isSavetagActive">
-                    @if (isSavetagActive) {
+                    @if (videoDetail.isSavedByCurrentUser) {
                       <mat-icon>bookmark</mat-icon>
                     } @else {
                       <mat-icon>bookmark_border</mat-icon>
                     }
                   </button>
-                  <button mat-fab aria-label="Example icon button with a delete icon" class="avatar-frame">
+                  <button mat-fab [routerLink]="['/profile', card.profileId, 'videos']"
+                          aria-label="Example icon button with a delete icon" class="avatar-frame">
                     <img
-                      src="https://image.dienthoaivui.com.vn/x,webp,q90/https://dashboard.dienthoaivui.com.vn/uploads/dashboard/editor_upload/avatar-ca-sau-cute-2.jpg"
+                      src="{{card.profile?.avatarPath}}"
                       alt="">
                   </button>
 
@@ -91,6 +107,7 @@
     <!--    </div>-->
   </div>
 
+  <!-- Sidebar bình luận -->
   @if (showCommentExpanded) {
     <div class="comment-sidebar">
       <div class="comment-header">
@@ -101,31 +118,40 @@
         </button>
       </div>
 
+      <!-- Danh sách comment -->
       <div class="comment-list">
         @for (c of comments; track c.id) {
           <div class="comment">
             <div class="avatar">
-              <img [src]="c.avatar" alt="avatar"/>
+              <img src="{{c.profile?.avatarUrl}}" alt="{{c.profile?.avatarUrl}}"/>
             </div>
             <div class="comment-content">
-              <p><strong>{{ c.name }}</strong> {{ c.text }}</p>
-              <span class="date">{{ c.date }}</span>
+              <p><strong>{{ c.profile?.username }}</strong> {{ c.content }}</p>
+              <span class="date">{{ c.createdAt | date : "MMM dd, yyyy" }}</span>
             </div>
           </div>
         }
       </div>
 
+      <!-- Form nhập comment -->
       <div class="frame-comment">
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="comment-input">
           <mat-label>Thêm bình luận</mat-label>
-          <input matInput placeholder="Viết gì đó..."/>
-          <button mat-icon-button matSuffix>
+          <input
+            matInput
+            placeholder="Viết bình luận..."
+            [(ngModel)]="commentContent"
+            (keydown.enter)="createComment()"
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="createComment()"
+          >
             <mat-icon>send</mat-icon>
           </button>
         </mat-form-field>
       </div>
     </div>
   }
-
-
 </div>

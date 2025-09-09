@@ -32,7 +32,7 @@
               </a>
             } @else {
               <a
-                (click)="removeFocus($event)"
+                (click)="removeFocus($event); this.notSearchClick.emit()"
                 [ngClass]="{ 'collapsed': collapsed }"
                 mat-list-item [routerLink]="route.path" routerLinkActive #rla="routerLinkActive"
                 [activated]="rla.isActive">
@@ -78,7 +78,7 @@
                 </a>
               } @else {
                 <a
-                  (click)="removeFocus($event)"
+                  (click)="removeFocus($event); notSearchClick.emit()"
                   [ngClass]="{ 'collapsed': collapsed }"
                   mat-list-item [routerLink]="route.path" routerLinkActive #rla="routerLinkActive"
                   [activated]="rla.isActive">
@@ -112,7 +112,7 @@
       [routerLink]="['/profile', userId(), 'videos']"
       [routerLinkActive]="'active'" #rla="routerLinkActive"
       [activated]="rla.isActive"
-      (click)="removeFocus($event)"
+      (click)="removeFocus($event);notSearchClick.emit()"
     >
       <img matListItemIcon class="avatar" src="avatar.png" alt="">
       @if (!collapsed) {

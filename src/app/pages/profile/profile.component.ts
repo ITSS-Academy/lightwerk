@@ -17,6 +17,7 @@ import * as ProfileActions from '../../ngrx/actions/profile.actions';
 import {ProfileService} from '../../services/profile/profile.service';
 import {ProfileModel} from '../../models/profile.model';
 import {AsyncPipe} from '@angular/common';
+import {MatButtonToggle, MatButtonToggleGroup} from '@angular/material/button-toggle';
 
 interface UserModel {
   id: string;
@@ -56,11 +57,25 @@ export class ProfileComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private store: Store<{ profile: ProfileState }>,
-    private profileService: ProfileService
+    private store: Store<{ profile: ProfileState }>
   ) {
-    const profileId = this.route.snapshot.params['profileId'];
-    this.profileService.getProfile(profileId).then()
+    this.subscription.push(
+      this.router.events.pipe(filter(e => e instanceof NavigationEnd)).subscribe(() => {
+        const child = this.route.firstChild;
+        const path = child?.snapshot.routeConfig?.path;
+        const idx = this.tabRoutes.indexOf(path || 'all');
+        this.selectedIndex = idx === -1 ? 0 : idx;
+      })
+    );
+    this.profileId = this.route.snapshot.params['profileId'];
+    this.videoList$ = this.store.select('profile', 'userVideos');
+    this.isLoading$ = this.store.select('profile', 'isLoading');
+    this.totalCount$ = this.store.select('profile', 'totalCount');
+    this.store.dispatch(ProfileActions.getUserVideos({
+      profileId: this.profileId,
+      orderBy: 'desc',
+      page: 0
+    }));
   }
 
   openDialog(): void {

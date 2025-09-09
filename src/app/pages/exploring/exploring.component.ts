@@ -1,22 +1,21 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { Observable, fromEvent, Subscription, BehaviorSubject, combineLatest } from 'rxjs';
-import { map, throttleTime } from 'rxjs/operators';
+import { Observable, fromEvent, Subscription, BehaviorSubject } from 'rxjs';
+import { throttleTime } from 'rxjs/operators';
 
 import * as VideoActions from '../../ngrx/actions/video.actions';
 import * as CategoryActions from '../../ngrx/actions/category.actions';
 import { VideoState } from '../../ngrx/states/video.state';
 import { CategoryState } from '../../ngrx/states/category.state';
 import { VideoModel } from '../../models/video.model';
-import { ExploringCardComponent } from './components/exploringcard/exploringcard.component';
 import { MatChipsModule } from '@angular/material/chips';
-import {ThumbnailListComponent} from '../../components/thumbnail-list/thumbnail-list.component';
+import { ThumbnailListComponent } from '../../components/thumbnail-list/thumbnail-list.component';
 
 @Component({
   selector: 'app-exploring',
   standalone: true,
-  imports: [CommonModule, ExploringCardComponent, MatChipsModule, ThumbnailListComponent],
+  imports: [CommonModule, MatChipsModule, ThumbnailListComponent],
   templateUrl: './exploring.component.html',
   styleUrl: './exploring.component.scss'
 })
@@ -26,8 +25,7 @@ export class ExploringComponent implements OnInit, AfterViewInit, OnDestroy {
 
   selectedChip: string | null = null;
 
-  videosRaw$!: Observable<VideoModel[]>;
-  videosFiltered$!: Observable<VideoModel[]>;
+  videos$!: Observable<VideoModel[]>;
   categories$!: Observable<{ id: string; name: string }[]>;
   isLoading$!: Observable<boolean>;
 
@@ -36,7 +34,7 @@ export class ExploringComponent implements OnInit, AfterViewInit, OnDestroy {
   private selectedChip$ = new BehaviorSubject<string | null>(null);
 
   constructor(private store: Store<{ video: VideoState; category: CategoryState }>) {
-    this.videosRaw$ = this.store.select(state => state.video.latestVideos);
+    this.videos$ = this.store.select(state => state.video.latestVideos);
     this.isLoading$ = this.store.select(state => state.video.isGettingLatest);
     this.categories$ = this.store.select(state => state.category.categories);
   }
@@ -44,15 +42,6 @@ export class ExploringComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     this.store.dispatch(CategoryActions.getAllCategories());
     this.loadVideos();
-
-    // Lọc video theo selectedChip
-    this.videosFiltered$ = combineLatest([this.videosRaw$, this.selectedChip$]).pipe(
-      map(([videos, chip]) => {
-        if (!videos) return [];
-        if (!chip) return videos; // ALL
-        return videos.filter(v => v.categoryId === chip); // dùng categoryId
-      })
-    );
   }
 
   ngAfterViewInit(): void {
@@ -74,10 +63,21 @@ export class ExploringComponent implements OnInit, AfterViewInit, OnDestroy {
   toggleChip(chip: string | null) {
     this.selectedChip = this.selectedChip === chip ? null : chip;
     this.selectedChip$.next(this.selectedChip);
+
+    this.page = 1; // reset lại khi đổi category
+    this.store.dispatch(VideoActions.clearVideoState());
+    this.loadVideos();
   }
 
   loadVideos(): void {
-    this.store.dispatch(VideoActions.getLatestVideos({ page: this.page }));
+    if (this.selectedChip) {
+      this.store.dispatch(VideoActions.getVideosByCategory({
+        categoryId: this.selectedChip,
+        page: this.page
+      }));
+    } else {
+      this.store.dispatch(VideoActions.getLatestVideos({ page: this.page }));
+    }
   }
 
   loadMore(): void {

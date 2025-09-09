@@ -16,13 +16,14 @@
   display: flex;
   flex-direction: column;
   cursor: pointer;
+  position: relative; /* để nút delete bám vào */
 }
 
 /* Thumbnail */
 .thumbnail {
   position: relative;
   width: 100%;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 3 / 3.6; /* làm thumbnail cao hơn một chút */
   overflow: hidden;
   border-radius: 1%;
   background: var(--mat-sys-background);
@@ -36,7 +37,7 @@
   .like-overlay {
     position: absolute;
     bottom: 8px;
-    right: 8px;
+    left: 8px;
     display: flex;
     align-items: center;
     gap: 4px;
@@ -54,6 +55,15 @@
   }
 }
 
+/* Nút thùng rác */
+.video-info button[mat-icon-button] {
+  position: absolute;
+  bottom: 8px;   /* góc dưới */
+  right: 8px;    /* bên phải */
+  z-index: 2;
+  border-radius: 0%;
+}
+
 /* Info */
 .video-info {
   margin-top: 8px;
@@ -64,6 +74,12 @@
   font-weight: 600;
   margin: 0;
   color: var(--mat-sys-on-surface);
+  max-width: 75%;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;    /* tối đa 2 dòng */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .video-meta {

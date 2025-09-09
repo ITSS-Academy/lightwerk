@@ -7,15 +7,28 @@ import {
   OnDestroy,
   Output,
   ViewChild,
-  EventEmitter
+  EventEmitter, OnInit
 } from '@angular/core';
-import {NgStyle} from "@angular/common";
+import {AsyncPipe, DatePipe, NgStyle} from "@angular/common";
 import {MatFabButton, MatIconButton} from "@angular/material/button";
 import {MatFormField, MatInput, MatLabel, MatSuffix} from "@angular/material/input";
 import {VideoComponent} from "../video/video.component";
 import {VideoModel} from '../../models/video.model';
 import {MatIcon} from '@angular/material/icon';
 import {convertToSupabaseUrl} from '../../utils/img-converter';
+import * as VideoActions from '../../ngrx/actions/video.actions';
+import {Store} from '@ngrx/store';
+import {VideoState} from '../../ngrx/states/video.state';
+import {Observable, Subscription, combineLatest} from 'rxjs';
+import * as LikeVideoActions from '../../ngrx/actions/like-video.actions';
+import {LikeVideoState} from '../../ngrx/states/like-video.state';
+import {deleteLikeVideo} from '../../ngrx/actions/like-video.actions';
+import {RouterLink} from '@angular/router';
+import {map} from 'rxjs/operators';
+import {CommentModel} from '../../models/comment.model';
+import {CommentState} from '../../ngrx/states/comment.state';
+import * as CommentAction from '../../ngrx/actions/comment.actions';
+import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-video-list',
@@ -27,13 +40,17 @@ import {convertToSupabaseUrl} from '../../utils/img-converter';
     MatInput,
     MatLabel,
     MatSuffix,
+    FormsModule,
     VideoComponent,
-    NgStyle
+    NgStyle,
+    AsyncPipe,
+    RouterLink,
+    DatePipe
   ],
   templateUrl: './video-list.component.html',
   styleUrl: './video-list.component.scss'
 })
-export class VideoListComponent implements AfterViewInit, OnDestroy {
+export class VideoListComponent implements AfterViewInit, OnInit, OnDestroy {
   isExpanded = false;
   showCommentExpanded = false;
   isFavoriteActive = false
@@ -103,22 +120,83 @@ export class VideoListComponent implements AfterViewInit, OnDestroy {
   private previousScrollTop: number = 0;
   currentVideoIndex: number = 0;
   isFullscreen: boolean = false;
+  isGettingLikeComment: boolean = true;
+  videoDetail!: VideoModel
+  isLiking$: Observable<boolean>;
 
   observer!: IntersectionObserver
 
   videoReadyStates: boolean[] = [];
+  subscription: Subscription[] = [];
+  comments$!: Observable<CommentModel[]>;
+  comments!: CommentModel[];
+  commentContent: string = '';
+  isGettingLiked$: Observable<boolean>
 
-  constructor(private cdr: ChangeDetectorRef) {
+  constructor(private cdr: ChangeDetectorRef,
+              private store: Store<{
+                video: VideoState,
+                likeVideo: LikeVideoState
+                comment: CommentState
+              }>,
+  ) {
+
+    this.isLiking$ = combineLatest([
+      this.store.select(state => state.likeVideo.isAdding),
+      this.store.select(state => state.likeVideo.isDeleting)
+    ]).pipe(
+      map(([isAdding, isDeleting]) => isAdding || isDeleting)
+    );
+    this.comments$ = this.store.select(state => state.comment.comments);
+    this.isGettingLiked$ = this.store.select(state => state.video.isGettingLiked)
+  }
+
+
+  ngOnInit() {
+    this.store.dispatch(CommentAction.getAllComments({videoId: this.cards[0]?.id!}));
+
+    this.subscription.push(
+      this.store.select(state => state.video.videoDetail).subscribe(video => {
+        this.store.select(state => state.video.videoDetail).subscribe(video => {
+          this.videoDetail = video
+        })
+      }),
+      this.store.select(state => state.likeVideo.isAddSuccess).subscribe(likeVideo => {
+        if (likeVideo) {
+          console.log(this.currentVideoIndex)
+          this.store.dispatch(VideoActions.getLikeCount({videoId: this.cards && this.cards.length > 0 ? this.cards[this.currentVideoIndex].id : ''}))
+        }
+      }),
+      this.store.select(state => state.video.isGettingLikeComment).subscribe(isGetting => {
+        this.isGettingLikeComment = isGetting
+        this.cdr.detectChanges();
+      }),
+      this.store.select(state => state.likeVideo.isDeleteSuccess).subscribe(unlikeVideo => {
+        if (unlikeVideo) {
+          console.log(this.currentVideoIndex)
+          this.store.dispatch(VideoActions.getLikeCount({videoId: this.cards && this.cards.length > 0 ? this.cards[this.currentVideoIndex].id : ''}))
+        }
+      }),
+      this.comments$.subscribe((comment: CommentModel[]) => {
+        console.log(comment);
+        this.comments = comment;
+      }),
+    )
+
   }
 
 
   ngOnDestroy() {
     if (this.observer) this.observer.disconnect();
+    this.subscription.forEach(sub => sub.unsubscribe());
   }
 
   ngAfterViewInit() {
     this.cdr.detectChanges();
     // Initialize videoReadyStates for all cards
+    this.store.dispatch(VideoActions.getLikedVideos({
+      videoId: this.cards && this.cards.length > 0 ? this.cards[0].id : ''
+    }))
     this.videoReadyStates = this.cards ? Array(this.cards.length).fill(false) : [];
   }
 
@@ -179,6 +257,8 @@ export class VideoListComponent implements AfterViewInit, OnDestroy {
           const index = Array.from(this.cardsContainerRef.nativeElement.children).indexOf(entry.target);
           if (index !== -1 && index !== this.currentVideoIndex) {
             this.currentVideoIndex = index;
+            this.store.dispatch(VideoActions.getLikedVideos({videoId: this.cards[this.currentVideoIndex].id}));
+            this.store.dispatch(CommentAction.getAllComments({videoId: this.cards[this.currentVideoIndex]?.id!}));
 
             if (this.currentVideoIndex == this.cards.length - 2) {
               console.log('Emitting getMoreEvent');
@@ -213,7 +293,6 @@ export class VideoListComponent implements AfterViewInit, OnDestroy {
   }
 
   @Input() cards!: VideoModel[]
-
   videos = [
     {
       videoSrc: 'asdfas',
@@ -227,79 +306,6 @@ export class VideoListComponent implements AfterViewInit, OnDestroy {
     }
   ]
 
-  comments = [
-    {
-      id: 1,
-      name: "Mạnh Mèo",
-      avatar: "https://i.pravatar.cc/40?img=1",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 28, 2022"
-    },
-    {
-      id: 2,
-      name: "Anh Bi",
-      avatar: "https://i.pravatar.cc/40?img=2",
-      text: "Simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
-      date: "July 28, 2022"
-    },
-    {
-      id: 3,
-      name: "Bé My",
-      avatar: "https://i.pravatar.cc/40?img=3",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 29, 2022"
-    },
-    {
-      id: 4,
-      name: "Chị Đen",
-      avatar: "https://i.pravatar.cc/40?img=4",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 30, 2022"
-    },
-    {
-      id: 5,
-      name: "Anh Lu Lu",
-      avatar: "https://i.pravatar.cc/40?img=5",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 28, 2022"
-    },
-    {
-      id: 6,
-      name: "Mạnh Mèo",
-      avatar: "https://i.pravatar.cc/40?img=1",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 28, 2022"
-    },
-    {
-      id: 7,
-      name: "Anh Bi",
-      avatar: "https://i.pravatar.cc/40?img=2",
-      text: "Simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
-      date: "July 28, 2022"
-    },
-    {
-      id: 8,
-      name: "Bé My",
-      avatar: "https://i.pravatar.cc/40?img=3",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 29, 2022"
-    },
-    {
-      id: 9,
-      name: "Chị Đen",
-      avatar: "https://i.pravatar.cc/40?img=4",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 30, 2022"
-    },
-    {
-      id: 10,
-      name: "Anh Lu Lu",
-      avatar: "https://i.pravatar.cc/40?img=5",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 28, 2022"
-    }
-  ];
-
 
   toggleComments() {
     this.showCommentExpanded = !this.showCommentExpanded;
@@ -311,6 +317,23 @@ export class VideoListComponent implements AfterViewInit, OnDestroy {
     console.log('Video at index', index, 'is ready');
     this.videoReadyStates[index] = true;
     this.cdr.detectChanges();
+  }
+
+  createComment() {
+    if (!this.commentContent.trim()) return;
+    const videoId = this.cards[this.currentVideoIndex].id;
+    this.store.dispatch(CommentAction.createComment({content: this.commentContent, videoId: videoId}));
+    this.commentContent = '';
+  }
+
+  toggleLike() {
+    const videoId = this.cards && this.cards.length > 0 ? this.cards[this.currentVideoIndex].id : ''
+    this.store.dispatch(LikeVideoActions.createLikeVideo({videoId}));
+  }
+
+  unlikeVideo() {
+    const videoId = this.cards && this.cards.length > 0 ? this.cards[this.currentVideoIndex].id : ''
+    this.store.dispatch(LikeVideoActions.deleteLikeVideo({videoId}));
   }
 
   protected readonly Math = Math;

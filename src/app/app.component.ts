@@ -99,4 +99,10 @@ export class AppComponent {
     this.toggleSearchSidenav();
     this.router.navigate(['/search'], {queryParams: {q: (event.target as HTMLInputElement).value}}).then();
   }
+
+  onOtherClick() {
+    if (this.searchSidenav?.opened) {
+      this.searchSidenav.close();
+    }
+  }
 }
