@@ -3,7 +3,8 @@ import {inject} from '@angular/core';
 import {ProfileService} from '../../services/profile/profile.service';
 import * as profileActions from '../actions/profile.actions'
 import {catchError, map, switchMap} from 'rxjs/operators';
-import {of} from 'rxjs';
+import {from, of} from 'rxjs';
+import {ProfileModel} from '../../models/profile.model';
 
 export const getUserVideosEffect = createEffect(
   (actions$ = inject(Actions), profileService = inject(ProfileService)) => {
@@ -38,7 +39,7 @@ export const editProfileEffect = createEffect(
               id: res.id,
               username: res.username,
               bio: res.bio,
-              avatarUrl: res.avatarUrl,
+              avatarPath: res.avatarUrl,
             }
           });
         }),
@@ -87,3 +88,22 @@ export const getFollowersListEffect = createEffect(
   },
   {functional: true}
 )
+export const getProfileEffect = createEffect(
+  (actions$ = inject(Actions), profileService = inject(ProfileService)) => {
+    return actions$.pipe(
+      ofType(profileActions.getProfile),
+      switchMap(({userId}) =>
+        from(profileService.getProfile(userId)).pipe(
+          map((res) =>
+            profileActions.getProfileSuccess({profile: res as ProfileModel}) // 👈 ép kiểu
+          ),
+          catchError((error) =>
+            of(profileActions.getProfileFailure({error}))
+          )
+        )
+      )
+    );
+  },
+  {functional: true}
+);
+

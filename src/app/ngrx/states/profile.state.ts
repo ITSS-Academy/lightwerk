@@ -8,6 +8,10 @@ export interface ProfileState {
   error: any;
 
   profile: ProfileModel,
+  isGettingProfile: boolean,
+  isGetProfileSuccess: boolean,
+  isGetProfileError: any,
+
   isEditing: boolean,
   isEditSuccess: boolean,
   isEditError: any,

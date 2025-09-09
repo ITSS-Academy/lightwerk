@@ -3,7 +3,7 @@ import {VideoModel} from '../../models/video.model';
 import {createReducer, on} from '@ngrx/store';
 import * as ProfileActions from '../actions/profile.actions';
 import {ProfileModel} from '../../models/profile.model';
-import {clearProfileState} from '../actions/profile.actions';
+import {clearProfileState, getProfile} from '../actions/profile.actions';
 
 export const initialState: ProfileState = {
   userVideos: <VideoModel[]>[],
@@ -14,6 +14,10 @@ export const initialState: ProfileState = {
   isEditSuccess: false,
   isEditError: null,
   profile: <ProfileModel>{},
+
+  isGettingProfile: false,
+  isGetProfileSuccess: false,
+  isGetProfileError: null,
 
   followingList: [],
   isLoadingFollowingList: false,
@@ -75,7 +79,10 @@ export const profileReducer = createReducer(
     console.log(type);
     return <ProfileState>{
       ...state,
-      profile: profile,
+      profile: {
+        ...state.profile,
+        ...profile
+      },
       isEditing: false,
       isEditSuccess: true,
       isEditError: null,
@@ -173,4 +180,31 @@ export const profileReducer = createReducer(
     isLoading: false,
   })),
   on(ProfileActions.clearProfileState, () => initialState),
+  on(ProfileActions.getProfile, (state, {userId, type}) => {
+    console.log(type);
+    return {
+      ...state,
+      isGettingProfile: true,
+      isGetProfileSuccess: false,
+      isGetProfileError: null,
+    }
+  }),
+  on(ProfileActions.getProfileSuccess, (state, {profile, type}) => {
+    console.log(type);
+    return {
+      ...state,
+      profile: profile,
+      isGettingProfile: false,
+      isGetProfileSuccess: true,
+    }
+  }),
+  on(ProfileActions.getProfileFailure, (state, {error, type}) => {
+    console.log(type);
+    return {
+      ...state,
+      isGettingProfile: false,
+      isGetProfileSuccess: false,
+      isGetProfileError: error,
+    }
+  })
 )
