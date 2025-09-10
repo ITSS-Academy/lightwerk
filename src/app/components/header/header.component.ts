@@ -9,6 +9,8 @@ import {LoginDialogComponent} from '../login-dialog/login-dialog.component';
 import {AuthService} from '../../services/auth/auth.service';
 import supabase from '../../utils/supabase';
 import {FormsModule} from '@angular/forms';
+import {Title} from '@angular/platform-browser';
+
 
 @Component({
   selector: 'app-header',
@@ -22,7 +24,6 @@ import {FormsModule} from '@angular/forms';
     MatMenuItem,
     MatDialogModule,
     MatMenuModule,
-    LoginDialogComponent,
     RouterLink,
     FormsModule,
   ],
@@ -41,7 +42,7 @@ export class HeaderComponent {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private dialog: MatDialog,
-    private authService: AuthService
+    private authService: AuthService,
   ) {
     this.router.events.subscribe(() => {
       const child = this.activatedRoute.firstChild;
@@ -81,6 +82,10 @@ export class HeaderComponent {
   }
 
   onSearch() {
-
+    // set query param q to searchQuery
+    if (this.searchQuery.trim() === '') {
+      return;
+    }
+    this.router.navigate(['/search'], {queryParams: {q: this.searchQuery.trim()}});
   }
 }
