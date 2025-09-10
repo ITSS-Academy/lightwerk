@@ -62,7 +62,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 
   openDialog(): void {
     const dialogRef = this.dialog.open(PlaylistDialogComponent, {
-      width: '600px',
+      width: '400px',
       height: '700px',
       maxWidth: '98vw',
       maxHeight: '98vh',

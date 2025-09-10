@@ -54,3 +54,25 @@ export const loadPlaylistDetailsSuccess = createAction('[Playlist] Load Playlist
 export const loadPlaylistDetailsFailure = createAction('[Playlist] Load Playlist Details Failure', props<{
   error: any
 }>());
+
+export const getAllPlaylistsAndVideoInPlaylist = createAction('[Playlist] Get All Playlists And Video In Playlist', props<{
+  profileID: string
+  videoID: string
+}>());
+
+export const getAllPlaylistsAndVideoInPlaylistSuccess = createAction('[Playlist] Get All Playlists And Video In Playlist Success', props<{
+  playlists: PlaylistModel[]
+}>());
+export const getAllPlaylistsAndVideoInPlaylistFailure = createAction('[Playlist] Get All Playlists And Video In Playlist Failure', props<{
+  error: any
+}>());
+
+export const addVideoToPlaylist = createAction('[Playlist] Add Video To Playlist', props<{
+  videoID: string
+}>());
+
+export const addVideoToPlaylistSuccess = createAction('[Playlist] Add Video To Playlist Success');
+export const addVideoToPlaylistFailure = createAction('[Playlist] Add Video To Playlist Failure', props<{
+  error: any
+}>());
+

@@ -7,7 +7,7 @@ import {
   OnDestroy,
   Output,
   ViewChild,
-  EventEmitter, OnInit
+  EventEmitter, OnInit, inject
 } from '@angular/core';
 import {AsyncPipe, DatePipe, NgStyle} from "@angular/common";
 import {MatFabButton, MatIconButton} from "@angular/material/button";
@@ -29,6 +29,11 @@ import {CommentModel} from '../../models/comment.model';
 import {CommentState} from '../../ngrx/states/comment.state';
 import * as CommentAction from '../../ngrx/actions/comment.actions';
 import {FormsModule} from '@angular/forms';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatDialog} from '@angular/material/dialog';
+import {PlaylistTableComponent} from '../playlist-table/playlist-table.component';
+import {AllPlaylistComponent} from '../all-playlist/all-playlist.component';
+import * as PlaylistActions from '../../ngrx/actions/playlist.actions';
 
 @Component({
   selector: 'app-video-list',
@@ -55,6 +60,7 @@ export class VideoListComponent implements AfterViewInit, OnInit, OnDestroy {
   showCommentExpanded = false;
   isFavoriteActive = false
   isSavetagActive = false
+  private _snackBar = inject(MatSnackBar);
 
   pageContainerRef!: ElementRef;
   @Output() getMoreEvent = new EventEmitter<void>();
@@ -139,6 +145,7 @@ export class VideoListComponent implements AfterViewInit, OnInit, OnDestroy {
                 likeVideo: LikeVideoState
                 comment: CommentState
               }>,
+              private dialog: MatDialog // Inject MatDialog
   ) {
 
     this.isLiking$ = combineLatest([
@@ -337,4 +344,10 @@ export class VideoListComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   protected readonly Math = Math;
+
+  saveToPlaylist() {
+    this.store.dispatch(
+      PlaylistActions.addVideoToPlaylist({videoID: this.cards[this.currentVideoIndex]?.id})
+    )
+  }
 }

@@ -1,19 +1,19 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, ViewChild, AfterViewInit, inject, OnInit, OnDestroy } from '@angular/core';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatSort, MatSortModule, SortDirection } from '@angular/material/sort';
-import { merge, Observable, of as observableOf, Subscription } from 'rxjs';
-import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { MatTableModule } from '@angular/material/table';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import {HttpClient} from '@angular/common/http';
+import {Component, ViewChild, AfterViewInit, inject, OnInit, OnDestroy} from '@angular/core';
+import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
+import {MatSort, MatSortModule, SortDirection} from '@angular/material/sort';
+import {merge, Observable, of as observableOf, Subscription} from 'rxjs';
+import {catchError, map, startWith, switchMap} from 'rxjs/operators';
+import {MatTableModule} from '@angular/material/table';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {AsyncPipe, DatePipe, DecimalPipe, JsonPipe} from '@angular/common';
-import { environment } from '../../environments/environment.development';
-import { AuthState } from '../../ngrx/states/auth.state';
-import { Store } from '@ngrx/store';
-import { VideoModel } from '../../models/video.model';
-import { MatIconModule } from '@angular/material/icon';
-import { VideoComponent } from '../../components/video/video.component';
-import { HistoryState } from '../../ngrx/states/history.state';
+import {environment} from '../../environments/environment.development';
+import {AuthState} from '../../ngrx/states/auth.state';
+import {Store} from '@ngrx/store';
+import {VideoModel} from '../../models/video.model';
+import {MatIconModule} from '@angular/material/icon';
+import {VideoComponent} from '../../components/video/video.component';
+import {HistoryState} from '../../ngrx/states/history.state';
 import * as HistoryActions from '../../ngrx/actions/history.actions';
 import {convertToSupabaseUrl} from '../../utils/img-converter';
 import {ThumbnailListComponent} from '../../components/thumbnail-list/thumbnail-list.component';
@@ -21,6 +21,7 @@ import {provideNativeDateAdapter} from '@angular/material/core';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatButtonModule} from '@angular/material/button';
 
 @Component({
   selector: 'app-history',
@@ -31,6 +32,7 @@ import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular
     MatSortModule,
     MatPaginatorModule,
     ThumbnailListComponent,
+    MatButtonModule,
     MatFormFieldModule, MatDatepickerModule, FormsModule, ReactiveFormsModule, JsonPipe, AsyncPipe
   ],
   providers: [provideNativeDateAdapter()],
@@ -76,4 +78,7 @@ export class HistoryComponent implements OnInit, OnDestroy {
   protected readonly convertToSupabaseUrl = convertToSupabaseUrl;
 
 
+  onDateChange() {
+    
+  }
 }

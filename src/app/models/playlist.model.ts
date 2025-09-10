@@ -8,4 +8,5 @@ export interface PlaylistModel {
   isPublic: boolean;
   createdAt: string;
   videos: VideoModel[];
+  isHaveVideo?: boolean;
 }
