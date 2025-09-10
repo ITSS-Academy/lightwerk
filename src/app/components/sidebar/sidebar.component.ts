@@ -34,6 +34,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
         this.userId.set(user.id);
         this.updateSections();
       } else {
+        this.userId.set(null);
         this.updateSections();
       }
     });
@@ -66,25 +67,38 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   updateSections() {
     const uid = this.userId();
-    this.sections = [
-      {
-        // header: 'Main',
-        routes: [
-          {path: '/home', icon: 'home', label: 'Home'},
-          {path: '/exploring', icon: 'explore', label: 'Explore'},
-          {path: '/following', icon: 'subscriptions', label: 'Following'},
-          {path: '/search', icon: 'search', label: 'Search'}
-        ]
-      },
-      {
-        header: 'Library',
-        routes: [
-          {path: '/history', icon: 'history', label: 'History'},
-          {path: uid ? `/profile/${uid}/liked-videos` : '', icon: 'thumb_up', label: 'Liked Videos'},
-          {path: uid ? `/profile/${uid}/playlists` : '', icon: 'playlist_play', label: 'Playlist'}
-        ]
-      },
-    ];
+    if (!uid) {
+      this.sections = [
+        {
+          routes: [
+            {path: '/home', icon: 'home', label: 'Home'},
+            {path: '/exploring', icon: 'explore', label: 'Explore'},
+            {path: '/following', icon: 'subscriptions', label: 'Following'},
+            {path: '/search', icon: 'search', label: 'Search'}
+          ]
+        }
+      ];
+    } else {
+      this.sections = [
+        {
+          // header: 'Main',
+          routes: [
+            {path: '/home', icon: 'home', label: 'Home'},
+            {path: '/exploring', icon: 'explore', label: 'Explore'},
+            {path: '/following', icon: 'subscriptions', label: 'Following'},
+            {path: '/search', icon: 'search', label: 'Search'}
+          ]
+        },
+        {
+          header: 'Library',
+          routes: [
+            {path: '/history', icon: 'history', label: 'History'},
+            {path: uid ? `/profile/${uid}/liked-videos` : '', icon: 'thumb_up', label: 'Liked Videos'},
+            {path: uid ? `/profile/${uid}/playlists` : '', icon: 'playlist_play', label: 'Playlist'}
+          ]
+        },
+      ];
+    }
   }
 
   removeFocus($event: Event) {
