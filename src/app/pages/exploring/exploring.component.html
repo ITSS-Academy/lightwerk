@@ -1,4 +1,4 @@
-<div style="display: flex; flex-direction: column; height: 100%;">
+<div style="display: flex; flex-direction: column; height: 100%">
   <div class="box">
     <mat-chip-set>
       <mat-chip
@@ -17,12 +17,15 @@
     </mat-chip-set>
   </div>
 
-<div class="exploring-container" #scrollContainer>
-  @if (isLoading$ | async) {
-    <p class="loading">Loading...</p>
-  } @else  {
-    <app-thumbnail-list [videos$]="this.videos$ "></app-thumbnail-list>
+  <div class="exploring-container" #scrollContainer>
+    @if (isLoading$ | async) {
+      <p class="loading">Loading...</p>
+    } @else {
+      <app-thumbnail-list [videos$]="this.videos$ "></app-thumbnail-list>
 
+      <!--      @if (isLoadMore$ | async) {-->
+        <!--        <p class="loading">Loading more...</p>-->
+        <!--      }-->
     }
   </div>
 
