@@ -39,5 +39,14 @@ export class AuthService {
     return !!data?.session && !error;
   }
 
+  /**
+   * Returns the current logged-in user's ID (if any)
+   */
+  async getCurrentUserId(): Promise<string | null> {
+    if (!supabase) return null;
+    const {data, error} = await supabase.auth.getSession();
+    if (error || !data?.session?.user?.id) return null;
+    return data.session.user.id;
+  }
 
 }

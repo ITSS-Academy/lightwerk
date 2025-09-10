@@ -30,6 +30,12 @@ export const initialState: ProfileState = {
   isGetSuccessFollowersList: false,
   canLoadMore: true,
   totalCount: 0,
+
+  likedVideos: <VideoModel[]>[],
+  isLoadingLikedVideos: false,
+  errorLoadingLikedVideos: null,
+  canLoadMoreLikedVideos: true,
+  totalCountLikedVideos: 0,
 }
 
 
@@ -206,5 +212,34 @@ export const profileReducer = createReducer(
       isGetProfileSuccess: false,
       isGetProfileError: error,
     }
-  })
+  }),
+  on(ProfileActions.getLikedVideos, (state, {type}) => {
+      console.log(type);
+      return {
+        ...state,
+        isLoadingLikedVideos: true,
+        errorLoadingLikedVideos: null,
+      }
+    }
+  ),
+  on(ProfileActions.getLikedVideosSuccess, (state, {likedVideos, totalCount, type}) => {
+    console.log(type);
+    const newLikedVideos = [...state.likedVideos, ...likedVideos];
+    return <ProfileState>{
+      ...state,
+      likedVideos: newLikedVideos,
+      isLoadingLikedVideos: false,
+      errorLoadingLikedVideos: null,
+      canLoadMoreLikedVideos: newLikedVideos.length < totalCount,
+      totalCountLikedVideos: totalCount,
+    }
+  }),
+  on(ProfileActions.getLikedVideosFailure, (state, {error, type}) => {
+    console.log(type);
+    return <ProfileState>{
+      ...state,
+      isLoadingLikedVideos: false,
+      errorLoadingLikedVideos: error,
+    }
+  }),
 )

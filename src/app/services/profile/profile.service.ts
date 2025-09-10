@@ -206,7 +206,86 @@ export class ProfileService {
 
   }
 
+  async getLikedVideos(userId: string, page: number, orderBy: 'asc' | 'desc', startDate?: string, endDate?: string) {
+    const {data, error} = await supabase
+      .from('like_video')
+      .select(`
+        *,
+        video:videoId (
+          id,
+          title,
+          thumbnailPath,
+          createdAt,
+          aspectRatio,
+          status,
+          isPublic,
+          viewCount,
+          profile: profileId (
+            id,
+            username,
+            avatarPath
+          )
+        )
+      `)
+      .eq('profileId', userId)
+      .eq('video.status', 'success')
+      .eq('video.isPublic', true)
+      .order('createdAt', {ascending: orderBy === 'asc'})
+      .range(page * 10, page * 10 + 9);
+
+    // Apply date filtering if both startDate and endDate are provided
+    let filteredData = data;
+    // if (startDate && endDate && data) {
+    //   filteredData = data?.filter(item => {
+    //     const videoDate = new Date(item.video.createdAt!);
+    //     return videoDate >= new Date(startDate) && videoDate <= new Date(endDate);
+    //   });
+    // }
+
+
+    if (error) {
+      console.log(error);
+      return Promise.reject(new Error(error.message));
+    }
+
+    //select count of liked videos
+    const {count, error: countError} = await supabase
+      .from('like_video')
+      .select(`
+        *,
+        video:videoId (
+          id,
+          title,
+          thumbnailPath,
+          createdAt,
+          aspectRatio,
+          status,
+          isPublic,
+          viewCount,
+          profile: profileId (
+            id,
+            username,
+            avatarPath
+          )
+        )
+      `, {count: 'exact'})
+      .eq('profileId', userId)
+      .eq('video.status', 'success')
+      .eq('video.isPublic', true);
+
+    if (countError) {
+      console.log(countError);
+      return Promise.reject(new Error(countError.message));
+    }
+
+    return {
+      videos: filteredData ? filteredData.map(item => item.video) : [],
+      totalCount: count || 0
+    }
+
+  }
 }
+
 
 
 

@@ -93,3 +93,20 @@ export const getProfileSuccess = createAction(
 export const getProfileFailure = createAction(
   "[Profile] Get profile failure", props<{ error: any }>()
 );
+
+export const getLikedVideos = createAction(
+  "[LikedVideos] Get liked videos",
+  props<{
+    profileId: string,
+    page: number,
+    orderBy: 'asc' | 'desc',
+  }>()
+);
+
+export const getLikedVideosSuccess = createAction(
+  "[LikedVideos] Get liked videos success", props<{ likedVideos: VideoModel[], totalCount: number }>()
+);
+
+export const getLikedVideosFailure = createAction(
+  "[LikedVideos] Get liked videos failure", props<{ error: any }>()
+);
