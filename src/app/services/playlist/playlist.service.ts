@@ -119,4 +119,57 @@ export class PlaylistService {
       })
     )
   }
+
+  async getAllPlaylistsAndCheckVideoInclusion(profileID: string, videoId: string) {
+    const playlists = await this.getAllPlaylists(profileID).toPromise();
+    if (!playlists) {
+      throw new Error('Failed to fetch playlists');
+    }
+    const updatedPlaylists = await Promise.all(playlists.map(async (playlist) => {
+      const {data, error} = await supabase
+        .from('video_playlists')
+        .select('*')
+        .eq('playlistId', playlist.id)
+        .eq('videoId', videoId)
+        .single();
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error checking video in playlist:', error);
+        throw new Error('Failed to check video in playlist');
+      }
+      return {
+        ...playlist,
+        containsVideo: !!data
+      };
+    }));
+    return updatedPlaylists;
+  }
+
+  async addVideoToPlaylist(videoId: string) {
+    // Get current user profile ID
+    const sessionRes = await supabase.auth.getSession();
+    if (!sessionRes.data.session) throw new Error('No user session');
+    const userId = sessionRes.data.session.user.id;
+
+    // Fetch all playlists for the user
+    try {
+      let playlists;
+      playlists = await this.getAllPlaylists(userId).toPromise();
+      let xemSauPlaylist = playlists!.find(p => p.title === 'Xem sau');
+
+      // If not found, create it
+      if (!xemSauPlaylist) {
+        const createRes: any = await this.createPlaylist('Xem sau', false).toPromise();
+        xemSauPlaylist = createRes?.playlist || createRes?.data || createRes;
+        // If API returns playlist in a different property, adjust above
+        if (!xemSauPlaylist?.id) throw new Error('Failed to create "Xem sau" playlist');
+      }
+
+      // Add video to the playlist
+      await this.addToPlaylist(xemSauPlaylist.id, videoId).toPromise();
+      return true;
+    } catch (e) {
+      throw new Error('Failed to fetch playlists');
+    }
+
+  }
 }

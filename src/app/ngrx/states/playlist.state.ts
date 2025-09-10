@@ -17,9 +17,14 @@ export interface PlaylistState {
   playlists: PlaylistModel[];
   isLoadingPlaylists: boolean;
   loadPlaylistsError: any;
+  isLoadPlaylistsSuccess: boolean;
 
 
   playListDetail: PlaylistModel;
   isLoadingPlaylistDetails: boolean;
   loadPlaylistDetailsError: any;
+
+  isAddingToPlaylist: boolean;
+  addToPlaylistSuccess: boolean;
+  addToPlaylistError: any;
 }

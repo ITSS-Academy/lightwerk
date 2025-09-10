@@ -11,7 +11,6 @@ export const initialState: PlaylistState = {
   isCreateSuccess: false,
   isCreateError: null,
 
-
   playListID: '',
   profileID: '',
   isDeleting: false,
@@ -21,11 +20,15 @@ export const initialState: PlaylistState = {
   playlists: [],
   isLoadingPlaylists: false,
   loadPlaylistsError: null,
+  isLoadPlaylistsSuccess: false,
 
   playListDetail: <PlaylistModel>{},
   isLoadingPlaylistDetails: false,
   loadPlaylistDetailsError: null,
 
+  isAddingToPlaylist: false,
+  addToPlaylistSuccess: false,
+  addToPlaylistError: null
 }
 
 export const playlistReducer = createReducer(
@@ -162,11 +165,53 @@ export const playlistReducer = createReducer(
   ),
 
   on(PlaylistActions.loadPlaylistDetailsFailure, (state, {error}) => {
-      return {
-        ...state,
-        isLoadingPlaylistDetails: false,
-        loadPlaylistDetailsError: error
-      }
+    return {
+      ...state,
+      isLoadingPlaylistDetails: false,
+      loadPlaylistDetailsError: error
     }
+  }),
+  on(PlaylistActions.getAllPlaylistsAndVideoInPlaylist, (state) => ({
+      ...state,
+      isLoadingPlaylists: true,
+      loadPlaylistsError: null,
+      isLoadPlaylistsSuccess: false,
+    }),
   ),
-);
+  on(PlaylistActions.getAllPlaylistsAndVideoInPlaylistSuccess, (state, {playlists}) => ({
+      ...state,
+      playlists: playlists,
+      isLoadingPlaylists: false,
+      loadPlaylistsError: null,
+      isLoadPlaylistsSuccess: true,
+    })
+  ),
+  on(PlaylistActions.getAllPlaylistsAndVideoInPlaylistFailure, (state, {error}) => ({
+      ...state,
+      isLoadingPlaylists: false,
+      loadPlaylistsError: error,
+      isLoadPlaylistsSuccess: false,
+    })
+  ),
+  on(PlaylistActions.addVideoToPlaylist, (state) => ({
+      ...state,
+      isAddingToPlaylist: true,
+      addToPlaylistSuccess: false,
+      addToPlaylistError: null
+    })
+  ),
+  on(PlaylistActions.addVideoToPlaylistSuccess, (state) => ({
+      ...state,
+      isAddingToPlaylist: false,
+      addToPlaylistSuccess: true,
+      addToPlaylistError: null
+    })
+  ),
+  on(PlaylistActions.addVideoToPlaylistFailure, (state, {error}) => ({
+      ...state,
+      isAddingToPlaylist: false,
+      addToPlaylistSuccess: false,
+      addToPlaylistError: error
+    })
+  ),
+)

@@ -74,8 +74,8 @@
                   <button [disabled]="isGettingLikeComment && !(isLiking$ | async)" mat-fab
                           aria-label="Example icon button with a delete icon"
                           class="bookmark"
-                          [class.active]="isSavetagActive"
-                          (click)="isSavetagActive = !isSavetagActive">
+                          [class.active]="videoDetail.isSavedByCurrentUser"
+                          (click)="saveToPlaylist()">
                     @if (videoDetail.isSavedByCurrentUser) {
                       <mat-icon>bookmark</mat-icon>
                     } @else {
@@ -88,15 +88,9 @@
                       src="{{card.profile?.avatarPath}}"
                       alt="">
                   </button>
-
-
                 </div>
               </div>
-
-
             </div>
-
-
           </div>
         }
 

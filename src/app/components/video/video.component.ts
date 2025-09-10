@@ -50,6 +50,8 @@ export class VideoComponent implements OnInit, OnDestroy, AfterViewInit, OnChang
   }> = [];
 
   ngOnInit(): void {
+    console.log(this.videoIdActivate)
+
     this.player = videojs(this.target.nativeElement, {
       controls: true,
       controlBar: {children: ['playToggle', 'volumePanel', 'progressControl']},
@@ -158,7 +160,7 @@ export class VideoComponent implements OnInit, OnDestroy, AfterViewInit, OnChang
           this.player.poster(convertToSupabaseUrl(this.thumbnailPath, 'thumbnail'));
         } else {
           // Activated: allow playback
-          // this.player.play();
+          this.player.play();
         }
       } else {
         // If not provided, do nothing special

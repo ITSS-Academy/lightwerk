@@ -1,6 +1,6 @@
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {inject,} from '@angular/core'
-import {catchError, exhaustMap, map, of} from 'rxjs';
+import {catchError, exhaustMap, from, map, of} from 'rxjs';
 import * as PlaylistActions from '../actions/playlist.actions';
 import {PlaylistService} from '../../services/playlist/playlist.service';
 
@@ -72,6 +72,43 @@ export const loadPlaylistDetails = createEffect(
           map((playlist) => PlaylistActions.loadPlaylistDetailsSuccess({playlist: playlist})),
           catchError((error: any) =>
             of(PlaylistActions.loadPlaylistDetailsFailure({error: error}))
+          )
+        )
+      )
+    );
+  },
+  {functional: true}
+)
+
+//get all playlists and video in playlist
+export const getAllPlaylistsAndVideoInPlaylist = createEffect(
+  (actions$: Actions = inject(Actions), playlistService: PlaylistService = inject(PlaylistService)) => {
+    return actions$.pipe(
+      ofType(PlaylistActions.getAllPlaylistsAndVideoInPlaylist),
+      exhaustMap((action) =>
+        from(playlistService.getAllPlaylistsAndCheckVideoInclusion(action.profileID, action.videoID)).pipe(
+          map((playlists) => {
+            return PlaylistActions.getAllPlaylistsAndVideoInPlaylistSuccess({playlists: playlists});
+          }),
+          catchError((error: any) =>
+            of(PlaylistActions.getAllPlaylistsAndVideoInPlaylistFailure({error: error}))
+          )
+        )
+      )
+    );
+  },
+  {functional: true}
+)
+
+export const addToPlaylist = createEffect(
+  (actions$: Actions = inject(Actions), playlistService: PlaylistService = inject(PlaylistService)) => {
+    return actions$.pipe(
+      ofType(PlaylistActions.addVideoToPlaylist),
+      exhaustMap((action) =>
+        from(playlistService.addVideoToPlaylist(action.videoID)).pipe(
+          map(() => PlaylistActions.addVideoToPlaylistSuccess()),
+          catchError((error: any) =>
+            of(PlaylistActions.addVideoToPlaylistFailure({error: error}))
           )
         )
       )

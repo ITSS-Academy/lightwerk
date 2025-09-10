@@ -5,7 +5,7 @@
         @for (item of followers; track item.id) {
           <div class="user-container">
             <div class="user-detail">
-              <img class="user-avatar" [src]="item.avatarUrl" alt="User Avatar">
+              <img class="user-avatar" [src]="item.avatarPath" alt="User Avatar">
               <span class="user-name">{{ item.username }}</span>
 
             </div>
@@ -27,7 +27,7 @@
         @for (item of following; track item.id) {
           <div class="user-container">
             <div class="user-detail">
-              <img class="user-avatar" [src]="item.avatarUrl" alt="User Avatar">
+              <img class="user-avatar" [src]="item.avatarPath" alt="User Avatar">
               <span class="user-name">{{ item.username }}</span>
             </div>
             <div class="button">
