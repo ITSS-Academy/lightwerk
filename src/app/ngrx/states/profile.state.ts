@@ -27,6 +27,12 @@ export interface ProfileState {
   isGetSuccessFollowersList: boolean,
   canLoadMore: boolean;
   totalCount: number;
+
+  likedVideos: VideoModel[];
+  isLoadingLikedVideos: boolean;
+  errorLoadingLikedVideos: any;
+  canLoadMoreLikedVideos: boolean;
+  totalCountLikedVideos: number;
 }
 
 

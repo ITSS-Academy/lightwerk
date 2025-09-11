@@ -107,3 +107,25 @@ export const getProfileEffect = createEffect(
   {functional: true}
 );
 
+export const getLikedVideosEffect = createEffect(
+  (actions$ = inject(Actions), profileService = inject(ProfileService)) => {
+    return actions$.pipe(
+      ofType(profileActions.getLikedVideos),
+      switchMap((arg) =>
+        from(profileService.getLikedVideos(arg.profileId, arg.page, arg.orderBy)).pipe(
+          map((res) => {
+            console.log(res);
+            return profileActions.getLikedVideosSuccess({
+              likedVideos: res.videos,
+              totalCount: res.totalCount,
+            });
+          }),
+          catchError((error: { message: any }) =>
+            of(profileActions.getLikedVideosFailure({error}))
+          )
+        )
+      )
+    );
+  },
+  {functional: true}
+)

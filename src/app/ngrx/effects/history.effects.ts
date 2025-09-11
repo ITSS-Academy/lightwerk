@@ -9,8 +9,8 @@ export const getHistoryVideos = createEffect(
   (actions$: Actions = inject(Actions), historyService = inject(HistoryService)) => {
     return actions$.pipe(
       ofType(HistoryActions.getAllHistory),
-      exhaustMap(() =>
-        from(historyService.getHistory()).pipe(
+      exhaustMap((action) =>
+        from(historyService.getHistory(action.startDate, action.endDate)).pipe(
           map((res) => HistoryActions.getAllHistorySuccess({history: res})),
           catchError((error: any) =>
             of(HistoryActions.getAllHistoryFailure({error: error}))
@@ -28,11 +28,11 @@ export const deleteHistoryVideo$ = createEffect(
       ofType(HistoryActions.deleteHistoryVideo),
       exhaustMap(action =>
         from(historyService.deleteFromHistory(action.videoId)).pipe(
-          map(() => HistoryActions.deleteHistoryVideoSuccess({ videoId: action.videoId })),
-          catchError(error => of(HistoryActions.deleteHistoryVideoFailure({ error })))
+          map(() => HistoryActions.deleteHistoryVideoSuccess({videoId: action.videoId})),
+          catchError(error => of(HistoryActions.deleteHistoryVideoFailure({error})))
         )
       )
     )
   },
-  { functional: true }
+  {functional: true}
 );

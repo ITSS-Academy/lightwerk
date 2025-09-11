@@ -38,3 +38,34 @@ mat-card-content {
 .video-card :hover {
   cursor: pointer;
 }
+
+.video-stats {
+  display: flex;
+  gap: 16px;
+  font-size: 0.9rem;
+  color: gray;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.video-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.username {
+  display: inline-block;
+  width: 50px;
+  white-space: nowrap;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+  font-size: 0.8rem;
+
+}

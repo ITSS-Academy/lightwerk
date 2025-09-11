@@ -1,5 +1,6 @@
 export interface HistoryState {
   historyVideos: any[];
+  canLoadMore: boolean;
   isLoading: boolean;
   isLoadSuccess: boolean;
   isLoadError: any;

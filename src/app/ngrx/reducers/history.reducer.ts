@@ -1,9 +1,10 @@
-import { HistoryState } from '../states/history.state';
-import { createReducer, on } from '@ngrx/store';
+import {HistoryState} from '../states/history.state';
+import {createReducer, on} from '@ngrx/store';
 import * as HistoryActions from '../actions/history.actions';
 
 const initialState: HistoryState = {
   historyVideos: [],
+  canLoadMore: true,
   isLoading: false,
   isLoadSuccess: false,
   isLoadError: null,
@@ -16,20 +17,20 @@ const initialState: HistoryState = {
 export const historyReducer = createReducer(
   initialState,
 
-  on(HistoryActions.getAllHistory, (state, { type }) => ({
+  on(HistoryActions.getAllHistory, (state, {type}) => ({
     ...state,
     isLoading: true,
     isLoadSuccess: false,
     isLoadError: null
   })),
-  on(HistoryActions.getAllHistorySuccess, (state, { history }) => ({
+  on(HistoryActions.getAllHistorySuccess, (state, {history}) => ({
     ...state,
     historyVideos: history,
     isLoading: false,
     isLoadSuccess: true,
     isLoadError: null
   })),
-  on(HistoryActions.getAllHistoryFailure, (state, { error }) => ({
+  on(HistoryActions.getAllHistoryFailure, (state, {error}) => ({
     ...state,
     isLoading: false,
     isLoadSuccess: false,
@@ -43,12 +44,12 @@ export const historyReducer = createReducer(
     deleteSuccess: false,
     deleteError: undefined
   })),
-  on(HistoryActions.deleteHistoryVideoSuccess, (state, { videoId }) => ({
+  on(HistoryActions.deleteHistoryVideoSuccess, (state, {videoId}) => ({
     ...state,
     isLoading: false,
     deleteSuccess: true,
   })),
-  on(HistoryActions.deleteHistoryVideoFailure, (state, { error }) => ({
+  on(HistoryActions.deleteHistoryVideoFailure, (state, {error}) => ({
     ...state,
     isDeleting: false,
     deleteSuccess: false,

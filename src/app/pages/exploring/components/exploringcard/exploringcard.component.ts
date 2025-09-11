@@ -1,5 +1,5 @@
 import {Component, inject, Input, OnDestroy, OnInit} from '@angular/core';
-import { VideoModel } from '../../../../models/video.model';
+import {VideoModel} from '../../../../models/video.model';
 import {convertToSupabaseUrl} from '../../../../utils/img-converter';
 import {DatePipe} from '@angular/common';
 import {ActivatedRoute} from '@angular/router';
@@ -26,7 +26,7 @@ import {
   ],
   styleUrls: ['./exploringcard.component.scss']
 })
-export class ExploringCardComponent implements OnInit, OnDestroy{
+export class ExploringCardComponent implements OnInit, OnDestroy {
 
   readonly dialog = inject(MatDialog);
   @Input() video!: VideoModel; // chỉ dùng VideoModel
@@ -43,21 +43,15 @@ export class ExploringCardComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit() {
-    // Giữ nguyên subscription log data
-    this.subscription.push(
-      this.store.select(state => state.history.deleteSuccess).subscribe(data => {
-        if (data) {
-          this.store.dispatch(HistoryActions.getAllHistory());
-        }
-      })
-    );
+
   }
+
   ngOnDestroy() {
     this.subscription.forEach(sub => sub.unsubscribe());
   }
 
   removeFromHistory(id: string) {
-    this.store.dispatch(HistoryActions.deleteHistoryVideo({videoId:id}));
+    this.store.dispatch(HistoryActions.deleteHistoryVideo({videoId: id}));
   }
 
 
