@@ -1,22 +1,24 @@
-<div class="search-header">
-  <mat-icon [routerLink]="['/search']">chevron_left</mat-icon>
-  <span>Search</span>
-</div>
+@if (profiles$ | async; as item) {
+  <div class="search-header">
 
-<div class="user-search">
-  @for (item of userList; track item.id) {
+    <mat-icon [routerLink]="['/search']" [queryParams]="{ q: this.query }">chevron_left</mat-icon>
+    <span>Search</span>
+  </div>
+
+  <div class="user-search">
+
 
     <div class="user-search-detail">
       <div class="user-search-detail-container">
-        <img src="{{item.avatar}}"
+        <img src="{{item.avatarPath}}"
              alt="User profile">
         <div class="user-search-detail-stats">
 
           <span class="username">{{ item.username }}</span>
-          @if (item.followers == 1) {
-            <span class="username-detail">{{ item.followers }} follower</span>
+          @if (item.followersCount == 1) {
+            <span class="username-detail">{{ item.followingCount }} follower</span>
           } @else {
-            <span class="username-detail">{{ item.followers }} followers</span>
+            <span class="username-detail">{{ item.followersCount }} followers</span>
           }
 
           <span class="username-detail">{{ item.bio }}</span>
@@ -27,5 +29,6 @@
         <button mat-flat-button>Follow</button>
       </div>
     </div>
-  }
-</div>
+
+  </div>
+}

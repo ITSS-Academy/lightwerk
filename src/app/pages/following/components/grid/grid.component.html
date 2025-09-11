@@ -1,4 +1,14 @@
-<div class="grid-list">
-  <app-thumbnail-list [videos$]="followingVideos$"></app-thumbnail-list>
+<div class="grid-list" #scrollContainer>
+  @if (isLoading$ | async) {
+    <p class="loading">Loading...</p>
+  } @else {
+    <app-thumbnail-list
+      [videos$]="followingVideos$"
+     
+    ></app-thumbnail-list>
 
+    @if (isLoadMore$ | async) {
+      <p class="loading-more">Loading more...</p>
+    }
+  }
 </div>

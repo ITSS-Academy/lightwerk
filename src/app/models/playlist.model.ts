@@ -7,6 +7,6 @@ export interface PlaylistModel {
   thumbnailPath: string;
   isPublic: boolean;
   createdAt: string;
-  videos: VideoModel[];
+  videos?: VideoModel[];
   isHaveVideo?: boolean;
 }

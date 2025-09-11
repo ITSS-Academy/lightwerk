@@ -24,6 +24,8 @@ import {followingReducer} from './ngrx/reducers/following.reducer';
 import * as FollowingEffects from './ngrx/effects/following.effects';
 import {commentReducer} from './ngrx/reducers/comment.reducer';
 import * as CommentEffects from './ngrx/effects/comment.effects';
+import {searchReducer} from './ngrx/reducers/search.reducer';
+import * as SearchEffects from './ngrx/effects/search.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({eventCoalescing: true}), provideRouter(routes), provideAnimationsAsync(),
@@ -37,10 +39,11 @@ export const appConfig: ApplicationConfig = {
         history: historyReducer,
         following: followingReducer,
         playlist: playlistReducer,
-        comment: commentReducer
+        comment: commentReducer,
+        search: searchReducer
       },
     ),
-    provideEffects(AuthEffects, VideoEffects, CategoryEffects, ProfileEffects, LikeVideoEffects, PlayListEffects, FollowingEffects,HistoryEffects,CommentEffects),
+    provideEffects(AuthEffects, VideoEffects, CategoryEffects, ProfileEffects, LikeVideoEffects, PlayListEffects, FollowingEffects, HistoryEffects, CommentEffects, SearchEffects),
     provideHttpClient()]
 };
 
