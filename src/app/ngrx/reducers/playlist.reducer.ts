@@ -28,7 +28,19 @@ export const initialState: PlaylistState = {
 
   isAddingToPlaylist: false,
   addToPlaylistSuccess: false,
-  addToPlaylistError: null
+  addToPlaylistError: null,
+
+  isRemovingFromPlaylist: false,
+  removeFromPlaylistSuccess: false,
+  removeFromPlaylistError: null,
+
+  isAddingToSpecificPlaylist: false,
+  addToSpecificPlaylistSuccess: false,
+  addToSpecificPlaylistError: null,
+
+  isRemovingFromSpecificPlaylist: false,
+  removeFromSpecificPlaylistSuccess: false,
+  removeFromSpecificPlaylistError: null,
 }
 
 export const playlistReducer = createReducer(
@@ -212,6 +224,93 @@ export const playlistReducer = createReducer(
       isAddingToPlaylist: false,
       addToPlaylistSuccess: false,
       addToPlaylistError: error
+    })
+  ),
+  on(PlaylistActions.removeVideoFromPlaylist, (state) => ({
+      ...state,
+      isRemovingFromPlaylist: true,
+      removeFromPlaylistSuccess: false,
+      removeFromPlaylistError: null
+    })
+  ),
+  on(PlaylistActions.removeVideoFromPlaylistSuccess, (state) => ({
+      ...state,
+      isRemovingFromPlaylist: false,
+      removeFromPlaylistSuccess: true,
+      removeFromPlaylistError: null
+    })
+  ),
+  on(PlaylistActions.removeVideoFromPlaylistFailure, (state, {error}) => ({
+      ...state,
+      isRemovingFromPlaylist: false,
+      removeFromPlaylistSuccess: false,
+      removeFromPlaylistError: error
+    })
+  ),
+
+  on(PlaylistActions.clearPlaylistSate, () => initialState),
+
+  on(PlaylistActions.addVideoToSpecificPlaylist, (state) => ({
+      ...state,
+      isAddingToSpecificPlaylist: true,
+      addToSpecificPlaylistSuccess: false,
+      addToSpecificPlaylistError: null
+    })
+  ),
+  on(PlaylistActions.addVideoToSpecificPlaylistSuccess, (state, {type, playlistID}) => {
+      const newPlaylists = state.playlists.map(playlist => {
+          if (playlistID === playlist.id) {
+            return {...playlist, isHaveVideo: true};
+          }
+          return playlist;
+        }
+      )
+      console.log(type, playlistID, state.playlists, newPlaylists);
+      return {
+        ...state,
+        playlists: newPlaylists,
+        isAddingToSpecificPlaylist: false,
+        addToSpecificPlaylistSuccess: true,
+        addToSpecificPlaylistError: null
+      }
+    }
+  ),
+  on(PlaylistActions.addVideoToSpecificPlaylistFailure, (state, {error}) => ({
+      ...state,
+      isAddingToSpecificPlaylist: false,
+      addToSpecificPlaylistSuccess: false,
+      addToSpecificPlaylistError: error
+    })
+  ),
+  on(PlaylistActions.removeVideoFromSpecificPlaylist, (state) => ({
+      ...state,
+      isRemovingFromSpecificPlaylist: true,
+      removeFromSpecificPlaylistSuccess: false,
+      removeFromSpecificPlaylistError: null
+    })
+  ),
+  on(PlaylistActions.removeVideoFromSpecificPlaylistSuccess, (state, {playlistID}) => {
+      const newPlaylists = state.playlists.map(playlist => {
+          if (playlistID === playlist.id) {
+            return {...playlist, isHaveVideo: false};
+          }
+          return playlist;
+        }
+      )
+      return {
+        ...state,
+        playlists: newPlaylists,
+        isRemovingFromSpecificPlaylist: false,
+        removeFromSpecificPlaylistSuccess: true,
+        removeFromSpecificPlaylistError: null
+      }
+    }
+  ),
+  on(PlaylistActions.removeVideoFromSpecificPlaylistFailure, (state, {error}) => ({
+      ...state,
+      isRemovingFromSpecificPlaylist: false,
+      removeFromSpecificPlaylistSuccess: false,
+      removeFromSpecificPlaylistError: error
     })
   ),
 )

@@ -71,11 +71,13 @@
                     {{ isGettingLikeComment ? '0' : videoDetail.commentCount }}
                   </span>
 
-                  <button [disabled]="isGettingLikeComment && !(isLiking$ | async)" mat-fab
-                          aria-label="Example icon button with a delete icon"
-                          class="bookmark"
-                          [class.active]="videoDetail.isSavedByCurrentUser"
-                          (click)="saveToPlaylist()">
+                  <button
+                    [disabled]="(isGettingLikeComment && !(isLiking$ | async)) || (this.isProcessingPlaylist$ | async)"
+                    mat-fab
+                    aria-label="Example icon button with a delete icon"
+                    class="bookmark"
+                    [class.active]="videoDetail.isSavedByCurrentUser"
+                    (click)="!videoDetail.isSavedByCurrentUser? saveToPlaylist() : removeFromPlaylist()">
                     @if (videoDetail.isSavedByCurrentUser) {
                       <mat-icon>bookmark</mat-icon>
                     } @else {

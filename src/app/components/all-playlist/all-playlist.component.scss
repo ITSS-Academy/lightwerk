@@ -29,6 +29,7 @@
 .playlist-list {
   display: flex;
   flex-wrap: wrap;
+  overflow-y: auto;
   gap: 20px;
   justify-content: flex-start;
 }

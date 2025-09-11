@@ -76,3 +76,35 @@ export const addVideoToPlaylistFailure = createAction('[Playlist] Add Video To P
   error: any
 }>());
 
+export const removeVideoFromPlaylist = createAction('[Playlist] Remove Video From Playlist', props<{
+  videoID: string
+}>());
+export const removeVideoFromPlaylistSuccess = createAction('[Playlist] Remove Video From Playlist Success');
+export const removeVideoFromPlaylistFailure = createAction('[Playlist] Remove Video From Playlist Failure', props<{
+  error: any
+}>());
+
+export const clearPlaylistSate = createAction('[Playlist] Clear Playlist State');
+
+
+export const addVideoToSpecificPlaylist = createAction('[Playlist] Add Video To Specific Playlist', props<{
+  videoID: string,
+  playlistID: string
+}>());
+export const addVideoToSpecificPlaylistSuccess = createAction('[Playlist] Add Video To Specific Playlist Success', props<{
+  playlistID: string
+}>());
+export const addVideoToSpecificPlaylistFailure = createAction('[Playlist] Add Video To Specific Playlist Failure', props<{
+  error: any
+}>());
+
+export const removeVideoFromSpecificPlaylist = createAction('[Playlist] Remove Video From Specific Playlist', props<{
+  videoID: string,
+  playlistID: string
+}>());
+export const removeVideoFromSpecificPlaylistSuccess = createAction('[Playlist] Remove Video From Specific Playlist Success', props<{
+  playlistID: string
+}>());
+export const removeVideoFromSpecificPlaylistFailure = createAction('[Playlist] Remove Video From Specific Playlist Failure', props<{
+  error: any
+}>());

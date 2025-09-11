@@ -116,3 +116,54 @@ export const addToPlaylist = createEffect(
   },
   {functional: true}
 )
+
+export const removeFromPlaylist = createEffect(
+  (actions$: Actions = inject(Actions), playlistService: PlaylistService = inject(PlaylistService)) => {
+    return actions$.pipe(
+      ofType(PlaylistActions.removeVideoFromPlaylist),
+      exhaustMap((action) =>
+        from(playlistService.removeFromPlaylist(action.videoID)).pipe(
+          map(() => PlaylistActions.removeVideoFromPlaylistSuccess()),
+          catchError((error: any) =>
+            of(PlaylistActions.removeVideoFromPlaylistFailure({error: error}))
+          )
+        )
+      )
+    );
+  },
+  {functional: true}
+)
+
+export const addToSpecificPlaylist = createEffect(
+  (actions$: Actions = inject(Actions), playlistService: PlaylistService = inject(PlaylistService)) => {
+    return actions$.pipe(
+      ofType(PlaylistActions.addVideoToSpecificPlaylist),
+      exhaustMap((action) =>
+        from(playlistService.addToPlaylist(action.playlistID, action.videoID)).pipe(
+          map(() => PlaylistActions.addVideoToSpecificPlaylistSuccess({playlistID: action.playlistID})),
+          catchError((error: any) =>
+            of(PlaylistActions.addVideoToSpecificPlaylistFailure({error: error}))
+          )
+        )
+      )
+    );
+  },
+  {functional: true}
+)
+
+export const removeFromSpecificPlaylist = createEffect(
+  (actions$: Actions = inject(Actions), playlistService: PlaylistService = inject(PlaylistService)) => {
+    return actions$.pipe(
+      ofType(PlaylistActions.removeVideoFromSpecificPlaylist),
+      exhaustMap((action) =>
+        from(playlistService.removeVideoFromPlaylist(action.playlistID, action.videoID)).pipe(
+          map(() => PlaylistActions.removeVideoFromSpecificPlaylistSuccess({playlistID: action.playlistID})),
+          catchError((error: any) =>
+            of(PlaylistActions.removeVideoFromSpecificPlaylistFailure({error: error}))
+          )
+        )
+      )
+    );
+  },
+  {functional: true}
+)

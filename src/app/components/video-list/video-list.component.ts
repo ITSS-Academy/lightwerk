@@ -34,6 +34,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {PlaylistTableComponent} from '../playlist-table/playlist-table.component';
 import {AllPlaylistComponent} from '../all-playlist/all-playlist.component';
 import * as PlaylistActions from '../../ngrx/actions/playlist.actions';
+import {PlaylistState} from '../../ngrx/states/playlist.state';
 
 @Component({
   selector: 'app-video-list',
@@ -138,12 +139,14 @@ export class VideoListComponent implements AfterViewInit, OnInit, OnDestroy {
   comments!: CommentModel[];
   commentContent: string = '';
   isGettingLiked$: Observable<boolean>
+  isProcessingPlaylist$: Observable<boolean>
 
   constructor(private cdr: ChangeDetectorRef,
               private store: Store<{
                 video: VideoState,
-                likeVideo: LikeVideoState
-                comment: CommentState
+                likeVideo: LikeVideoState,
+                comment: CommentState,
+                playlist: PlaylistState
               }>,
               private dialog: MatDialog // Inject MatDialog
   ) {
@@ -154,6 +157,17 @@ export class VideoListComponent implements AfterViewInit, OnInit, OnDestroy {
     ]).pipe(
       map(([isAdding, isDeleting]) => isAdding || isDeleting)
     );
+
+    this.isProcessingPlaylist$ = combineLatest([
+      this.store.select(state => state.playlist.isAddingToPlaylist),
+      this.store.select(state => state.playlist.isRemovingFromPlaylist)
+    ]).pipe(
+      map(([isAdding, isRemoving]) => {
+        console.log('isAdding:', isAdding, 'isRemoving:', isRemoving);
+        return isAdding || isRemoving
+      })
+    );
+
     this.comments$ = this.store.select(state => state.comment.comments);
     this.isGettingLiked$ = this.store.select(state => state.video.isGettingLiked)
   }
@@ -188,6 +202,26 @@ export class VideoListComponent implements AfterViewInit, OnInit, OnDestroy {
         console.log(comment);
         this.comments = comment;
       }),
+      this.store.select(state => state.playlist.addToPlaylistSuccess).subscribe(isSuccess => {
+        if (isSuccess) {
+          this._snackBar.open('Added to playlist', 'Manange', {
+            duration: 3000,
+          }).onAction().subscribe(() => {
+            this.dialog.open(AllPlaylistComponent, {
+              width: '600px',
+              maxHeight: '80vh',
+              data:
+                {videoId: this.cards[this.currentVideoIndex]?.id}
+            });
+          });
+          this.store.dispatch(VideoActions.setIsSaved())
+        }
+      }),
+      this.store.select(state => state.playlist.removeFromPlaylistSuccess).subscribe(isSuccess => {
+        if (isSuccess) {
+          this.store.dispatch(VideoActions.setIsSaved())
+        }
+      })
     )
 
   }
@@ -195,6 +229,8 @@ export class VideoListComponent implements AfterViewInit, OnInit, OnDestroy {
 
   ngOnDestroy() {
     if (this.observer) this.observer.disconnect();
+    this.store.dispatch(VideoActions.clearVideoState());
+    this.store.dispatch(PlaylistActions.clearPlaylistSate())
     this.subscription.forEach(sub => sub.unsubscribe());
   }
 
@@ -266,6 +302,8 @@ export class VideoListComponent implements AfterViewInit, OnInit, OnDestroy {
             this.currentVideoIndex = index;
             this.store.dispatch(VideoActions.getLikedVideos({videoId: this.cards[this.currentVideoIndex].id}));
             this.store.dispatch(CommentAction.getAllComments({videoId: this.cards[this.currentVideoIndex]?.id!}));
+            // tắt dialog nếu có
+
 
             if (this.currentVideoIndex == this.cards.length - 2) {
               console.log('Emitting getMoreEvent');
@@ -348,6 +386,12 @@ export class VideoListComponent implements AfterViewInit, OnInit, OnDestroy {
   saveToPlaylist() {
     this.store.dispatch(
       PlaylistActions.addVideoToPlaylist({videoID: this.cards[this.currentVideoIndex]?.id})
+    )
+  }
+
+  removeFromPlaylist() {
+    this.store.dispatch(
+      PlaylistActions.removeVideoFromPlaylist({videoID: this.cards[this.currentVideoIndex]?.id})
     )
   }
 }

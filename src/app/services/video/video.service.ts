@@ -188,12 +188,12 @@ export class VideoService {
   }
 
   async getVideosByCategory(categoryId: string, page: number) {
-    const { data, error,count } = await supabase
+    const {data, error, count} = await supabase
       .from('video',)
-      .select('*',{ count: 'exact' })
+      .select('*', {count: 'exact'})
       .eq('categoryId', categoryId)
       .eq('isPublic', true)
-      .order('createdAt', { ascending: false })
+      .order('createdAt', {ascending: false})
       .range((page - 1) * 10, page * 10 - 1);
 
     if (error) {

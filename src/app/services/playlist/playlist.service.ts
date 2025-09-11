@@ -125,20 +125,21 @@ export class PlaylistService {
     if (!playlists) {
       throw new Error('Failed to fetch playlists');
     }
+    console.log(playlists)
     const updatedPlaylists = await Promise.all(playlists.map(async (playlist) => {
       const {data, error} = await supabase
         .from('video_playlists')
         .select('*')
         .eq('playlistId', playlist.id)
         .eq('videoId', videoId)
-        .single();
+        .maybeSingle();
       if (error && error.code !== 'PGRST116') {
         console.error('Error checking video in playlist:', error);
         throw new Error('Failed to check video in playlist');
       }
       return {
         ...playlist,
-        containsVideo: !!data
+        isHaveVideo: !!data
       };
     }));
     return updatedPlaylists;
@@ -170,6 +171,38 @@ export class PlaylistService {
     } catch (e) {
       throw new Error('Failed to fetch playlists');
     }
+  }
 
+  async removeFromPlaylist(videoId: string) {
+    const {error: deleteError} = await supabase
+      .from('video_playlists')
+      .delete()
+      .eq('videoId', videoId);
+
+    if (deleteError) {
+      console.error('Error removing video from playlists:', deleteError);
+      throw new Error('Failed to remove video from playlists');
+    }
+
+    return true;
+
+  }
+
+  async removeVideoFromPlaylist(playlistId: string, videoId: string) {
+    const {error: deleteError} = await supabase
+      .from('video_playlists')
+      .delete()
+      .eq('videoId', videoId)
+      .eq('playlistId', playlistId);
+
+    if (deleteError) {
+      console.error('Error removing video from playlist:', deleteError);
+      throw new Error('Failed to remove video from playlist');
+    }
+
+    return {
+      playlistId,
+      videoId
+    }
   }
 }

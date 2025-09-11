@@ -27,4 +27,16 @@ export interface PlaylistState {
   isAddingToPlaylist: boolean;
   addToPlaylistSuccess: boolean;
   addToPlaylistError: any;
+
+  isRemovingFromPlaylist: boolean;
+  removeFromPlaylistSuccess: boolean;
+  removeFromPlaylistError: any;
+
+  isAddingToSpecificPlaylist: boolean;
+  addToSpecificPlaylistSuccess: boolean;
+  addToSpecificPlaylistError: any;
+
+  isRemovingFromSpecificPlaylist: boolean;
+  removeFromSpecificPlaylistSuccess: boolean;
+  removeFromSpecificPlaylistError: any;
 }
