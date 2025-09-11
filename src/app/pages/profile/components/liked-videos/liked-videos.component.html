@@ -1,6 +1,6 @@
 <div class="video-container">
   <div class="video-grid">
-    @for (item of LikedVideoList; track item.id) {
+    @for (item of likedVideoList$ | async; track $index) {
       <app-liked-video-card [likedVideoCard]="item"></app-liked-video-card>
     }
   </div>

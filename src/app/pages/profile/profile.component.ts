@@ -18,6 +18,8 @@ import {ProfileService} from '../../services/profile/profile.service';
 import {ProfileModel} from '../../models/profile.model';
 import {AsyncPipe} from '@angular/common';
 import {MatButtonToggle, MatButtonToggleGroup} from '@angular/material/button-toggle';
+import {AuthService} from '../../services/auth/auth.service';
+import * as PlayListAction from '../../ngrx/actions/playlist.actions';
 
 interface UserModel {
   id: string;
@@ -53,25 +55,34 @@ export class ProfileComponent implements OnInit, OnDestroy {
   isLoading$!: import("rxjs").Observable<boolean>;
   totalCount$!: import("rxjs").Observable<number>;
   profile$!: Observable<ProfileModel | null>;
+  likedVideoList$!: Observable<import("../../models/video.model").VideoModel[]>;
+  isOwnProfile: boolean = false;
 
   constructor(
-    private route: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     private router: Router,
-    private store: Store<{ profile: ProfileState }>
+    private store: Store<{ profile: ProfileState }>,
+    private authService: AuthService // Inject AuthService
   ) {
     this.subscription.push(
       this.router.events.pipe(filter(e => e instanceof NavigationEnd)).subscribe(() => {
-        const child = this.route.firstChild;
+        const child = this.activatedRoute.firstChild;
         const path = child?.snapshot.routeConfig?.path;
         const idx = this.tabRoutes.indexOf(path || 'all');
         this.selectedIndex = idx === -1 ? 0 : idx;
       })
     );
-    this.profileId = this.route.snapshot.params['profileId'];
+    this.profileId = this.activatedRoute.snapshot.params['profileId'];
     this.videoList$ = this.store.select('profile', 'userVideos');
     this.isLoading$ = this.store.select('profile', 'isLoading');
     this.totalCount$ = this.store.select('profile', 'totalCount');
+    this.likedVideoList$ = this.store.select('profile', 'likedVideos');
     this.store.dispatch(ProfileActions.getUserVideos({
+      profileId: this.profileId,
+      orderBy: 'desc',
+      page: 0
+    }));
+    this.store.dispatch(ProfileActions.getLikedVideos({
       profileId: this.profileId,
       orderBy: 'desc',
       page: 0
@@ -110,11 +121,39 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   onScroll(event: Event) {
     const element = event.target as HTMLElement;
-    if (element.scrollTop + element.clientHeight >= element.scrollHeight) {
+    console.log('Scroll event:', element.scrollTop, element.clientHeight, element.scrollHeight);
+    if (element.scrollTop + element.clientHeight >= element.scrollHeight - 100) {
+
+      console.log('Scrolled to bottom');
       if (this.selectedIndex === 0) {
+        console.log('Load more videos');
         this.loadMoreVideos();
       }
+      if (this.selectedIndex === 2) {
+        console.log('Load more liked videos');
+        this.loadMoreLikedVideos();
+      }
+
     }
+  }
+
+  loadMoreLikedVideos() {
+    combineLatest([
+      this.store.select(state => state.profile.isLoadingLikedVideos),
+      this.store.select('profile', 'canLoadMoreLikedVideos'),
+      this.likedVideoList$
+    ]).pipe(
+      take(1)
+    ).subscribe(([isLoading, canLoadMore, likedVideoList]) => {
+      console.log('isLoading:', isLoading, 'canLoadMoreLikedVideos:', canLoadMore, 'current liked video count:', likedVideoList.length);
+      if (!isLoading && canLoadMore) {
+        this.store.dispatch(ProfileActions.getLikedVideos({
+          profileId: this.profileId,
+          orderBy: 'desc',
+          page: Math.floor(likedVideoList.length / 10)
+        }));
+      }
+    });
   }
 
   loadMoreVideos() {
@@ -127,7 +166,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
     ).subscribe(([isLoading, canLoadMore, videoList]) => {
       console.log('isLoading:', isLoading, 'canLoadMore:', canLoadMore, 'current video count:', videoList.length);
       if (!isLoading && canLoadMore) {
-        // console.log(videoList.length / 10);
         this.store.dispatch(ProfileActions.getUserVideos({
           profileId: this.profileId,
           orderBy: 'desc',
@@ -140,13 +178,36 @@ export class ProfileComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscription.push(
       this.router.events.pipe(filter(e => e instanceof NavigationEnd)).subscribe(() => {
-        const child = this.route.firstChild;
+        const child = this.activatedRoute.firstChild;
         const path = child?.snapshot.routeConfig?.path;
         const idx = this.tabRoutes.indexOf(path || 'all');
         this.selectedIndex = idx === -1 ? 0 : idx;
+      }),
+      this.activatedRoute.params.subscribe(params => {
+        if (params['profileId'] && params['profileId'] !== this.profileId) {
+          this.store.dispatch(ProfileActions.clearProfileState());
+          this.profileId = params['profileId'];
+          console.log('Profile ID changed to:', this.profileId);
+          this.store.dispatch(ProfileActions.getUserVideos({
+            profileId: this.profileId,
+            orderBy: 'desc',
+            page: 0
+          }));
+          this.store.dispatch(ProfileActions.getProfile({userId: this.profileId}));
+          this.store.dispatch(ProfileActions.getLikedVideos({
+            profileId: this.profileId,
+            orderBy: 'desc',
+            page: 0
+          }));
+          this.store.dispatch(PlayListAction.loadAllPlaylists({profileID: this.profileId}));
+          // Check if it's own profile
+          this.authService.getCurrentUserId().then(currentUserId => {
+            this.isOwnProfile = currentUserId === this.profileId;
+          });
+        }
       })
     );
-    this.profileId = this.route.snapshot.params['profileId'];
+    this.profileId = this.activatedRoute.snapshot.params['profileId'];
     this.videoList$ = this.store.select('profile', 'userVideos');
     this.isLoading$ = this.store.select('profile', 'isLoading');
     this.totalCount$ = this.store.select('profile', 'totalCount');
@@ -157,7 +218,21 @@ export class ProfileComponent implements OnInit, OnDestroy {
       page: 0
     }));
     this.store.dispatch(ProfileActions.getProfile({userId: this.profileId}));
+
+
+    this.store.dispatch(ProfileActions.getLikedVideos({
+      profileId: this.profileId,
+      orderBy: 'desc',
+      page: 0
+    }));
+
+    this.authService.getCurrentUserId().then(
+      currentUserId => {
+        this.isOwnProfile = currentUserId === this.profileId;
+      }
+    )
   }
+
 
   ngOnDestroy() {
     this.subscription.forEach(sub => sub.unsubscribe());
@@ -167,7 +242,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   onTabChange(idx: number) {
     const route = this.tabRoutes[idx];
-    this.router.navigate([route], {relativeTo: this.route});
+    this.router.navigate([route], {relativeTo: this.activatedRoute});
   }
 
   followers: UserModel[] = [

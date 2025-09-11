@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import supabase from '../../utils/supabase';
 import {from} from 'rxjs';
@@ -8,9 +8,10 @@ import {from} from 'rxjs';
 })
 export class HistoryService {
 
-  constructor() { }
+  constructor() {
+  }
 
-  async getHistory() {
+  async getHistory(startDate?: Date, endDate?: Date) {
     const user = await supabase.auth.getUser();
     if (!user.data.user) {
       throw new Error('User not authenticated');
@@ -18,18 +19,30 @@ export class HistoryService {
 
     const userId = user.data.user.id;
 
-    const { data, error } = await supabase
+    const {data, error} = await supabase
       .from('history_videos')
       .select('*, video(*)')
       .eq('profileId', userId)
-      .order('createdAt', { ascending: false });
+      .order('createdAt', {ascending: false});
+
 
     if (error) {
       console.error('Error fetching history:', error);
       throw new Error('Failed to fetch history');
     }
 
-    return data
+    let filteredData = [...data]
+
+    if (startDate && endDate) {
+      filteredData = data?.filter(item => {
+        const createdAt = new Date(item.createdAt);
+        return createdAt >= startDate && createdAt <= endDate;
+      });
+      return filteredData;
+    }
+
+
+    return filteredData
   }
 
   async deleteFromHistory(videoId: string) {
@@ -40,7 +53,7 @@ export class HistoryService {
 
     const userId = user.data.user.id;
 
-    const { data, error } = await supabase
+    const {data, error} = await supabase
       .from('history_videos')
       .delete()
       .eq('profileId', userId)
