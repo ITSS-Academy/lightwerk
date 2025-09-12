@@ -5,7 +5,10 @@ import {Pipe, PipeTransform} from '@angular/core';
 })
 export class AvatarPipe implements PipeTransform {
 
-  transform(value: string): string | null {
+  transform(value: string | null | undefined): string | null {
+    if (!value) {
+      return null;
+    }
     if (value.startsWith('https')) {
       return value;
     }

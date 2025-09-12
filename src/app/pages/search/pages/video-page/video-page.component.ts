@@ -10,6 +10,7 @@ import {Store} from '@ngrx/store';
 import {SearchState} from '../../../../ngrx/states/search.state';
 import * as SearchActions from '../../../../ngrx/actions/search.actions';
 import {convertToSupabaseUrl} from '../../../../utils/img-converter';
+import {AvatarPipe} from '../../../../utils/avatar.pipe';
 
 
 @Component({
@@ -22,6 +23,7 @@ import {convertToSupabaseUrl} from '../../../../utils/img-converter';
     MatCardContent,
     MatCardImage,
     AsyncPipe,
+    AvatarPipe
   ],
   templateUrl: './video-page.component.html',
   styleUrl: './video-page.component.scss'

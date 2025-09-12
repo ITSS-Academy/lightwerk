@@ -13,7 +13,7 @@
           <span class="title">{{ item.title }}</span>
           <div class="video-details">
             <div class="user">
-              <img class="user-avatar" src="{{item.profile?.avatarPath}}" alt="Username">
+              <img class="user-avatar" src="{{item.profile?.avatarPath | avatar }}" alt="Username">
               <span class="user-name">{{ item.profile?.username }}</span>
             </div>
             <span class="date">{{ item.createdAt | date }}</span>
