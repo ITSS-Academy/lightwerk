@@ -22,17 +22,10 @@
         </div>
       </div>
 
-      @if (item.isFollowing == false) {
-        <div class="button">
-          <button mat-flat-button>Follow</button>
-        </div>
-      } @else if (item.isFollowing == true) {
-        <div class="button">
-          <button mat-flat-button>Unfollow</button>
-        </div>
-      } @else {
-        <div></div>
-      }
+      
+      <button mat-flat-button (click)="toggleFollow(item,item.isFollowing ?? false)">
+        {{ item.isFollowing ? 'Unfollow' : 'Follow' }}
+      </button>
     </div>
   } @else {
 
@@ -69,3 +62,4 @@
     </div>
   </div>
 </div>
+

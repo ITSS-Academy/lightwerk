@@ -6,6 +6,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 export class AvatarPipe implements PipeTransform {
 
   transform(value: string | null | undefined): string | null {
+    console.log('AvatarPipe transform called with value:', value);
     if (!value) {
       return null;
     }

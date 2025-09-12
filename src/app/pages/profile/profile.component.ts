@@ -188,7 +188,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
             page: 0
           }));
           this.store.dispatch(PlayListAction.loadAllPlaylists({profileID: this.profileId}));
-          // Check if it's own profile
+
           this.authService.getCurrentUserId().then(currentUserId => {
             this.isOwnProfile = currentUserId === this.profileId;
           });
@@ -238,61 +238,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.router.navigate([route], {relativeTo: this.activatedRoute});
   }
 
-  followers: UserModel[] = [
-    {
-      id: "1",
-      username: "User_1",
-      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
-    },
-    {
-      id: "2",
-      username: "User_2",
-      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
-    },
-    {
-      id: "3",
-      username: "User_3",
-      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
-    },
-    {
-      id: "4",
-      username: "User_4",
-      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
-    },
-    {
-      id: "5",
-      username: "User_5",
-      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
-    },
-  ];
-
-  following: UserModel[] = [
-    {
-      id: "1",
-      username: "User_1",
-      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
-    },
-    {
-      id: "2",
-      username: "User_2",
-      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
-    },
-    {
-      id: "3",
-      username: "User_3",
-      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
-    },
-    {
-      id: "4",
-      username: "User_4",
-      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
-    },
-    {
-      id: "5",
-      username: "User_5",
-      imageUrl: "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
-    },
-  ];
-
+  toggleFollow(profile: ProfileModel, isFollowing: boolean) {
+    if (isFollowing) {
+      this.store.dispatch(ProfileActions.followUser({userId: profile.id, shouldFollow: false}));
+    } else {
+      this.store.dispatch(ProfileActions.followUser({userId: profile.id, shouldFollow: true}));
+    }
+  }
 
 }

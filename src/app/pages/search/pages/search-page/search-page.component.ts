@@ -72,6 +72,14 @@ export class SearchPageComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
+  toggleFollow(profile: ProfileModel, isFollowing: boolean) {
+    if (isFollowing) {
+      this.store.dispatch(SearchActions.followUser({userId: profile.id, shouldFollow: false}));
+    } else {
+      this.store.dispatch(SearchActions.followUser({userId: profile.id, shouldFollow: true}));
+    }
+  }
+
   protected readonly convertToSupabaseUrl = convertToSupabaseUrl;
 
 

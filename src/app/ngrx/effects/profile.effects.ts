@@ -3,8 +3,10 @@ import {inject} from '@angular/core';
 import {ProfileService} from '../../services/profile/profile.service';
 import * as profileActions from '../actions/profile.actions'
 import {catchError, map, switchMap} from 'rxjs/operators';
-import {from, of} from 'rxjs';
+import {exhaustMap, from, of} from 'rxjs';
 import {ProfileModel} from '../../models/profile.model';
+import {SearchService} from '../../services/search/search.service';
+import * as SearchActions from '../actions/search.actions';
 
 export const getUserVideosEffect = createEffect(
   (actions$ = inject(Actions), profileService = inject(ProfileService)) => {
@@ -52,42 +54,7 @@ export const editProfileEffect = createEffect(
   {functional: true}
 )
 
-//get following list
 
-export const getFollowingListEffect = createEffect(
-  (actions$ = inject(Actions), profileService = inject(ProfileService)) => {
-    return actions$.pipe(
-      ofType(profileActions.getFollowingList),
-      switchMap((arg) => profileService.getFollowing(arg.userId).pipe(
-        map((res) => {
-          return profileActions.getFollowingListSuccess({followingList: res});
-        }),
-        catchError((error: { message: any }) =>
-          of(profileActions.getFollowingListFailure({error}))
-        ))
-      )
-    );
-  },
-  {functional: true}
-)
-
-//get followers list
-export const getFollowersListEffect = createEffect(
-  (actions$ = inject(Actions), profileService = inject(ProfileService)) => {
-    return actions$.pipe(
-      ofType(profileActions.getFollowersList),
-      switchMap((arg) => profileService.getFollowers(arg.userId).pipe(
-        map((res) => {
-          return profileActions.getFollowersListSuccess({followersList: res});
-        }),
-        catchError((error: { message: any }) =>
-          of(profileActions.getFollowersListFailure({error}))
-        ))
-      )
-    );
-  },
-  {functional: true}
-)
 export const getProfileEffect = createEffect(
   (actions$ = inject(Actions), profileService = inject(ProfileService)) => {
     return actions$.pipe(
@@ -129,3 +96,73 @@ export const getLikedVideosEffect = createEffect(
   },
   {functional: true}
 )
+
+// Following List Effects
+export const getFollowingEffect = createEffect(
+  (actions$ = inject(Actions), profileService = inject(ProfileService)) => {
+    return actions$.pipe(
+      ofType(profileActions.getFollowing),
+      switchMap((arg) =>
+        from(profileService.getFollowing(arg.profileId)).pipe(
+          map((following: ProfileModel[]) => {
+            console.log(following);
+            return profileActions.getFollowingSuccess({
+              following,
+              totalCount: following.length,
+            });
+          }),
+          catchError((error: { message: any }) =>
+            of(profileActions.getFollowingFailure({error}))
+          )
+        )
+      )
+    );
+  },
+  {functional: true}
+)
+
+
+// Followers List Effects
+export const getFollowersEffect = createEffect(
+  (actions$ = inject(Actions), profileService = inject(ProfileService)) => {
+    return actions$.pipe(
+      ofType(profileActions.getFollowers),
+      switchMap((arg) =>
+        from(profileService.getFollowers(arg.profileId)).pipe(
+          map((followers: ProfileModel[]) => {
+            console.log(followers);
+            return profileActions.getFollowersSuccess({
+              followers,
+              totalCount: followers.length,
+            });
+          }),
+          catchError((error: { message: any }) =>
+            of(profileActions.getFollowersFailure({error}))
+          )
+        )
+      )
+    );
+  },
+  {functional: true}
+)
+
+export const followUser = createEffect(
+  () => {
+    const actions$ = inject(Actions);
+    const searchService = inject(SearchService);
+    return actions$.pipe(
+      ofType(SearchActions.followUser),
+      exhaustMap((action) =>
+        searchService.toggleFollowUser(action.userId, action.shouldFollow).pipe(
+          map((response) => SearchActions.followUserSuccess({
+            isFollowing: response.isFollowing
+          })),
+          catchError((error: any) =>
+            of(SearchActions.followUserFailure({error: error}))
+          )
+        )
+      )
+    );
+  },
+  {functional: true}
+);

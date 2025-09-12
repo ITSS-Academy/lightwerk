@@ -50,3 +50,27 @@ export const searchVideos = createEffect(
   },
   {functional: true}
 );
+
+
+export const followUser = createEffect(
+  () => {
+    const actions$ = inject(Actions);
+    const searchService = inject(SearchService);
+    return actions$.pipe(
+      ofType(SearchActions.followUser),
+      exhaustMap((action) =>
+        searchService.toggleFollowUser(action.userId, action.shouldFollow).pipe(
+          map((response) => SearchActions.followUserSuccess({
+            isFollowing: response.isFollowing
+          })),
+          catchError((error: any) =>
+            of(SearchActions.followUserFailure({error: error}))
+          )
+        )
+      )
+    );
+  },
+  {functional: true}
+);
+
+

@@ -11,4 +11,8 @@ export interface SearchState {
   isLoadingVideos: boolean,
   isSearchVideosSuccess: boolean,
   isSearchVideosError: any,
+
+  isFollowing: boolean,
+  isFollowSuccess: boolean,
+  isFollowError: any,
 }

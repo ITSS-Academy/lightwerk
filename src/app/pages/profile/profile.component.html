@@ -17,8 +17,8 @@
             Edit profile
           </button>
         } @else {
-          <button mat-flat-button>
-            Follow
+          <button mat-flat-button (click)="toggleFollow(profile,profile.isFollowing ?? false)">
+            {{ profile.isFollowing ? '✓ Following' : '+ Follow' }}
           </button>
         }
 
