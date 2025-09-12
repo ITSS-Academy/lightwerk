@@ -79,6 +79,6 @@ export class HistoryComponent implements OnInit, OnDestroy {
 
 
   onDateChange() {
-    
+
   }
 }
