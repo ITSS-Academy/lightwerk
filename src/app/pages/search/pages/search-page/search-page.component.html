@@ -14,7 +14,8 @@
       <div class="user-search-detail-container">
 
         <div class="user-search-detail-container">
-          <img [src]="item.avatarPath"
+          <img [src]="item.avatarPath | avatar"
+                referrerpolicy="no-referrer"
                alt="User profile">
           <div class="user-search-detail-stats">
             <span>{{ item.username }}</span>
@@ -57,7 +58,7 @@
             <span class="title">{{ item.title }}</span>
             <div class="video-details">
               <div class="user">
-                <img class="user-avatar" src="{{item.profile?.avatarPath}}" alt="Username">
+                <img class="user-avatar" src="{{item.profile?.avatarPath | avatar}}" alt="Username">
                 <span class="user-name">{{ item.profile?.username }}</span>
               </div>
               <span class="date">{{ item.createdAt | date }}</span>

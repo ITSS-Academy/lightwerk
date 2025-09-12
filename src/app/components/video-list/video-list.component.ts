@@ -35,6 +35,7 @@ import {PlaylistTableComponent} from '../playlist-table/playlist-table.component
 import {AllPlaylistComponent} from '../all-playlist/all-playlist.component';
 import * as PlaylistActions from '../../ngrx/actions/playlist.actions';
 import {PlaylistState} from '../../ngrx/states/playlist.state';
+import {AvatarPipe} from '../../utils/avatar.pipe';
 
 @Component({
   selector: 'app-video-list',
@@ -51,7 +52,8 @@ import {PlaylistState} from '../../ngrx/states/playlist.state';
     NgStyle,
     AsyncPipe,
     RouterLink,
-    DatePipe
+    DatePipe,
+    AvatarPipe
   ],
   templateUrl: './video-list.component.html',
   styleUrl: './video-list.component.scss'
