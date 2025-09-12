@@ -7,13 +7,14 @@
 
   <mat-card-content>
     <div class="playlist-details">
-      <!--      <span class="title">{{ playlist.title }}</span>-->
-      <!--      @if (playlist.videos.length == 1) {-->
-      <!--        <span>{{ playlist.videos.length }} Video</span>-->
-      <!--      } @else {-->
-      <!--        <span>{{ playlist.videos.length }} Videos</span>-->
-      <!--      }-->
-
+      <h3 class="playlist-title">{{ playlist.title }}</h3>
+      @if (playlist.videos) {
+        @if (playlist.videos.length === 1) {
+          <p class="video-count">1 video</p>
+        } @else if (playlist.videos.length > 1) {
+          <p class="video-count">{{ playlist.videos?.length }} videos</p>
+        }
+      }
     </div>
     <div class="playlist-visible">
       @if (playlist.isPublic) {

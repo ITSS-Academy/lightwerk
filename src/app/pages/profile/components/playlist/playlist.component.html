@@ -8,8 +8,10 @@
 
 <div class="video-container">
   <div class="video-grid">
-    @for (item of (isPlayList$ | async); track item.id) {
-      <app-playlist-card [playlist]="item"></app-playlist-card>
+    @if (!(isLoadingPlaylists$ | async)) {
+      @for (item of (playList$ | async); track item.id) {
+        <app-playlist-card [playlist]="item"></app-playlist-card>
+      }
     }
   </div>
 </div>

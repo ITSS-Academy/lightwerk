@@ -1,10 +1,10 @@
 <div class="playlist-dialog-container">
   <div class="dialog-header">
     <h2>All Playlists</h2>
-    <button mat-flat-button color="primary" (click)="openCreatePlaylistDialog()">
-      <mat-icon>add</mat-icon>
-      Create Playlist
-    </button>
+    <!--    <button mat-flat-button color="primary" (click)="openCreatePlaylistDialog()">-->
+    <!--      <mat-icon>add</mat-icon>-->
+    <!--      Create Playlist-->
+    <!--    </button>-->
   </div>
   <div class="playlist-list">
     @if (playlists.length === 0) {
@@ -14,17 +14,23 @@
       </div>
     } @else {
       @for (playlist of playlists; track playlist.id) {
-        <div class="playlist-card" (click)="addToPlaylist(playlist)">
-          <img class="playlist-thumbnail" [src]="playlist.thumbnailPath" alt="Playlist Thumbnail">
+        <div class="playlist-card" (click)="onCardClick(playlist)">
+          <img class="playlist-thumbnail" [src]="convertToSupabaseUrl(playlist.thumbnailPath,'thumbnail')"
+               alt="Playlist Thumbnail">
           <div class="playlist-info">
             <div class="playlist-title">{{ playlist.title }}</div>
             <div class="playlist-status" [ngClass]="playlist.isPublic ? 'public' : 'private'">
               <mat-icon>{{ playlist.isPublic ? 'public' : 'lock' }}</mat-icon>
               <span>{{ playlist.isPublic ? 'Public' : 'Private' }}</span>
             </div>
-            <div class="playlist-checkbox" (click)="$event.stopPropagation()">
-              <mat-checkbox [(ngModel)]="playlist.isHaveVideo"></mat-checkbox>
-            </div>
+          </div>
+          <div class="playlist-checkbox" (click)="$event.stopPropagation()">
+            <mat-checkbox
+              [checked]="playlist.isHaveVideo"
+              (change)="onCheckboxChange(playlist)"
+              [disabled]="isAddingToPlaylist || isRemovingFromPlaylist"
+            >
+            </mat-checkbox>
           </div>
         </div>
       }

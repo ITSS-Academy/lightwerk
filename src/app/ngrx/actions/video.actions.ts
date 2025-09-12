@@ -90,3 +90,5 @@ export const getLikeCountFailure = createAction('[Video] Get Like Count Failure'
   error: any
 }>())
 
+export const setIsSaved = createAction('[Video] Set Is Saved',)
+

@@ -37,23 +37,56 @@ export class ProfileService {
     )
   }
 
-  editProfileUser(username: string, bio: string, avatar: File | null) {
-    return from(new Promise<{
-      username: string;
-      bio: string;
-      avatarUrl: string;
-      id: string;
-    }>((resolve) => {
-      console.log(avatar);
-      console.log(username, bio);
+  async editProfileUser(username: string, bio: string, avatar: File | null): Promise<ProfileModel> {
+    let avatarPath = null;
 
-      resolve({
-        username,
-        bio,
-        avatarUrl: avatar ? URL.createObjectURL(avatar) : '',
-        id: 'asd'
-      });
-    }));
+    const {data, error} = await supabase.auth.getUser();
+    if (error || !data.user) {
+      console.log(error);
+      throw new Error('No access token');
+    }
+    const uid = data.user.id;
+
+    if (avatar) {
+      const fileExt = avatar.name.split('.').pop();
+      const filePath = `avatars/${uid}/avatar.${fileExt}`;
+
+      const {data, error: uploadError} = await supabase.storage
+        .from('avatars')
+        .upload(filePath, avatar, {upsert: true});
+
+      if (uploadError) {
+        console.log(uploadError);
+        throw new Error(uploadError.message);
+      }
+
+      avatarPath = data?.path;
+    }
+
+    const updates: any = {
+      username,
+      bio,
+      email: data.user.email,
+    };
+
+    if (avatarPath) {
+      updates.avatarPath = avatarPath;
+    }
+
+    const {error: updateError} = await supabase
+      .from('profile')
+      .update(updates)
+      .eq('id', data.user.id);
+
+    if (updateError) {
+      console.log(updateError);
+      throw new Error(updateError.message);
+    }
+
+    return {
+      ...updates,
+      id: data.user.id,
+    } as ProfileModel;
   }
 
   getFollowers(userId: string) {
@@ -187,8 +220,8 @@ export class ProfileService {
       .from('profile')
       .select(`
     *,
-    following:profile_follows!FK_01be95fab8cc9e6da1fb9dfe36a(followingId),
-    followers: profile_follows!FK_f5a23cae4f853a80601d52b4cd4(followerId)
+    following: profile_follows!FK_f5a23cae4f853a80601d52b4cd4(followerId),
+    followers:profile_follows!FK_01be95fab8cc9e6da1fb9dfe36a(followingId)
   `)
       .eq('id', userId)
       .single();
@@ -206,7 +239,82 @@ export class ProfileService {
 
   }
 
+  async getLikedVideos(userId: string, page: number, orderBy: 'asc' | 'desc', startDate?: string, endDate?: string) {
+    const {data, error} = await supabase
+      .from('like_video')
+      .select(`
+        *,
+        video:videoId (
+          id,
+          title,
+          thumbnailPath,
+          createdAt,
+          aspectRatio,
+          status,
+          isPublic,
+          viewCount,
+          profile: profileId (
+            id,
+            username,
+            avatarPath
+          )
+        )
+      `)
+      .eq('profileId', userId)
+      .eq('video.status', 'success')
+      .eq('video.isPublic', true)
+      .order('createdAt', {ascending: orderBy === 'asc'})
+      .range(page * 10, page * 10 + 9);
+
+    // Apply date filtering if both startDate and endDate are provided
+    let filteredData = data;
+    // if (startDate && endDate && data) {
+    //   filteredData = data?.filter(item => {
+    //     const videoDate = new Date(item.video.createdAt!);
+    //     return videoDate >= new Date(startDate) && videoDate <= new Date(endDate);
+    //   });
+    // }
+
+
+    if (error) {
+      console.log(error);
+      return Promise.reject(new Error(error.message));
+    }
+
+    //select count of liked videos
+    const {count, error: countError} = await supabase
+      .from('like_video')
+      .select(`
+        *,
+        video:videoId (
+          id,
+          title,
+          thumbnailPath,
+          createdAt,
+          aspectRatio,
+          status,
+          isPublic,
+          viewCount,
+          profile: profileId (
+            id,
+            username,
+            avatarPath
+          )
+        )
+      `, {count: 'exact'})
+      .eq('profileId', userId)
+      .eq('video.status', 'success')
+      .eq('video.isPublic', true);
+
+    if (countError) {
+      console.log(countError);
+      return Promise.reject(new Error(countError.message));
+    }
+
+    return {
+      videos: filteredData ? filteredData.map(item => item.video) : [],
+      totalCount: count || 0
+    }
+
+  }
 }
-
-
-

@@ -5,6 +5,8 @@ import {NgClass} from '@angular/common';
 import supabase from '../../utils/supabase';
 import {Subscription} from 'rxjs';
 import {filter} from 'rxjs/operators';
+import {Store} from '@ngrx/store';
+import {AuthState} from '../../ngrx/states/auth.state';
 
 @Component({
   selector: 'app-sidebar',
@@ -25,7 +27,9 @@ export class SidebarComponent implements OnInit, OnDestroy {
   @Output() searchClick = new EventEmitter<void>();
   @Output() notSearchClick = new EventEmitter<void>();
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private store: Store<{
+    auth: AuthState
+  }>) {
   }
 
   ngOnInit() {
@@ -56,6 +60,15 @@ export class SidebarComponent implements OnInit, OnDestroy {
         .subscribe(() => {
           this.isSearchActive = this.router.isActive('/search', matchOptions);
         }),
+      this.store.select(state => state.auth.auth.user).subscribe(user => {
+        if (user?.id) {
+          this.userId.set(user.id);
+          this.updateSections();
+        } else {
+          this.userId.set(null);
+          this.updateSections();
+        }
+      }),
     )
   }
 
@@ -73,7 +86,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
           routes: [
             {path: '/home', icon: 'home', label: 'Home'},
             {path: '/exploring', icon: 'explore', label: 'Explore'},
-            {path: '/following', icon: 'subscriptions', label: 'Following'},
             {path: '/search', icon: 'search', label: 'Search'}
           ]
         }

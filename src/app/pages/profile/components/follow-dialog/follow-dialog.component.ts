@@ -8,6 +8,7 @@ import {ProfileState} from '../../../../ngrx/states/profile.state';
 import {ProfileModel} from '../../../../models/profile.model';
 import {Observable, Subscription} from 'rxjs';
 import * as ProfileActions from '../../../../ngrx/actions/profile.actions';
+import {AvatarPipe} from '../../../../utils/avatar.pipe';
 
 
 @Component({
@@ -16,7 +17,8 @@ import * as ProfileActions from '../../../../ngrx/actions/profile.actions';
     MatDialogContent,
     MatTabGroup,
     MatTab,
-    MatButton
+    MatButton,
+    AvatarPipe
   ],
   templateUrl: './follow-dialog.component.html',
   styleUrl: './follow-dialog.component.scss'

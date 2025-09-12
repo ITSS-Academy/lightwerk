@@ -5,14 +5,23 @@
   @if (profile$ | async; as profile) {
     <div class="profile-container">
       <div class="profile-image">
-        <img class="user-image" [src]="profile.avatarPath" alt="User's image">
+        <img class="user-image" [src]="profile.avatarPath | avatar" alt="User's image"
+        referrerpolicy="no-referrer"
+        >
       </div>
       <div class="profile-information">
         <h2>{{ profile.username || username }}</h2>
-        <button mat-flat-button (click)="openDialog()">
-          <mat-icon>edit</mat-icon>
-          Edit profile
-        </button>
+        @if (isOwnProfile) {
+          <button mat-flat-button (click)="openDialog()">
+            <mat-icon>edit</mat-icon>
+            Edit profile
+          </button>
+        } @else {
+          <button mat-flat-button>
+            Follow
+          </button>
+        }
+
         <div class="stats">
           <h3 (click)="openDialogUser('followers')">
             {{ profile.followersCount }} followers
@@ -71,7 +80,7 @@
       </ng-template>
       @if (selectedIndex == 2) {
         <ng-container>
-          <app-liked-videos></app-liked-videos>
+          <app-liked-videos [profileId]="profileId"></app-liked-videos>
         </ng-container>
       }
     </mat-tab>

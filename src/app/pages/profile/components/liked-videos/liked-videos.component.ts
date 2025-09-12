@@ -1,6 +1,12 @@
-import {Component} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {VideoCardComponent} from "../video-card/video-card.component";
 import {LikedVideoCardComponent} from '../liked-video-card/liked-video-card.component';
+import {Observable, Subscription} from 'rxjs';
+import {VideoModel} from '../../../../models/video.model';
+import {Store} from '@ngrx/store';
+import {ProfileState} from '../../../../ngrx/states/profile.state';
+import {AsyncPipe} from '@angular/common';
+import {AvatarPipe} from '../../../../utils/avatar.pipe';
 
 interface LikedVideoCard {
   id: string;
@@ -12,38 +18,36 @@ interface LikedVideoCard {
 @Component({
   selector: 'app-liked-videos',
   imports: [
-    LikedVideoCardComponent
+    LikedVideoCardComponent,
+    AsyncPipe,
   ],
   templateUrl: './liked-videos.component.html',
   styleUrl: './liked-videos.component.scss'
 })
-export class LikedVideosComponent {
-  LikedVideoList: LikedVideoCard[] = [
-    {
-      id: "1",
-      title: "Chinese Tones",
-      image: "https://blog-cdn.italki.com/wp-content/uploads/sites/2/2022/09/30084900/chinese-tones.jpg",
-      date: new Date(),
-    },
-    {
-      id: "2",
-      title: "Chinese Characters Origin",
-      image: "https://openbooks.lib.msu.edu/app/uploads/sites/66/2021/06/character-strokes.jpg",
-      date: new Date(),
-    },
-    {
-      id: "3",
-      title: "Chinese Grammar (part 1)",
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRy1oMNizUhInauwSnVB6IYg70Wyr9Bxjwvwg&s",
-      date: new Date(),
-    },
-    {
-      id: "4",
-      title: "Respecting the elders in China",
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxUGk2gZmRDLNy4Alh8H25L5-Y8d2Maw-53g&s",
-      date: new Date(),
-    },
+export class LikedVideosComponent implements OnInit {
+  @Input() profileId!: string;
+  likedVideoList$ !: Observable<VideoModel[]>;
+  subscription: Subscription[] = [];
 
-  ];
+
+  constructor(
+    private store: Store<{
+      profile: ProfileState
+    }>) {
+    this.likedVideoList$ = this.store.select(state => state.profile.likedVideos);
+  }
+
+  ngOnInit() {
+    this.subscription.push(
+      this.likedVideoList$.subscribe((videos: VideoModel[]) => {
+        if (videos && videos.length > 0) {
+          console.log(videos);
+        } else {
+          console.log('No liked videos found.');
+        }
+      })
+    )
+  }
+
 
 }

@@ -31,7 +31,7 @@ export const editProfileEffect = createEffect(
   (actions$ = inject(Actions), profileService = inject(ProfileService)) => {
     return actions$.pipe(
       ofType(profileActions.editProfileUser),
-      switchMap((arg) => profileService.editProfileUser(arg.username, arg.bio, arg.avatarUrl).pipe(
+      switchMap((arg) => from(profileService.editProfileUser(arg.username, arg.bio, arg.avatarUrl)).pipe(
         map((res) => {
           console.log(res);
           return profileActions.editProfileUserSuccess({
@@ -39,7 +39,7 @@ export const editProfileEffect = createEffect(
               id: res.id,
               username: res.username,
               bio: res.bio,
-              avatarPath: res.avatarUrl,
+              avatarPath: res.avatarPath,
             }
           });
         }),
@@ -107,3 +107,25 @@ export const getProfileEffect = createEffect(
   {functional: true}
 );
 
+export const getLikedVideosEffect = createEffect(
+  (actions$ = inject(Actions), profileService = inject(ProfileService)) => {
+    return actions$.pipe(
+      ofType(profileActions.getLikedVideos),
+      switchMap((arg) =>
+        from(profileService.getLikedVideos(arg.profileId, arg.page, arg.orderBy)).pipe(
+          map((res) => {
+            console.log(res);
+            return profileActions.getLikedVideosSuccess({
+              likedVideos: res.videos,
+              totalCount: res.totalCount,
+            });
+          }),
+          catchError((error: { message: any }) =>
+            of(profileActions.getLikedVideosFailure({error}))
+          )
+        )
+      )
+    );
+  },
+  {functional: true}
+)

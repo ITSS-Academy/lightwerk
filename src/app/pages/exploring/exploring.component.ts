@@ -30,8 +30,11 @@ export class ExploringComponent implements OnInit, AfterViewInit, OnDestroy {
   categories$!: Observable<{ id: string; name: string }[]>;
   isLoading$!: Observable<boolean>;
   isLoadMore$!: Observable<boolean>;
+  isLoading!: boolean;
+  canGetMoreLatest!: boolean;
+  subscriptions: Subscription[] = []
 
-  page = 1;
+  page = 0;
   private scrollSub!: Subscription;
   private resizeSub!: Subscription;
   private selectedChip$ = new BehaviorSubject<string | null>(null);
@@ -48,6 +51,10 @@ export class ExploringComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     this.store.dispatch(CategoryActions.getAllCategories());
     this.loadVideos();
+    this.subscriptions.push(
+      this.store.select(state => state.video.isGettingLatest).subscribe(loading => this.isLoading = loading),
+      this.store.select(state => state.video.canGetMoreLatest).subscribe(canGetMore => this.canGetMoreLatest = canGetMore)
+    );
   }
 
   ngAfterViewInit(): void {
@@ -75,7 +82,7 @@ export class ExploringComponent implements OnInit, AfterViewInit, OnDestroy {
     this.selectedChip = this.selectedChip === chip ? null : chip;
     this.selectedChip$.next(this.selectedChip);
 
-    this.page = 1;
+    this.page = 0;
     this.store.dispatch(VideoActions.clearVideoState());
 
     // reset scroll về đầu
@@ -84,6 +91,20 @@ export class ExploringComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     this.loadVideos();
+    this.ensureContainerFull();
+  }
+
+  ensureContainerFull() {
+    setTimeout(() => {
+      const el = this.scrollContainer?.nativeElement;
+      if (!el) return;
+      // Nếu chưa có scroll (container chưa đầy), và còn dữ liệu để load
+      if (el.scrollHeight <= el.clientHeight && this.canGetMoreLatest && !this.isLoading) {
+        this.loadMore();
+        // Gọi lại để kiểm tra tiếp sau khi loadMore hoàn thành
+        setTimeout(() => this.ensureContainerFull(), 300);
+      }
+    }, 300);
   }
 
   loadVideos(): void {
@@ -98,6 +119,9 @@ export class ExploringComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   loadMore(): void {
+    if (this.isLoading || !this.canGetMoreLatest) {
+      return;
+    }
     this.page++;
     this.loadVideos();
   }

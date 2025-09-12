@@ -5,47 +5,63 @@
 <!--</div>-->
 
 <div class="user-search">
-  <div class="search-header">
-    <span>Users</span>
-    <mat-icon [routerLink]="['/search/user']">chevron_right</mat-icon>
-  </div>
-  <div class="user-search-detail">
-    <div class="user-search-detail-container">
-      <img src="https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/avatar-default-icon.png"
-           alt="User profile">
-      <div class="user-search-detail-stats">
-        <span>Username</span>
-        <span>0 followers</span>
-        <span>Bio</span>
-      </div>
+  @if (profiles$ | async; as item) {
+    <div class="search-header">
+      <span>Users</span>
+      <mat-icon [routerLink]="['/search/user']" [queryParams]="{ q: this.query }">chevron_right</mat-icon>
     </div>
+    <div class="user-search-detail">
+      <div class="user-search-detail-container">
 
-    <div class="button">
-      <button mat-flat-button>Follow</button>
+        <div class="user-search-detail-container">
+          <img [src]="item.avatarPath | avatar"
+                referrerpolicy="no-referrer"
+               alt="User profile">
+          <div class="user-search-detail-stats">
+            <span>{{ item.username }}</span>
+            <span>{{ item.followersCount }} followers</span>
+            <span>{{ item.bio }}</span>
+          </div>
+        </div>
+
+      </div>
+      @if (item.isFollowing == false) {
+        <div class="button">
+          <button mat-flat-button>Follow</button>
+        </div>
+      } @else if (item.isFollowing == true) {
+        <div class="button">
+          <button mat-flat-button>Unfollow</button>
+        </div>
+      } @else {
+        <div></div>
+      }
     </div>
-  </div>
+  } @else {
+
+  }
 </div>
 
 <div class="video-search">
   <div class="search-header">
     <span>Videos</span>
-    <mat-icon [routerLink]="['/search/video']">chevron_right</mat-icon>
+    <mat-icon [routerLink]="['/search/video']" [queryParams]="{ q: this.query }">chevron_right</mat-icon>
   </div>
   <div class="video-container">
     <div class="video-grid">
-      @for (item of videoList; track item.id) {
+      @for (item of (videos$ | async); track item.profileId) {
         <mat-card class="video-card" appearance="outlined">
           <img mat-card-image class="video-thumbnail"
-               src="{{item.imageUrl}}"
+               src="{{convertToSupabaseUrl(item.thumbnailPath,'thumbnail')}}"
                alt="Video Placeholder Image">
           <mat-card-content>
             <span class="title">{{ item.title }}</span>
             <div class="video-details">
               <div class="user">
-                <img class="user-avatar" src="{{item.avatar}}" alt="Username">
-                <span class="user-name">{{ item.username }}</span>
+                <img class="user-avatar" src="{{item.profile?.avatarPath | avatar}}" alt="Username">
+                <span class="user-name">{{ item.profile?.username }}</span>
               </div>
-              <span class="date">{{ item.date | date }}</span>
+              <span class="date">{{ item.createdAt | date }}</span>
             </div>
           </mat-card-content>
         </mat-card>

@@ -32,13 +32,15 @@ import {ActivatedRoute} from '@angular/router';
 
 export class PlaylistComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
-  isPlayList$!: Observable<PlaylistModel[]>
+  playList$!: Observable<PlaylistModel[]>
+  isLoadingPlaylists$: Observable<boolean>
 
   constructor(private store: Store<{
                 playlist: PlaylistState,
               }>, private activatedRoute: ActivatedRoute
   ) {
-    this.isPlayList$ = this.store.select(state => state.playlist.playlists)
+    this.isLoadingPlaylists$ = this.store.select(state => state.playlist.isLoadingPlaylists)
+    this.playList$ = this.store.select(state => state.playlist.playlists)
   }
 
   ngOnInit() {
