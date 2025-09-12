@@ -8,18 +8,23 @@
   border: 1px solid transparent;
 }
 
+mat-card-content {
+  padding: 0 !important;
+}
+
 .thumbnail {
   position: relative;
   width: 100%;
-  aspect-ratio: 3 / 3.6; /* làm thumbnail cao hơn một chút */
+  aspect-ratio: 3 / 4; /* làm thumbnail cao hơn một chút */
   overflow: hidden;
   border-radius: 1%;
+  object-fit: cover;
   background: var(--mat-sys-background);
 
   img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+
   }
 }
 

@@ -24,10 +24,11 @@ import {VideoModel} from '../../models/video.model';
 import {VideoState} from '../../ngrx/states/video.state';
 import {VideoComponent} from '../video/video.component';
 import supabase from '../../utils/supabase';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-detail-dialog',
-  imports: [MatDialogModule, MatButton, MatCard, MatCardAvatar, MatCardHeader, MatCardTitleGroup, MatIconModule, MatFormField, MatFormField, MatInput, MatSuffix, MatFormField, MatLabel, MatHint, MatIconButton, NgClass, NgStyle, DialogVideoComponent, VideoComponent, AsyncPipe],
+  imports: [MatDialogModule, MatButton, MatCard, MatCardAvatar, MatCardHeader, MatCardTitleGroup, MatIconModule, MatFormField, MatFormField, MatInput, MatSuffix, MatFormField, MatLabel, MatHint, MatIconButton, NgClass, NgStyle, DialogVideoComponent, VideoComponent, AsyncPipe, RouterLink],
   templateUrl: './detail-dialog.component.html',
   styleUrl: './detail-dialog.component.scss'
 })

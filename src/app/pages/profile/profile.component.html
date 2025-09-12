@@ -6,11 +6,11 @@
     <div class="profile-container">
       <div class="profile-image">
         <img class="user-image" [src]="profile.avatarPath | avatar" alt="User's image"
-        referrerpolicy="no-referrer"
+             referrerpolicy="no-referrer"
         >
       </div>
       <div class="profile-information">
-        <h2>{{ profile.username || username }}</h2>
+        <h2>{{ profile.username }}</h2>
         @if (isOwnProfile) {
           <button mat-flat-button (click)="openDialog()">
             <mat-icon>edit</mat-icon>

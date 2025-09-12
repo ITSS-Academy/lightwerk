@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {MatIcon} from '@angular/material/icon';
 import {AsyncPipe, DatePipe} from '@angular/common';
@@ -11,6 +11,8 @@ import {SearchState} from '../../../../ngrx/states/search.state';
 import * as SearchActions from '../../../../ngrx/actions/search.actions';
 import {convertToSupabaseUrl} from '../../../../utils/img-converter';
 import {AvatarPipe} from '../../../../utils/avatar.pipe';
+import {DetailDialogComponent} from '../../../../components/detail-dialog/detail-dialog.component';
+import {MatDialog} from '@angular/material/dialog';
 
 
 @Component({
@@ -32,6 +34,7 @@ export class VideoPageComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   videos$!: Observable<VideoModel[]>;
   query: string = '';
+  readonly dialog = inject(MatDialog);
 
   constructor(
     private route: ActivatedRoute,
@@ -63,4 +66,21 @@ export class VideoPageComponent implements OnInit, OnDestroy {
   }
 
   protected readonly convertToSupabaseUrl = convertToSupabaseUrl;
+
+  openDialog(item: VideoModel) {
+    const dialogRef = this.dialog.open(DetailDialogComponent, {
+      width: '100vw',
+      height: '100vh',
+      maxWidth: '100%',
+      maxHeight: '100vh',
+      panelClass: 'full-screen-dialog',
+      data: {video: item}
+    });
+    console.log('Dialog opened');
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+
+  }
 }

@@ -12,6 +12,10 @@
   align-items: center;
 }
 
+mat-card-content {
+  padding: 0 !important;
+}
+
 .video-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(clamp(150px, 16%, 220px), 1fr));
@@ -19,9 +23,13 @@
   justify-content: start; /* dồn trái, không căn đều */
   align-content: start;
   padding: 1%;
-  max-width: 1200px;
+  max-width: 1050px;
   margin: 0 auto;
   overflow: hidden;
+}
+
+.video-info {
+  margin-top: 8px;
 }
 
 .video-card {
@@ -31,21 +39,22 @@
   display: flex;
   flex-direction: column;
   cursor: pointer;
-  border: 1px solid transparent;
+  border: none;
 }
 
 .thumbnail {
   position: relative;
   width: 100%;
-  aspect-ratio: 3 / 3.6; /* làm thumbnail cao hơn một chút */
+  aspect-ratio: 3 / 4; /* làm thumbnail cao hơn một chút */
   overflow: hidden;
   border-radius: 1%;
+  object-fit: cover;
   background: var(--mat-sys-background);
 
   img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+
   }
 }
 

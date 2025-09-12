@@ -6,11 +6,15 @@
     <div class="video-info">
       <span class="title">{{ likedVideoCard.title }}</span>
       <div class="video-stats">
-        <div class="video-user">
+        <div class="video-user"
+             [routerLink]="['/profile', likedVideoCard.profile?.id, 'videos']"
+             (click)="$event.stopPropagation()"
+        >
           <img class="avatar" [src]="likedVideoCard.profile?.avatarPath! | avatar"
                referrerpolicy="no-referrer"
                alt="User Avatar">
-          <span class="username">{{ likedVideoCard.profile?.username }}</span>
+          <span
+            class="username">{{ likedVideoCard.profile?.username }}</span>
         </div>
         <div class="video-date">
           <span class="date">{{ likedVideoCard.createdAt | date }}</span>

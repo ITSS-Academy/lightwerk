@@ -27,14 +27,16 @@
 
           </div>
         </div>
-
-        <div class="button">
-          <button mat-button (click)="openDialogmakePublic()">Make public</button>
-          <button mat-button (click)="openDialogDeletePlaylist()">Delete Playlist</button>
-          <button mat-button (click)="openDialogChangeName()">Change Name</button>
-        </div>
+        @if (isOwnProfile) {
+          <div class="button">
+            <button mat-button (click)="openDialogmakePublic()">Make public</button>
+            <button mat-button (click)="openDialogDeletePlaylist()">Delete Playlist</button>
+            <button mat-button (click)="openDialogChangeName()">Change Name</button>
+          </div>
+        }
       </div>
     </div>
+
 
     <div class="video-container">
       <div class="video-grid">

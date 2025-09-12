@@ -16,6 +16,7 @@ import {filter} from 'rxjs/operators';
 import * as PlaylistActions from '../../ngrx/actions/playlist.actions';
 import {convertToSupabaseUrl} from '../../utils/img-converter';
 import {AvatarPipe} from '../../utils/avatar.pipe';
+import {AuthService} from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-playlist-detail',
@@ -36,9 +37,11 @@ export class PlaylistDetailComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   readonly dialog = inject(MatDialog);
   isLoading$!: Observable<boolean>;
+  isOwnProfile: boolean = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
+    private authService: AuthService,
     private store: Store<{ playlist: PlaylistState }>
   ) {
     this.isLoading$ = this.store.select(state => state.playlist.isLoadingPlaylistDetails);
@@ -49,13 +52,14 @@ export class PlaylistDetailComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.store.dispatch(PlaylistActions.loadPlaylistDetails({playlistID: this.playlistId}));
 
-
     this.subscriptions.push(
       this.playListDetail$.subscribe((details: PlaylistModel) => {
-        console.log(details);
         if (details.id) {
           this.playlistDetail = details;
-          console.log(details);
+          // Check ownership after playlist details are loaded
+          this.authService.getCurrentUserId().then(currentUserId => {
+            this.isOwnProfile = this.playlistDetail?.profile?.id === currentUserId;
+          });
         }
       })
     );
