@@ -10,7 +10,7 @@ export const uploadVideo = createEffect(
     return actions$.pipe(
       ofType(VideoActions.uploadVideo),
       exhaustMap((action) =>
-        videoService.chunkVideo(action.file).pipe(
+        videoService.chunkVideo(action.file, action.videoId).pipe(
           switchMap((res) => {
               console.log(res)
               return videoService.mergeChunks(res[0].videoId).pipe(
@@ -107,7 +107,7 @@ export const getVideosByCategory = createEffect(
     return actions$.pipe(
       ofType(VideoActions.getVideosByCategory),
       exhaustMap((action) =>
-        from(videoService.getVideosByCategory(action.categoryId,action.page)).pipe(
+        from(videoService.getVideosByCategory(action.categoryId, action.page)).pipe(
           map((res) => VideoActions.getVideosByCategorySuccess({
             videos: res.videos,
             totalItems: res.pagination.totalCount

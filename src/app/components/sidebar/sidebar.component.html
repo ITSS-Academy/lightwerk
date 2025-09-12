@@ -1,7 +1,7 @@
 <div class="sidebar-container">
   <div>
     <div class="sidebar-logo" [ngClass]="{ 'collapsed': collapsed }">
-      <img src="logo.svg" alt="Logo"/>
+      <img [routerLink]="'/home'" src="logo.svg" alt="Logo"/>
     </div>
 
     <mat-nav-list>
@@ -14,7 +14,7 @@
           @for (route of section.routes; track route) {
             @if (route.path == '/search') {
               <a
-                (click)="removeFocus($event); this.searchClick.emit();searchclick1() "
+                (click)="removeFocus($event); this.searchClick.emit(); "
                 [ngClass]="{ 'collapsed': collapsed }"
                 mat-list-item
                 [activated]="isSearchActive">
@@ -57,10 +57,10 @@
         @if (!collapsed) {
           @if (section.header == "Library" && !this.userId || this.userId == undefined) {
           } @else {
-            @for (route of section.routes; track route) {
+            @for (route of section.routes; track $index) {
               @if (route.path == '/search') {
                 <a
-                  (click)="removeFocus($event); this.searchClick.emit();searchclick1() "
+                  (click)="removeFocus($event); this.searchClick.emit(); "
                   [ngClass]="{ 'collapsed': collapsed }"
                   mat-list-item
                   [activated]="isSearchActive">

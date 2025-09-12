@@ -2,7 +2,7 @@ import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {PlaylistDialogComponent} from '../../pages/profile/components/playlist-dialog/playlist-dialog.component';
 import {MatIconModule} from '@angular/material/icon';
-import {NgClass} from '@angular/common';
+import {AsyncPipe, NgClass} from '@angular/common';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {FormsModule} from '@angular/forms';
@@ -11,7 +11,7 @@ import {Store} from '@ngrx/store';
 import {PlaylistState} from '../../ngrx/states/playlist.state';
 import supabase from '../../utils/supabase';
 import * as PlaylistActions from '../../ngrx/actions/playlist.actions';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {convertToSupabaseUrl} from '../../utils/img-converter';
 
 interface DialogData {
@@ -20,7 +20,7 @@ interface DialogData {
 
 @Component({
   selector: 'app-all-playlist',
-  imports: [MatIconModule, NgClass, MatButtonModule, MatCheckboxModule, FormsModule],
+  imports: [MatIconModule, NgClass, MatButtonModule, MatCheckboxModule, FormsModule, AsyncPipe],
   templateUrl: './all-playlist.component.html',
   styleUrl: './all-playlist.component.scss'
 })
@@ -30,12 +30,14 @@ export class AllPlaylistComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   isAddingToPlaylist = false;
   isRemovingFromPlaylist = false;
+  isLoadingPlaylists$: Observable<boolean>
 
   constructor(private dialog: MatDialog, private dialogRef: MatDialogRef<AllPlaylistComponent>,
               private store: Store<{
                 playlist: PlaylistState
               }>
   ) {
+    this.isLoadingPlaylists$ = this.store.select(state => state.playlist.isLoadingPlaylists);
   }
 
   ngOnInit() {
@@ -96,6 +98,16 @@ export class AllPlaylistComponent implements OnInit, OnDestroy {
         videoID: this.data.videoId,
         playlistID: playlist.id
       }));
+    }
+  }
+
+  onClose() {
+    // Check if all playlists are unchecked (isHaveVideo === false)
+    const allUnchecked = !this.playlists || this.playlists.length === 0 || this.playlists.every(p => !p.isHaveVideo);
+    if (allUnchecked) {
+      this.dialogRef.close(false);
+    } else {
+      this.dialogRef.close(this.playlists);
     }
   }
 

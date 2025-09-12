@@ -32,6 +32,7 @@ import {Title} from '@angular/platform-browser';
 })
 export class HeaderComponent {
   @Output() toggleMenuEvent = new EventEmitter();
+  @Input() userId!: string | null;
 
   searchQuery: string = ''
   headerTitle: string = '';

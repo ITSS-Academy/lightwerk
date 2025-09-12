@@ -29,7 +29,7 @@ import {CommentModel} from '../../models/comment.model';
 import {CommentState} from '../../ngrx/states/comment.state';
 import * as CommentAction from '../../ngrx/actions/comment.actions';
 import {FormsModule} from '@angular/forms';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatSnackBar, MatSnackBarRef} from '@angular/material/snack-bar';
 import {MatDialog} from '@angular/material/dialog';
 import {PlaylistTableComponent} from '../playlist-table/playlist-table.component';
 import {AllPlaylistComponent} from '../all-playlist/all-playlist.component';
@@ -64,6 +64,8 @@ export class VideoListComponent implements AfterViewInit, OnInit, OnDestroy {
   isFavoriteActive = false
   isSavetagActive = false
   private _snackBar = inject(MatSnackBar);
+  private snackbarRef: MatSnackBarRef<any> | null = null;
+  private snackbarActionSub: Subscription | null = null;
 
   pageContainerRef!: ElementRef;
   @Output() getMoreEvent = new EventEmitter<void>();
@@ -206,10 +208,11 @@ export class VideoListComponent implements AfterViewInit, OnInit, OnDestroy {
       }),
       this.store.select(state => state.playlist.addToPlaylistSuccess).subscribe(isSuccess => {
         if (isSuccess) {
-          this._snackBar.open('Added to playlist', 'Manange', {
+          this.snackbarRef = this._snackBar.open('Added to playlist', 'Manange', {
             duration: 3000,
-          }).onAction().subscribe(() => {
-            this.dialog.open(AllPlaylistComponent, {
+          });
+          this.snackbarActionSub = this.snackbarRef.onAction().subscribe(() => {
+            const dialogRef = this.dialog.open(AllPlaylistComponent, {
               width: '600px',
               maxHeight: '80vh',
               data:
@@ -304,7 +307,7 @@ export class VideoListComponent implements AfterViewInit, OnInit, OnDestroy {
             this.currentVideoIndex = index;
             this.store.dispatch(VideoActions.getLikedVideos({videoId: this.cards[this.currentVideoIndex].id}));
             this.store.dispatch(CommentAction.getAllComments({videoId: this.cards[this.currentVideoIndex]?.id!}));
-            // tắt dialog nếu có
+            this.turnoffSnackbar()
 
 
             if (this.currentVideoIndex == this.cards.length - 2) {
@@ -392,8 +395,21 @@ export class VideoListComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   removeFromPlaylist() {
+    this.turnoffSnackbar()
     this.store.dispatch(
       PlaylistActions.removeVideoFromPlaylist({videoID: this.cards[this.currentVideoIndex]?.id})
     )
+  }
+
+  turnoffSnackbar() {
+    // Close snackbar if open
+    if (this.snackbarRef) {
+      this.snackbarRef.dismiss();
+      this.snackbarRef = null;
+    }
+    if (this.snackbarActionSub) {
+      this.snackbarActionSub.unsubscribe();
+      this.snackbarActionSub = null;
+    }
   }
 }

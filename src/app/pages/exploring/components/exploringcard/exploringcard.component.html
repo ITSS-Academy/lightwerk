@@ -30,7 +30,7 @@
     <img [src]="convertToSupabaseUrl(video.thumbnailPath, 'thumbnail')" (click)="openDialog(video)" alt="">
     <div class="like-overlay">
       <span class="heart">❤</span>
-      <span class="count">{{ '0'}}</span>
+      <span class="count">{{ video.likeCount ?? '0' }}</span>
     </div>
   </div>
 

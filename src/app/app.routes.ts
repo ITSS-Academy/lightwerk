@@ -3,15 +3,36 @@ import {searchRoutes} from './pages/search/search.routes';
 
 export const routes: Routes = [
   {
+    path: 'studio',
+    children: [
+
+      {
+        path: 'upload',
+        loadComponent: () => import('./pages/upload/upload.component').then(m => m.UploadComponent),
+        data: {headerTitle: 'Upload'}
+      },
+      {
+        path: 'analytics',
+        loadComponent: () => import('./pages/analytics/analytics.component').then(m => m.AnalyticsComponent),
+        data: {headerTitle: 'Analytics'}
+      },
+      {
+        path: '',
+        redirectTo: 'upload',
+        pathMatch: 'full'
+      },
+    ]
+  },
+  {
     path: 'upload-detail/:videoId',
     loadComponent: () => import('./pages/upload-detail/upload-detail.component').then(m => m.UploadDetailComponent),
     data: {headerTitle: 'Upload'}
   },
-  {
-    path: 'upload',
-    loadComponent: () => import('./pages/create-video/create-video.component').then(m => m.CreateVideoComponent),
-    data: {headerTitle: 'Upload'}
-  },
+  // {
+  //   path: 'upload',
+  //   loadComponent: () => import('./pages/create-video/create-video.component').then(m => m.CreateVideoComponent),
+  //   data: {headerTitle: 'Upload'}
+  // },
   {
     path: 'home',
     loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent),

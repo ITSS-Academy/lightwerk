@@ -3,6 +3,7 @@ import {UploadVideoModel, VideoModel} from '../../models/video.model';
 
 export const uploadVideo = createAction('[Video] Upload Video', props<{
   file: File,
+  videoId: string
 }>());
 export const uploadVideoSuccess = createAction('[Video] Upload Video Success', props<{
   video: VideoModel,
@@ -90,5 +91,5 @@ export const getLikeCountFailure = createAction('[Video] Get Like Count Failure'
   error: any
 }>())
 
-export const setIsSaved = createAction('[Video] Set Is Saved',)
+export const setIsSaved = createAction('[Video] Set Is Saved')
 

@@ -41,6 +41,11 @@ export const initialState: PlaylistState = {
   isRemovingFromSpecificPlaylist: false,
   removeFromSpecificPlaylistSuccess: false,
   removeFromSpecificPlaylistError: null,
+
+  isGettingVideoInPlaylist: false,
+  getVideoInPlaylistSuccess: false,
+  getVideoInPlaylistError: null,
+  isHaveVideoInPlaylist: false,
 }
 
 export const playlistReducer = createReducer(
@@ -313,4 +318,28 @@ export const playlistReducer = createReducer(
       removeFromSpecificPlaylistError: error
     })
   ),
+  on(PlaylistActions.getVideoInPlaylist, (state) => ({
+      ...state,
+      isGettingVideoInPlaylist: true,
+      getVideoInPlaylistSuccess: false,
+      getVideoInPlaylistError: null
+    })
+  ),
+  on(PlaylistActions.getVideoInPlaylistSuccess, ((state, {}) => {
+      return {
+        ...state,
+        isGettingVideoInPlaylist: false,
+        getVideoInPlaylistSuccess: true,
+        getVideoInPlaylistError: null,
+        isHaveVideoInPlaylist: true,
+      }
+    }
+  )),
+  on(PlaylistActions.getVideoInPlaylistFailure, (state, {error}) => ({
+      ...state,
+      isGettingVideoInPlaylist: false,
+      getVideoInPlaylistSuccess: false,
+      getVideoInPlaylistError: error
+    })
+  )
 )

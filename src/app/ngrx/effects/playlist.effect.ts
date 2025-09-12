@@ -167,3 +167,22 @@ export const removeFromSpecificPlaylist = createEffect(
   },
   {functional: true}
 )
+
+export const getVideoInPlaylist = createEffect(
+  (actions$: Actions = inject(Actions), playlistService: PlaylistService = inject(PlaylistService)) => {
+    return actions$.pipe(
+      ofType(PlaylistActions.getVideoInPlaylist),
+      exhaustMap((action) =>
+        from(playlistService.getIsSavedInPlaylist(action.videoID)).pipe(
+          map((isHaveVideo) => PlaylistActions.getVideoInPlaylistSuccess({
+            isHaveVideoInPlaylist: isHaveVideo
+          })),
+          catchError((error: any) =>
+            of(PlaylistActions.getVideoInPlaylistFailure({error: error}))
+          )
+        )
+      )
+    );
+  },
+  {functional: true}
+)

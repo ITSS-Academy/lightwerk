@@ -40,28 +40,32 @@
           <mat-icon>playlist_add</mat-icon>
           Playlist
         </button>
-        <button mat-menu-item [routerLink]="'/upload'">
+        <button mat-menu-item [routerLink]="'/studio'">
           <mat-icon>video_library</mat-icon>
           Video
         </button>
       </mat-menu>
 
 
-      <button mat-icon-button [matMenuTriggerFor]="userMenu">
-        <img class="avatar" src="avatar.png" alt="">
-      </button>
-      <mat-menu #userMenu="matMenu">
-        <button (click)="logOut()" mat-menu-item>
-          <mat-icon>logout</mat-icon>
-          Logout
+      @if (this.userId; as uid) {
+        <button mat-icon-button [matMenuTriggerFor]="userMenu">
+          <img class="avatar" src="avatar.png" alt="">
         </button>
-        <button mat-menu-item [routerLink]="'/profile/1'">
+        <mat-menu #userMenu="matMenu">
+          <button mat-menu-item [routerLink]="`/profile/${uid}`">
           <span class="avatar">
             <mat-icon>account_circle</mat-icon>
           </span>
-          Profile
-        </button>
-      </mat-menu>
+            Profile
+          </button>
+          <button (click)="logOut()" mat-menu-item>
+            <mat-icon>logout</mat-icon>
+            Logout
+          </button>
+
+        </mat-menu>
+      }
+
     </div>
   </div>
 

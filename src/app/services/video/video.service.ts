@@ -21,7 +21,7 @@ export class VideoService {
     return from(supabase.auth.getSession())
   }
 
-  chunkVideo(video: File): Observable<any> {
+  chunkVideo(video: File, videoId: string): Observable<any> {
     const chunkSize = 1024 * 1024; // 1MB
     const totalChunks = Math.ceil(video.size / chunkSize);
 
@@ -32,7 +32,6 @@ export class VideoService {
       return {index: i, chunk};
     });
 
-    const videoId = uuidv4();
     let uploadedChunks = 0;
 
     return this.getAccessToken().pipe(
@@ -189,8 +188,11 @@ export class VideoService {
 
   async getVideosByCategory(categoryId: string, page: number) {
     const {data, error, count} = await supabase
-      .from('video',)
-      .select('*', {count: 'exact'})
+      .from('video')
+      .select(`
+        *,
+        like_video(count)
+      `, {count: 'exact'})
       .eq('categoryId', categoryId)
       .eq('isPublic', true)
       .order('createdAt', {ascending: false})
@@ -202,7 +204,12 @@ export class VideoService {
     }
 
     return {
-      videos: data as VideoModel[],
+      videos: data ? data.map(
+        (video) => ({
+            ...video,
+            likeCount: video.like_video[0].count,
+          }
+        )) as VideoModel[] : [],
       pagination: {
         limit: 10,
         page,

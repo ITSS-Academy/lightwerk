@@ -108,3 +108,13 @@ export const removeVideoFromSpecificPlaylistSuccess = createAction('[Playlist] R
 export const removeVideoFromSpecificPlaylistFailure = createAction('[Playlist] Remove Video From Specific Playlist Failure', props<{
   error: any
 }>());
+
+export const getVideoInPlaylist = createAction('[Playlist] Get Video In Playlist', props<{
+  videoID: string,
+}>());
+export const getVideoInPlaylistSuccess = createAction('[Playlist] Get Video In Playlist Success', props<{
+  isHaveVideoInPlaylist: boolean
+}>());
+export const getVideoInPlaylistFailure = createAction('[Playlist] Get Video In Playlist Failure', props<{
+  error: any
+}>());

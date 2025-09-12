@@ -205,4 +205,34 @@ export class PlaylistService {
       videoId
     }
   }
+
+  async getIsSavedInPlaylist(videoId: string) {
+    //get video is in any playlist of current user
+    const sessionRes = await supabase.auth.getSession();
+    if (!sessionRes.data.session) throw new Error('No user session');
+    const userId = sessionRes.data.session.user.id;
+    const {data: playlists, error: fetchError} = await supabase
+      .from('playlist')
+      .select('id')
+      .eq('profileId', userId);
+    if (fetchError) {
+      console.error('Error fetching user playlists:', fetchError);
+      throw new Error('Failed to fetch user playlists');
+    }
+    if (!playlists || playlists.length === 0) {
+      return false;
+    }
+    const playlistIds = playlists.map(p => p.id);
+    const {data, error: checkError} = await supabase
+      .from('video_playlists')
+      .select('playlistId')
+      .in('playlistId', playlistIds)
+      .eq('videoId', videoId)
+
+    if (checkError) {
+      console.error('Error checking video in playlists:', checkError);
+      throw new Error('Failed to check video in playlists');
+    }
+    return data && data.length > 0;
+  }
 }

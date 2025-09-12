@@ -1,0 +1,142 @@
+<mat-horizontal-stepper [linear]="true" #stepper>
+  <mat-step [stepControl]="videoFormGroup" [editable]="false" [completed]="false">
+    <ng-template matStepLabel>Step 1: Select video</ng-template>
+
+    @if ((isUploadingFile$| async) || (isGettingVideoInfo$ | async)) {
+      <ng-container>
+        <div class="uploading-overlay">
+          <mat-spinner mode="indeterminate"></mat-spinner>
+          <p>Uploading... Please wait.</p>
+        </div>
+      </ng-container>
+    } @else {
+      <form [formGroup]="videoFormGroup">
+        <div class="upload-step">
+          <div class="upload-dropzone" (click)="fileInput.click()">
+            <input #fileInput type="file" accept="video/*" hidden (change)="onFileSelected($event)"/>
+            @if (!selectedFile) {
+              <ng-container>
+                <p>Drag and drop a video here or click to select a file</p>
+              </ng-container>
+            }
+
+            @if (selectedFile) {
+              <ng-container>
+                <p>Selected: {{ selectedFile.name }}</p>
+              </ng-container>
+            }
+
+          </div>
+          <div class="step-actions">
+            <button mat-raised-button color="primary" [disabled]="!selectedFile" (click)="onContinueStep1()">
+              Continue
+            </button>
+          </div>
+        </div>
+      </form>
+    }
+
+  </mat-step>
+
+  <mat-step [stepControl]="infoFormGroup" [editable]="false" [completed]="false">
+    <ng-template matStepLabel>Step 2: Video information</ng-template>
+
+    @if (!(this.isCreatingVideoInfo$ | async)) {
+      @if (!(isGettingVideoInfo$| async); as isGettingInfo) {
+        @if ((video$ |async); as video) {
+          <form [formGroup]="infoFormGroup">
+            <div class="info-step">
+              <div class="thumbnail-col">
+                <img
+                  [src]="!this.thumbnailPreview ? video.thumbnailPath ? convertToSupabaseUrl(video.thumbnailPath,'thumbnail'): '' : thumbnailPreview "
+                  alt="Thumbnail" class="thumbnail-preview"/>
+                <input #thumbInput type="file" accept="image/*" hidden (change)="onThumbnailSelected($event)"/>
+                <button mat-raised-button color="primary" type="button" (click)="thumbInput.click()">
+                  <mat-icon>image</mat-icon>
+                  Change thumbnail
+                </button>
+              </div>
+              <div class="form-col">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Title</mat-label>
+                  <input matInput formControlName="title" required/>
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Description</mat-label>
+                  <textarea matInput formControlName="description" rows="3"></textarea>
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Duration (seconds)</mat-label>
+                  <input matInput disabled value="{{video.duration | duration}}" readonly/>
+                </mat-form-field>
+                <mat-radio-group formControlName="visibility" class="full-width visibility-group">
+                  <mat-radio-button value="public">Public</mat-radio-button>
+                  <mat-radio-button value="private">Private</mat-radio-button>
+                </mat-radio-group>
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Category</mat-label>
+                  <mat-select formControlName="category">
+                    @for (category of (this.categories$ | async); track category.id) {
+                      <mat-option [value]="category.id">{{ category.name }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+                <div class="step-actions">
+                  <button mat-raised-button color="primary" (click)="onContinueStep2()"
+                          [disabled]="!infoFormGroup.valid">Continue
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        }
+      } @else {
+        <ng-container>
+          <div class="uploading-overlay">
+            <mat-spinner mode="indeterminate"></mat-spinner>
+            <p>Uploading... Please wait.</p>
+          </div>
+        </ng-container>
+      }
+    } @else {
+      <ng-container>
+        <div class="uploading-overlay">
+          <mat-spinner mode="indeterminate"></mat-spinner>
+          <p>Uploading... Please wait.</p>
+        </div>
+      </ng-container>
+    }
+  </mat-step>
+
+  <mat-step [editable]="false" [completed]="false">
+    <ng-template matStepLabel>Step 3: Complete</ng-template>
+
+    @if (!(isGettingVideoInfo$| async) && !(this.isCreatingVideoInfo$ | async)) {
+      @if ((video$ |async); as video) {
+        <div class="complete-step">
+          <h2>Complete!</h2>
+          <p>Your video is ready to be uploaded.</p>
+          <mat-card class="summary-card">
+            <mat-card-header>
+              <mat-card-title>{{ video?.title }}</mat-card-title>
+            </mat-card-header>
+            <img mat-card-image
+                 [src]="!this.thumbnailPreview ? video.thumbnailPath ? convertToSupabaseUrl(video.thumbnailPath,'thumbnail'): '' : thumbnailPreview "
+                 alt="Thumbnail"/>
+            <mat-card-content>
+              @if (video.description && video.description.length > 0) {
+                <p><strong>Description:</strong> {{ video?.description }}</p>
+              }
+              <p><strong>Duration:</strong> {{ video?.duration | duration }}</p>
+              <p><strong>Visibility:</strong> {{ video?.isPublic ? 'Public' : 'Private' }}</p>
+              <p><strong>Category:</strong> {{ video?.category?.name }}</p>
+            </mat-card-content>
+          </mat-card>
+          <div class="step-actions">
+            <button mat-raised-button color="primary" (click)="onSubmit()">Confirm &amp; Finish</button>
+          </div>
+        </div>
+      }
+    }
+  </mat-step>
+</mat-horizontal-stepper>

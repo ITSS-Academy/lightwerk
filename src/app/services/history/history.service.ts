@@ -21,7 +21,7 @@ export class HistoryService {
 
     const {data, error} = await supabase
       .from('history_videos')
-      .select('*, video(*)')
+      .select('*, video(*,like_video(count))')
       .eq('profileId', userId)
       .order('createdAt', {ascending: false});
 
@@ -38,7 +38,17 @@ export class HistoryService {
         const createdAt = new Date(item.createdAt);
         return createdAt >= startDate && createdAt <= endDate;
       });
-      return filteredData;
+      console.log('11111111111', filteredData);
+
+      return filteredData.map(item => {
+        return {
+          ...item,
+          video: {
+            ...item.video,
+            likeCount: item.video.like_video[0]?.count || 0
+          }
+        }
+      });
     }
 
 

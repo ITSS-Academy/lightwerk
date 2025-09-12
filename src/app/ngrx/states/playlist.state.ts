@@ -39,4 +39,9 @@ export interface PlaylistState {
   isRemovingFromSpecificPlaylist: boolean;
   removeFromSpecificPlaylistSuccess: boolean;
   removeFromSpecificPlaylistError: any;
+
+  isGettingVideoInPlaylist: boolean;
+  getVideoInPlaylistSuccess: boolean;
+  getVideoInPlaylistError: any;
+  isHaveVideoInPlaylist: boolean;
 }

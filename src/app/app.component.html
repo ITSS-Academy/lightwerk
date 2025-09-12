@@ -7,6 +7,8 @@
                [style.transition]="!isSmallScreen? 'all 0.3s ease-in-out' : 'none'"
   >
     <app-sidebar [collapsed]="collapsed()" (notSearchClick)="onOtherClick()"
+                 [isSearchActive]="isSearchActive"
+                 [sections]="sections"
                  (searchClick)="toggleSearchSidenav()"></app-sidebar>
   </mat-sidenav>
 
@@ -40,7 +42,9 @@
 
       <mat-sidenav-content>
         <div style="height: 100%; width: 100%; display: flex; flex-direction: column; padding: 0 16px">
-          <app-header (toggleMenuEvent)="toggleSidebar()"></app-header>
+          <app-header
+            [userId]="this.userId()"
+            (toggleMenuEvent)="toggleSidebar()"></app-header>
 
 
           @if (!(isLoggingIn$| async)) {
@@ -51,8 +55,6 @@
             <div
               style="height: 100%; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
               <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-
-
             </div>
           }
         </div>
