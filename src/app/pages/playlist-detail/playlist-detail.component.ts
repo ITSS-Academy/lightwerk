@@ -15,6 +15,7 @@ import {PlaylistState} from '../../ngrx/states/playlist.state';
 import {filter} from 'rxjs/operators';
 import * as PlaylistActions from '../../ngrx/actions/playlist.actions';
 import {convertToSupabaseUrl} from '../../utils/img-converter';
+import {AvatarPipe} from '../../utils/avatar.pipe';
 
 @Component({
   selector: 'app-playlist-detail',
@@ -23,6 +24,7 @@ import {convertToSupabaseUrl} from '../../utils/img-converter';
     NgStyle,
     VideoCardComponent,
     AsyncPipe,
+    AvatarPipe,
   ],
   templateUrl: './playlist-detail.component.html',
   styleUrl: './playlist-detail.component.scss'

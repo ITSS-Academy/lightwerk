@@ -1,11 +1,21 @@
 <mat-card class="video-card" appearance="outlined" (click)="openDialog()">
-  <img mat-card-image
-       src="{{convertToSupabaseUrl(video!.thumbnailPath, 'thumbnail')}}"
-       alt="Video Placeholder Image">
+
+  <img [src]="convertToSupabaseUrl(video.thumbnailPath, 'thumbnail')" (click)="openDialog()" alt="thumbnail"
+       class="thumbnail">
   <mat-card-content>
-    <span class="title">{{ video.title }}</span>
-    <div class="video-details">
-      <span class="date">{{ video.createdAt | date }}</span>
+    <div class="video-info">
+      <span class="title">{{ video.title }}</span>
+      <div class="video-details">
+        @if (video.viewCount == 1) {
+          <span class="views">{{ video.viewCount }} view</span>
+        } @else {
+          <span class="views">{{ video.viewCount }} views</span>
+        }
+        <span class="date">{{ video.createdAt | date }}</span>
+      </div>
     </div>
   </mat-card-content>
 </mat-card>
+
+
+

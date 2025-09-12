@@ -1,34 +1,56 @@
 .video-card {
+  min-width: 150px; /* để responsive không bị quá bé */
+  max-width: 220px; /* hạn chế to quá */
   width: 100%;
   display: flex;
-  height: 400px;
   flex-direction: column;
+  cursor: pointer;
+  border: 1px solid transparent;
 }
 
-img {
+.thumbnail {
+  position: relative;
   width: 100%;
-  height: 80%;
-  object-fit: cover;
-  border-radius: 4px;
+  aspect-ratio: 3 / 3.6; /* làm thumbnail cao hơn một chút */
+  overflow: hidden;
+  border-radius: 1%;
+  background: var(--mat-sys-background);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 }
 
-mat-card-content {
-  margin-top: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
+.video-info {
+  margin-top: 8px;
 }
 
 
 .title {
+  font-size: 14px; // giữ px cố định
+  font-weight: 600;
+  margin: 0;
+  color: var(--mat-sys-on-surface);
+  max-width: 75%;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* tối đa 2 dòng */
+  -webkit-box-orient: vertical;
   display: inline-block;
   width: 180px;
   white-space: nowrap;
   overflow: hidden !important;
   text-overflow: ellipsis;
-  font-weight: 500;
-  font-size: 1.3rem;
+}
+
+.video-details {
+  font-size: 12px; // giữ px cố định
+  color: #555;
+  margin-top: 2px;
+  gap: 5px;
+  display: flex;
+  align-items: center;
 }
 
 .date {

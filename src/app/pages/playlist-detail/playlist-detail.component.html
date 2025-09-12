@@ -1,24 +1,31 @@
 @if (!(isLoading$ | async)) {
   @if (playListDetail$ | async; as playlist) {
-    <div class="playlist-container" [ngStyle]="backgroundImageStyle">
-      <div class="playlist-background-blur"></div>
-      <div class="playlist-background-gradient"></div>
-      <div class="playlist-detail">
+    <!-- Playlist Hero Section (Dynamic) -->
+    <div class="playlist-hero">
+      <div class="bg"
+           [ngStyle]="{'background-image': 'url(' + (playlistDetail?.thumbnailPath? convertToSupabaseUrl(playlistDetail.thumbnailPath, 'thumbnail') : '') + ')'}"></div>
+      <div class="overlay-dark"></div>
+      <div class="overlay-gradient"></div>
+      <div class="header">
+        <div class="header-content">
+          <img class="cover"
+               [src]="playlistDetail?.thumbnailPath? convertToSupabaseUrl(playlistDetail.thumbnailPath, 'thumbnail') : ''"
+               alt="Playlist Cover"/>
+          <div class="meta">
+            <div class="eyebrow">Playlist</div>
+            <h1 class="title">{{ playlistDetail?.title }}</h1>
+            <div class="owner">
+              <img [src]="playlistDetail.profile?.avatarPath | avatar"
+                   alt="{{playlistDetail.profile?.username}}"/>
+              <div>
+                <div style="font-weight:600;">{{ playlistDetail.profile?.username }}</div>
+                <div class="sub">{{ playlist.videos?.length || 0 }}
+                  video{{ (playlist.videos?.length || 0) === 1 ? '' : 's' }}
+                </div>
+              </div>
+            </div>
 
-        <div class="playlist-detail-stats">
-          <span class="name">{{ playlistDetail?.title }}</span>
-
-
-          <!--          @if (playlist.videos.length == 1) {-->
-          <!--            <span class="stats">{{ playlist.videos.length }} video</span>-->
-          <!--          } @else {-->
-          <!--            <span class="stats">{{ playlist.videos.length }} videos</span>-->
-          <!--          }-->
-
-
-          <span class="stats">Created by <img
-            src="{{convertToSupabaseUrl(playlistDetail.thumbnailPath, 'thumbnail')}}"
-            alt="User profile">{{ playlistDetail.profileId }}</span>
+          </div>
         </div>
 
         <div class="button">
@@ -36,8 +43,9 @@
         }
       </div>
     </div>
-
-
   }
-
 }
+
+
+
+

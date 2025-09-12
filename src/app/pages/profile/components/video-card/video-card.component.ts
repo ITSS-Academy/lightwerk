@@ -12,7 +12,6 @@ import {DetailDialogComponent} from '../../../../components/detail-dialog/detail
   imports: [
     MatCard,
     MatCardContent,
-    MatCardImage,
     DatePipe
   ],
   templateUrl: './video-card.component.html',

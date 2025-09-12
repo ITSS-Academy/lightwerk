@@ -17,7 +17,6 @@
             >
           }
           @if (profileImageUrl) {
-            referrerpolicy="no-referrer"
             <img [src]="profileImageUrl | avatar" alt="username">
 
           }
@@ -54,16 +53,9 @@
               <span>Username is required.</span>
 
             }
-            @if (form.get('username')?.errors?.['pattern']) {
-              <span>Only letters, numbers, and periods allowed.</span>
 
-            }
           </div>
         }
-
-        <p>www.reel.com.vn/{{ form.get('username')?.value ? "@" + form.get('username')?.value : '' }}</p>
-        <p>Usernames can only contain letters, numbers, and periods.
-          Changing your usernames will change your profile link.</p>
       </div>
     </div>
 
