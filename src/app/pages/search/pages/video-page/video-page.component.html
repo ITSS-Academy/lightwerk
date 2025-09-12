@@ -5,18 +5,21 @@
 <div class="video-container">
   <div class="video-grid">
     @for (item of (videos$ | async); track item.profileId) {
-      <mat-card class="video-card" appearance="outlined">
-        <img mat-card-image class="video-thumbnail"
+      <mat-card class="video-card" appearance="outlined" (click)="openDialog(item)">
+        <img mat-card-image
              src="{{convertToSupabaseUrl(item.thumbnailPath,'thumbnail')}}"
-             alt="Video Placeholder Image">
+             alt="Video Placeholder Image" class="thumbnail">
         <mat-card-content>
-          <span class="title">{{ item.title }}</span>
-          <div class="video-details">
-            <div class="user">
-              <img class="user-avatar" src="{{item.profile?.avatarPath | avatar }}" alt="Username">
-              <span class="user-name">{{ item.profile?.username }}</span>
+          <div class="video-info">
+            <span class="title">{{ item.title }}</span>
+            <div class="video-details">
+              <div class="user" [routerLink]="['/profile', item.profile?.id, 'videos' ] "
+                   (click)="$event.stopPropagation()">
+                <img class="user-avatar" src="{{item.profile?.avatarPath | avatar }}" alt="Username">
+                <span class="user-name">{{ item.profile?.username }}</span>
+              </div>
+              <span class="date">{{ item.createdAt | date }}</span>
             </div>
-            <span class="date">{{ item.createdAt | date }}</span>
           </div>
         </mat-card-content>
       </mat-card>

@@ -1,29 +1,19 @@
 <mat-card class="playlist-card" appearance="outlined" (click)="navigateToPlaylistDetail(playlist.id)">
   @if (playlist.thumbnailPath) {
-    <img mat-card-image src="{{convertToSupabaseUrl(playlist.thumbnailPath, 'thumbnail')}}" alt="{{playlist.title}}">
+    <img [src]="convertToSupabaseUrl(playlist.thumbnailPath, 'thumbnail')" alt="{{playlist.title}}"
+         class="thumbnail"/>
   } @else {
-    <img mat-card-image src="" alt="Playlist Thumbnail"/>
+    <img src="https://coffective.com/wp-content/uploads/2018/06/default-featured-image.png.jpg"
+         alt="Playlist Thumbnail" class="thumbnail">
   }
 
   <mat-card-content>
-    <div class="playlist-details">
-      <h3 class="playlist-title">{{ playlist.title }}</h3>
-      @if (playlist.videos) {
-        @if (playlist.videos.length === 1) {
-          <p class="video-count">1 video</p>
-        } @else if (playlist.videos.length > 1) {
-          <p class="video-count">{{ playlist.videos?.length }} videos</p>
-        }
-      }
+    <div class="playlist-info">
+      <span class="playlist-title">{{ playlist.title }}</span>
+
+
     </div>
-    <div class="playlist-visible">
-      @if (playlist.isPublic) {
-        <mat-icon>lock</mat-icon>
-      } @else if (!playlist.isPublic) {
-        <mat-icon>language</mat-icon>
-      }
-      <span class="date">{{ playlist.createdAt | date }}</span>
-    </div>
+
 
   </mat-card-content>
 </mat-card>

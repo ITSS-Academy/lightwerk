@@ -48,7 +48,6 @@ export class ProfileDialogComponent implements OnInit, OnDestroy {
     this.form = new FormGroup({
       username: new FormControl(data?.username || '', [
         Validators.required,
-        Validators.pattern(/^[a-zA-Z0-9.]+$/)
       ]),
       bio: new FormControl(data?.bio || '', [
         Validators.maxLength(80)

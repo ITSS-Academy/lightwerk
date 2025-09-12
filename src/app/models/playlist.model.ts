@@ -1,4 +1,5 @@
 import {VideoModel} from './video.model';
+import {ProfileModel} from './profile.model';
 
 export interface PlaylistModel {
   id: string;
@@ -9,4 +10,5 @@ export interface PlaylistModel {
   createdAt: string;
   videos?: VideoModel[];
   isHaveVideo?: boolean;
+  profile?: ProfileModel;
 }

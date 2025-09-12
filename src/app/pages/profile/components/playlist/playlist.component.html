@@ -1,9 +1,12 @@
-<div class="button">
-  <button mat-flat-button (click)="openDialog()">
-    <mat-icon>add_circle</mat-icon>
-    Create a new playlist
-  </button>
-</div>
+@if (isOwnProfile) {
+  <div class="button">
+    <button mat-flat-button (click)="openDialog()">
+      <mat-icon>add_circle</mat-icon>
+      Create a new playlist
+    </button>
+  </div>
+}
+
 
 
 <div class="video-container">

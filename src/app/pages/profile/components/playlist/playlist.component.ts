@@ -16,6 +16,8 @@ import {map} from 'rxjs/operators';
 import {AsyncPipe} from '@angular/common';
 import * as PlayListAction from '../../../../ngrx/actions/playlist.actions';
 import {ActivatedRoute} from '@angular/router';
+import {AuthService} from '../../../../services/auth/auth.service';
+
 
 @Component({
   selector: 'app-playlist',
@@ -34,10 +36,11 @@ export class PlaylistComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   playList$!: Observable<PlaylistModel[]>
   isLoadingPlaylists$: Observable<boolean>
+  isOwnProfile: boolean = false;
 
   constructor(private store: Store<{
                 playlist: PlaylistState,
-              }>, private activatedRoute: ActivatedRoute
+              }>, private activatedRoute: ActivatedRoute, private authService: AuthService
   ) {
     this.isLoadingPlaylists$ = this.store.select(state => state.playlist.isLoadingPlaylists)
     this.playList$ = this.store.select(state => state.playlist.playlists)
@@ -51,6 +54,11 @@ export class PlaylistComponent implements OnInit, OnDestroy {
     );
     const profileID = this.activatedRoute.snapshot.paramMap.get('profileId');
     this.store.dispatch(PlayListAction.loadAllPlaylists({profileID: profileID!}));
+    this.authService.getCurrentUserId().then(
+      currentUserId => {
+        this.isOwnProfile = currentUserId === this.activatedRoute.snapshot.paramMap.get('profileId');
+      }
+    )
 
   }
 

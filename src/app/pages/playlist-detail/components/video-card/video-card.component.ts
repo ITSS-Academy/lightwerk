@@ -6,6 +6,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {DeleteVideoDialogComponent} from '../delete-video-dialog/delete-video-dialog.component';
 import {VideoModel} from '../../../../models/video.model';
 import {convertToSupabaseUrl} from '../../../../utils/img-converter';
+import {DetailDialogComponent} from '../../../../components/detail-dialog/detail-dialog.component';
 
 
 @Component({
@@ -37,4 +38,21 @@ export class VideoCardComponent {
   }
 
   protected readonly convertToSupabaseUrl = convertToSupabaseUrl;
+
+  openVideoDialog() {
+    const dialogRef = this.dialog.open(DetailDialogComponent, {
+      width: '100vw',
+      height: '100vh',
+      maxWidth: '100%',
+      maxHeight: '100vh',
+      panelClass: 'full-screen-dialog',
+      data: {video: this.video}
+    });
+    console.log('Dialog opened==========');
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
+
 }
