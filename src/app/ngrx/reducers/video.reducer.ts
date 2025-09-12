@@ -3,6 +3,8 @@ import {VideoModel} from '../../models/video.model';
 import {createReducer, on} from '@ngrx/store';
 import * as VideoActions from '../actions/video.actions';
 import {state} from '@angular/animations';
+import {ProfileModel} from '../../models/profile.model';
+import * as SearchActions from '../actions/search.actions';
 
 const initialState: VideoState = {
   videoDetail: {} as VideoModel,
@@ -44,6 +46,10 @@ const initialState: VideoState = {
   isGettingLiked: false,
   isGettingLikedSuccess: false,
   isGettingLikedError: null,
+
+  isFollowing: false,
+  isFollowSuccess: false,
+  isFollowError: null,
 }
 
 export const videoReducer = createReducer(
@@ -296,7 +302,49 @@ export const videoReducer = createReducer(
         isSavedByCurrentUser: !state.videoDetail.isSavedByCurrentUser
       }
     }
-  })
+  }),
+
+  on(VideoActions.followUser, (state, {userId}) => {
+    console.log('Following user with ID:', userId);
+    return {
+      ...state,
+      isFollowing: false,
+      isFollowSuccess: false,
+      isFollowError: null,
+    }
+  }),
+
+  on(VideoActions.followUserSuccess, (state, {isFollowing}) => {
+    return {
+      ...state,
+      videoDetail: {
+        ...state.videoDetail,
+        profile: state.videoDetail.profile
+          ? {
+            ...state.videoDetail.profile,
+            isFollowing: isFollowing,
+            followersCount: state.videoDetail.profile.followersCount
+              ? state.videoDetail.profile.followersCount + (isFollowing ? 1 : -1)
+              : isFollowing ? 1 : 0,
+          }
+          : state.videoDetail.profile,
+      },
+      isFollowing: true,
+      isFollowSuccess: true,
+      isFollowError: null,
+    };
+  }),
+
+
+  on(VideoActions.followUserFailure, (state, {error}) => {
+    console.error('Follow user failure:', error);
+    return {
+      ...state,
+      isFollowing: false,
+      isFollowSuccess: false,
+      isFollowError: error,
+    }
+  }),
 );
 
 

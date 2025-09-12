@@ -6,7 +6,7 @@
     <div class="profile-container">
       <div class="profile-image">
         <img class="user-image" [src]="profile.avatarPath | avatar" alt="User's image"
-        referrerpolicy="no-referrer"
+             referrerpolicy="no-referrer"
         >
       </div>
       <div class="profile-information">
@@ -17,8 +17,8 @@
             Edit profile
           </button>
         } @else {
-          <button mat-flat-button>
-            Follow
+          <button mat-flat-button (click)="toggleFollow(profile,profile.isFollowing ?? false)">
+            {{ profile.isFollowing ? '✓ Following' : '+ Follow' }}
           </button>
         }
 

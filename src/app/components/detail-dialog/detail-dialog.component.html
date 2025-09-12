@@ -48,17 +48,11 @@
 
             <!-- Button -->
             @if (!isCurrentUserSignal()) {
-              <div class="button-follow" (click)="toggleFollow()">
-                @if (isFollowing) {
-                  <button mat-button class="following-btn">
-                    ✓ Following
-                  </button>
-                } @else {
-                  <button mat-button class="follow-btn">
-                    + Follow
-                  </button>
-                }
-              </div>
+              @if (videoDetail$ | async; as video) {
+                <button mat-flat-button (click)="toggleFollow(video, video.profile?.isFollowing ?? false)">
+                  {{ video.profile?.isFollowing ? '✓ Following' : '+ Follow' }}
+                </button>
+              }
             }
 
 
@@ -104,12 +98,14 @@
           </div>
           <div class="comment-list">
             <!-- Comment List with @for -->
-            @for (c of comment; track c.id) {
+            @for (c of comments; track c.id) {
               <div class="comment">
-                <img [src]="c.avatar" alt="avatar" class="avatar">
+                <div class="avatar">
+                  <img src="{{c.profile?.avatarUrl}}" alt="{{c.profile?.avatarUrl}}"/>
+                </div>
                 <div class="comment-content">
-                  <p><strong>{{ c.name }}</strong> {{ c.text }}</p>
-                  <span class="date">{{ c.date }}</span>
+                  <p><strong>{{ c.profile?.username }}</strong> {{ c.content }}</p>
+                  <span class="date">{{ c.createdAt | date : "MMM dd, yyyy" }}</span>
                 </div>
               </div>
             }

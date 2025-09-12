@@ -89,131 +89,6 @@ export class ProfileService {
     } as ProfileModel;
   }
 
-  getFollowers(userId: string) {
-    return from(supabase.auth.getSession()).pipe(
-      mergeMap((data) => {
-        if (data.error || !data.data.session) {
-          return throwError(() => new Error('No access token'));
-        }
-        console.log(data.data.session);
-        return of([{
-          id: '11111',
-          username: 'HahahahahahaHahahahahahaHahahahahahaHahahahahahaHahahahahahaHahahahahahaHahahahahaha',
-          avatarPath: 'https://thichtrangtri.com/wp-content/uploads/2025/05/hinh-anh-con-meo-cute-1.jpg',
-          isFollowing: false
-        },
-          {
-            id: '22222',
-            username: 'OMG Too',
-            avatarPath: 'https://cellphones.com.vn/sforum/wp-content/uploads/2024/02/avatar-anh-meo-cute-3.jpg',
-            isFollowing: true
-          },
-          {
-            id: '33333',
-            username: 'OMG3',
-            avatarPath: 'https://i.pinimg.com/564x/c8/cc/68/c8cc6816a2448d0a03a5e46e932ce7a9.jpg',
-            isFollowing: false
-          },
-          {
-            id: '12345',
-            username: 'OMG4',
-            avatarPath: 'https://nupet.vn/wp-content/uploads/2023/11/anh-meo-hai-huoc-nupet-21.jpg',
-            isFollowing: true
-          },
-          {
-            id: '678910',
-            username: 'OMG5',
-            avatarPath: 'https://cdn.mobilecity.vn/mobilecity-vn/images/2024/11/top-meme-meo-cuc-dang-yeu-8.png.webp',
-            isFollowing: false
-          },
-          {
-            id: 'hheheh',
-            username: 'OMG6',
-            avatarPath: 'https://maunailxinh.com/wp-content/uploads/2025/05/anh-meo-gian-cute-1.jpg',
-            isFollowing: true
-          },
-          {
-            id: '22222',
-            username: 'OMG Too',
-            avatarPath: 'https://cellphones.com.vn/sforum/wp-content/uploads/2024/02/avatar-anh-meo-cute-3.jpg',
-            isFollowing: true
-          },
-          {
-            id: '33333',
-            username: 'OMG3',
-            avatarPath: 'https://i.pinimg.com/564x/c8/cc/68/c8cc6816a2448d0a03a5e46e932ce7a9.jpg',
-            isFollowing: false
-          },
-          {
-            id: '12345',
-            username: 'OMG4',
-            avatarPath: 'https://nupet.vn/wp-content/uploads/2023/11/anh-meo-hai-huoc-nupet-21.jpg',
-            isFollowing: true
-          },
-          {
-            id: '678910',
-            username: 'OMG5',
-            avatarPath: 'https://cdn.mobilecity.vn/mobilecity-vn/images/2024/11/top-meme-meo-cuc-dang-yeu-8.png.webp',
-            isFollowing: false
-          },
-          {
-            id: 'hheheh',
-            username: 'OMG6',
-            avatarPath: 'https://maunailxinh.com/wp-content/uploads/2025/05/anh-meo-gian-cute-1.jpg',
-            isFollowing: true
-          },
-        ]);
-      })
-    )
-  }
-
-  getFollowing(userId: string): Observable<ProfileModel[]> {
-    return from(supabase.auth.getSession()).pipe(
-      mergeMap((data) => {
-        if (data.error || !data.data.session) {
-          return throwError(() => new Error('No access token'));
-        }
-        console.log(data.data.session);
-        return of([{
-          id: '1',
-          username: 'follower1',
-          avatarPath: 'https://sieupet.com/sites/default/files/pictures/images/1-1473150685951-5.jpg',
-          isFollowing: false
-        },
-          {
-            id: '2',
-            username: 'follower2',
-            avatarPath: 'https://hoanghamobile.com/tin-tuc/wp-content/uploads/2024/05/anh-cho-hai-74.jpg',
-            isFollowing: true
-          },
-          {
-            id: '3',
-            username: 'follower3',
-            avatarPath: 'https://cdn2.fptshop.com.vn/unsafe/800x0/meme_cho_1_e568e5b1a5.jpg',
-            isFollowing: false
-          },
-          {
-            id: '4',
-            username: 'follower4',
-            avatarPath: 'https://top10tphcm.com/wp-content/uploads/2024/01/hinh-anh-cho-husky-cute-dep-hai-huoc-70.jpg',
-            isFollowing: true
-          },
-          {
-            id: '5',
-            username: 'follower5',
-            avatarPath: 'https://kimipet.vn/wp-content/uploads/2021/06/husky-ngao-.jpg',
-            isFollowing: false
-          },
-          {
-            id: '6',
-            username: 'follower6',
-            avatarPath: 'https://hoichimtroi.com/wp-content/uploads/2025/07/anh-cho-cute-de-thuong.jpg',
-            isFollowing: true
-          }
-        ]);
-      })
-    )
-  }
 
   async getProfile(userId: string) {
     const {data, error} = await supabase
@@ -317,4 +192,146 @@ export class ProfileService {
     }
 
   }
+
+  //get Follower
+  getFollowers(userId: string) {
+    return from(supabase.from('profile_follows')
+      .select(`
+        *,
+        follower: followerId (
+          id,
+          username,
+          avatarPath
+        )
+      `)
+      .eq('followingId', userId)).pipe(
+      mergeMap(({data, error}) => {
+        if (error) {
+          console.log(error);
+          return throwError(() => new Error(error.message));
+        }
+        if (!data) {
+          return of([]);
+        }
+        const followers = data.map(item => ({
+          ...item.follower,
+          isFollowing: false // This will be updated later
+        } as ProfileModel));
+
+        return this.getAccessToken().pipe(
+          mergeMap(({data, error}) => {
+            if (error || !data.session) {
+              return of(followers);
+            }
+            const currentUserId = data.session.user.id;
+            return from(supabase.from('profile_follows')
+              .select('followingId')
+              .eq('followerId', currentUserId)).pipe(
+              mergeMap(({data: followingData, error: followingError}) => {
+                if (followingError) {
+                  console.log(followingError);
+                  return of(followers);
+                }
+                const followingIds = followingData ? followingData.map(item => item.followingId) : [];
+                const updatedFollowers = followers.map(follower => ({
+                  ...follower,
+                  isFollowing: followingIds.includes(follower.id)
+                }));
+                return of(updatedFollowers);
+              })
+            );
+          })
+        );
+      })
+    );
+  }
+
+  //get Following
+  getFollowing(userId: string) {
+    return from(supabase.from('profile_follows')
+      .select(`
+        *,
+        following: followingId (
+          id,
+          username,
+          avatarPath
+        )
+      `)
+      .eq('followerId', userId)).pipe(
+      mergeMap(({data, error}) => {
+        if (error) {
+          console.log(error);
+          return throwError(() => new Error(error.message));
+        }
+        if (!data) {
+          return of([]);
+        }
+        const following = data.map(item => ({
+          ...item.following,
+          isFollowing: false // This will be updated later
+        } as ProfileModel));
+
+        return this.getAccessToken().pipe(
+          mergeMap(({data, error}) => {
+            if (error || !data.session) {
+              return of(following);
+            }
+            const currentUserId = data.session.user.id;
+            return from(supabase.from('profile_follows')
+              .select('followingId')
+
+              .eq('followerId', currentUserId)).pipe(
+              mergeMap(({data: followingData, error: followingError}) => {
+                if (followingError) {
+                  console.log(followingError);
+                  return of(following);
+                }
+                const followingIds = followingData ? followingData.map(item => item.followingId) : [];
+                const updatedFollowing = following.map(follow => ({
+                  ...follow,
+                  isFollowing: followingIds.includes(follow.id)
+                }));
+                return of(updatedFollowing);
+              })
+            );
+          })
+        );
+      })
+    );
+  }
+  
+  toggleFollowUser(userId: string, shouldFollow: boolean): Observable<{ isFollowing: boolean }> {
+    return from(
+      (async () => {
+        const {data, error} = await supabase.auth.getSession();
+        if (error) throw new Error(error.message);
+
+        const currentUserId = data.session?.user.id;
+        if (!currentUserId) throw new Error('User not authenticated');
+
+        if (shouldFollow) {
+          // Follow: current user là followerId, target user là followingId
+          const {error: followError} = await supabase
+            .from('profile_follows')
+            .insert({
+              followerId: currentUserId,
+              followingId: userId
+            });
+
+          if (followError) throw new Error(followError.message);
+        } else {
+          // Unfollow
+          const {error: unfollowError} = await supabase
+            .from('profile_follows')
+            .delete()
+            .match({followerId: currentUserId, followingId: userId});
+
+          if (unfollowError) throw new Error(unfollowError.message);
+        }
+
+        return {isFollowing: shouldFollow};
+      })()
+    );
+  }
+
 }
