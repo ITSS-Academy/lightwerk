@@ -5,6 +5,7 @@ import {VideoModel} from '../../../../models/video.model';
 import {convertToSupabaseUrl} from '../../../../utils/img-converter';
 import {MatDialog} from '@angular/material/dialog';
 import {DetailDialogComponent} from '../../../../components/detail-dialog/detail-dialog.component';
+import {AvatarPipe} from '../../../../utils/avatar.pipe';
 
 
 @Component({
@@ -13,7 +14,8 @@ import {DetailDialogComponent} from '../../../../components/detail-dialog/detail
     DatePipe,
     MatCard,
     MatCardContent,
-    MatCardImage
+    MatCardImage,
+    AvatarPipe
   ],
   templateUrl: './liked-video-card.component.html',
   styleUrl: './liked-video-card.component.scss'

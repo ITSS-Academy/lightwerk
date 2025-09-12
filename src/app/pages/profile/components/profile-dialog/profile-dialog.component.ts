@@ -11,6 +11,7 @@ import {Store} from '@ngrx/store';
 import * as ProfileActions from '../../../../ngrx/actions/profile.actions';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {Subscription} from 'rxjs';
+import {AvatarPipe} from '../../../../utils/avatar.pipe';
 
 @Component({
   selector: 'app-profile-dialog',
@@ -23,7 +24,8 @@ import {Subscription} from 'rxjs';
     MatDialogActions,
     MatIcon,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AvatarPipe
   ],
   templateUrl: './profile-dialog.component.html',
   styleUrl: './profile-dialog.component.scss'

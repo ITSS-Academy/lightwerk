@@ -194,7 +194,7 @@ export class VideoService {
       .eq('categoryId', categoryId)
       .eq('isPublic', true)
       .order('createdAt', {ascending: false})
-      .range((page - 1) * 10, page * 10 - 1);
+      .range((page) * 10, (page + 1) * 10 - 1);
 
     if (error) {
       console.error('Error fetching videos by category:', error);

@@ -105,7 +105,12 @@ export const profileReducer = createReducer(
   }),
   on(ProfileActions.resetEditProfileState, (state, {type}) => {
     console.log(type);
-    return initialState
+    return {
+      ...state,
+      isEditing: false,
+      isEditSuccess: false,
+      isEditError: null,
+    }
   }),
   on(ProfileActions.getFollowingList, (state, {type}) => {
     console.log(type);

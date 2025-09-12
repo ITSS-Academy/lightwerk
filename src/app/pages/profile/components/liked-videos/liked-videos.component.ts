@@ -6,6 +6,7 @@ import {VideoModel} from '../../../../models/video.model';
 import {Store} from '@ngrx/store';
 import {ProfileState} from '../../../../ngrx/states/profile.state';
 import {AsyncPipe} from '@angular/common';
+import {AvatarPipe} from '../../../../utils/avatar.pipe';
 
 interface LikedVideoCard {
   id: string;
@@ -18,7 +19,7 @@ interface LikedVideoCard {
   selector: 'app-liked-videos',
   imports: [
     LikedVideoCardComponent,
-    AsyncPipe
+    AsyncPipe,
   ],
   templateUrl: './liked-videos.component.html',
   styleUrl: './liked-videos.component.scss'

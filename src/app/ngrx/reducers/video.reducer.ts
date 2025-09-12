@@ -139,7 +139,8 @@ export const videoReducer = createReducer(
       isGetLatestSuccess: false,
     }
   }),
-  on(VideoActions.getLatestVideosSuccess, (state, {videos, totalItems}) => {
+  on(VideoActions.getLatestVideosSuccess, (state, {type, videos, totalItems}) => {
+    console.log(type, videos.length, state.latestVideos.length);
     return {
       ...state,
       canGetMoreLatest: state.latestVideos.length + videos.length < totalItems,

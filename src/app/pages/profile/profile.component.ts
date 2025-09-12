@@ -20,6 +20,7 @@ import {AsyncPipe} from '@angular/common';
 import {MatButtonToggle, MatButtonToggleGroup} from '@angular/material/button-toggle';
 import {AuthService} from '../../services/auth/auth.service';
 import * as PlayListAction from '../../ngrx/actions/playlist.actions';
+import {AvatarPipe} from '../../utils/avatar.pipe';
 
 interface UserModel {
   id: string;
@@ -36,7 +37,8 @@ interface UserModel {
     PlaylistComponent,
     LikedVideosComponent,
     MatButton,
-    AsyncPipe
+    AsyncPipe,
+    AvatarPipe
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
