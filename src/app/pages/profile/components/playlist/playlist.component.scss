@@ -8,9 +8,10 @@
 .video-grid {
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(auto-fit, min(250px)); /* 4:3 aspect ratio for cards */
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* 4:3 aspect ratio for cards */
   gap: 3rem; /* spacing between images */
   overflow-y: hidden;
+  justify-content: start;
 }
 
 

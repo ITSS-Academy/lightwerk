@@ -13,6 +13,8 @@
           <p class="video-count">1 video</p>
         } @else if (playlist.videos.length > 1) {
           <p class="video-count">{{ playlist.videos?.length }} videos</p>
+        } @else {
+          <p class="video-count">No videos</p>
         }
       }
     </div>
