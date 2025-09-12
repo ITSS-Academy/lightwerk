@@ -8,6 +8,7 @@ import {Store} from '@ngrx/store';
 import {SearchState} from '../../../../ngrx/states/search.state';
 import * as SearchActions from '../../../../ngrx/actions/search.actions';
 import {AsyncPipe} from '@angular/common';
+import {AvatarPipe} from '../../../../utils/avatar.pipe';
 
 interface UserModel {
   id: string;
@@ -24,6 +25,7 @@ interface UserModel {
     MatIcon,
     RouterLink,
     AsyncPipe,
+    AvatarPipe,
 
   ],
   templateUrl: './user-page.component.html',

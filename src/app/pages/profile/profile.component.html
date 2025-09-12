@@ -5,7 +5,9 @@
   @if (profile$ | async; as profile) {
     <div class="profile-container">
       <div class="profile-image">
-        <img class="user-image" [src]="profile.avatarPath | avatar" alt="User's image">
+        <img class="user-image" [src]="profile.avatarPath | avatar" alt="User's image"
+        referrerpolicy="no-referrer"
+        >
       </div>
       <div class="profile-information">
         <h2>{{ profile.username || username }}</h2>

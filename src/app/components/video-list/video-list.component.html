@@ -87,7 +87,7 @@
                   <button mat-fab [routerLink]="['/profile', card.profileId, 'videos']"
                           aria-label="Example icon button with a delete icon" class="avatar-frame">
                     <img
-                      src="{{card.profile?.avatarPath}}"
+                      src="{{card.profile?.avatarPath | avatar}}"
                       referrerpolicy="no-referrer"
                       alt="">
                   </button>

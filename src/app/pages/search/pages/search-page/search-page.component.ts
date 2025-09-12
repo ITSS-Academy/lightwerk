@@ -13,6 +13,7 @@ import {Observable, Subscription} from 'rxjs';
 import {ProfileModel} from '../../../../models/profile.model';
 import * as SearchActions from '../../../../ngrx/actions/search.actions';
 import {convertToSupabaseUrl} from '../../../../utils/img-converter';
+import {AvatarPipe} from '../../../../utils/avatar.pipe';
 
 @Component({
   selector: 'app-search-page',
@@ -25,6 +26,7 @@ import {convertToSupabaseUrl} from '../../../../utils/img-converter';
     MatIconModule,
     RouterLink,
     AsyncPipe,
+    AvatarPipe,
 
   ],
   templateUrl: './search-page.component.html',
