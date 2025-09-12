@@ -31,7 +31,8 @@
     <div style="flex: 1 ; display: flex; flex-direction: column; gap:10px; overflow: auto">
       <div class="top-right-container">
         <div class="info-user">
-          <div class="frame-avatar">
+          <div class="frame-avatar" [routerLink]="['/profile', (videoDetail$ | async)?.profile?.id, 'videos'] "
+               (click)="$event.stopPropagation(); closeDialog()">
 
             <!-- Avatar -->
             <div class="info">

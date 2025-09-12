@@ -31,10 +31,41 @@ import * as CommentAction from '../../ngrx/actions/comment.actions';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import * as SearchActions from '../../ngrx/actions/search.actions';
 import {AvatarPipe} from '../../utils/avatar.pipe';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-detail-dialog',
-  imports: [MatDialogModule, MatButton, MatIconModule, MatFormField, MatFormField, MatInput, MatSuffix, MatFormField, MatLabel, MatIconButton, NgClass, NgStyle, VideoComponent, AsyncPipe, DatePipe, ReactiveFormsModule, FormsModule, MatFabButton, AvatarPipe],
+  imports: [
+    // Angular core
+    NgClass,
+    NgStyle,
+    AsyncPipe,
+    DatePipe,
+    RouterLink,
+    ReactiveFormsModule,
+    FormsModule,
+
+    // Angular Material
+    MatDialogModule,
+    MatButton,
+    MatIconModule,
+    MatCard,
+    MatCardAvatar,
+    MatCardHeader,
+    MatCardTitleGroup,
+    MatFormField,
+    MatInput,
+    MatSuffix,
+    MatLabel,
+    MatHint,
+    MatIconButton,
+    MatFabButton,
+
+    // Custom components / pipes
+    DialogVideoComponent,
+    VideoComponent,
+    AvatarPipe
+  ],
   templateUrl: './detail-dialog.component.html',
   styleUrl: './detail-dialog.component.scss'
 })

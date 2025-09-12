@@ -1,17 +1,36 @@
 .playlist-card {
+  min-width: 150px; /* để responsive không bị quá bé */
+  max-width: 220px; /* hạn chế to quá */
   width: 100%;
   display: flex;
-  height: 400px;
   flex-direction: column;
-  gap: 10px;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.playlist-info {
+  margin-top: 8px;
 }
 
 mat-card-content {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  padding: 0 !important;
 }
 
+.playlist-title {
+  font-size: 14px; // giữ px cố định
+  font-weight: 600;
+  margin: 0;
+  color: var(--mat-sys-on-surface);
+  max-width: 75%;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* tối đa 2 dòng */
+  -webkit-box-orient: vertical;
+  display: inline-block;
+  width: 180px;
+  white-space: nowrap;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+}
 
 .playlist-details {
   display: flex;
@@ -19,31 +38,36 @@ mat-card-content {
   gap: 1rem;
 }
 
-img {
+.thumbnail {
+  position: relative;
   width: 100%;
-  height: 80%;
+  aspect-ratio: 3 / 4; /* làm thumbnail cao hơn một chút */
   object-fit: cover;
-  border-radius: 4px;
+  overflow: hidden;
+  border-radius: 1%;
+  background: var(--mat-sys-background);
+
+  img {
+    width: 100%;
+    height: 100%;
+
+  }
 }
 
-.title {
-  display: inline-block;
-  width: 100px;
-  white-space: nowrap;
-  overflow: hidden !important;
-  text-overflow: ellipsis;
-  font-weight: 500;
-  font-size: 1.3rem;
+.playlist-details {
+  margin-top: 8px;
 }
 
 
-.playlist-visible {
-  color: #9f9d9d;
+.playlist-details {
+  font-size: 12px; // giữ px cố định
+  color: #555;
+  margin-top: 2px;
+  gap: 5px;
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 1rem;
+  align-items: center;
 }
+
 
 .playlist-card :hover {
   cursor: pointer;

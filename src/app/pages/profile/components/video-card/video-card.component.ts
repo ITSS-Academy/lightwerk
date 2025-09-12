@@ -12,7 +12,6 @@ import {DetailDialogComponent} from '../../../../components/detail-dialog/detail
   imports: [
     MatCard,
     MatCardContent,
-    MatCardImage,
     DatePipe
   ],
   templateUrl: './video-card.component.html',
@@ -33,10 +32,11 @@ export class VideoCardComponent {
       panelClass: 'full-screen-dialog',
       data: {video: this.video}
     });
-    console.log('Dialog opened');
+    console.log('Dialog opened==========');
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
     });
   }
 }
+

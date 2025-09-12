@@ -1,18 +1,24 @@
 <mat-card class="video-card" appearance="outlined" (click)="openDialog()">
   <img mat-card-image
        src="{{convertToSupabaseUrl(likedVideoCard!.thumbnailPath, 'thumbnail')}}"
-       alt="Video Placeholder Image">
+       alt="Video Placeholder Image" class="thumbnail">
   <mat-card-content>
-    <span class="title">{{ likedVideoCard.title }}</span>
-    <div class="video-stats">
-      <div class="video-user">
-        <img class="avatar" [src]="likedVideoCard.profile?.avatarPath! | avatar"
-             referrerpolicy="no-referrer"
-             alt="User Avatar">
-        <span class="username">{{ likedVideoCard.profile?.username }}</span>
-      </div>
-      <div class="video-date">
-        <span class="date">{{ likedVideoCard.createdAt | date }}</span>
+    <div class="video-info">
+      <span class="title">{{ likedVideoCard.title }}</span>
+      <div class="video-stats">
+        <div class="video-user"
+             [routerLink]="['/profile', likedVideoCard.profile?.id, 'videos']"
+             (click)="$event.stopPropagation()"
+        >
+          <img class="avatar" [src]="likedVideoCard.profile?.avatarPath! | avatar"
+               referrerpolicy="no-referrer"
+               alt="User Avatar">
+          <span
+            class="username">{{ likedVideoCard.profile?.username }}</span>
+        </div>
+        <div class="video-date">
+          <span class="date">{{ likedVideoCard.createdAt | date }}</span>
+        </div>
       </div>
     </div>
   </mat-card-content>

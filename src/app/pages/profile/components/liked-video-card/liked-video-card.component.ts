@@ -6,6 +6,7 @@ import {convertToSupabaseUrl} from '../../../../utils/img-converter';
 import {MatDialog} from '@angular/material/dialog';
 import {DetailDialogComponent} from '../../../../components/detail-dialog/detail-dialog.component';
 import {AvatarPipe} from '../../../../utils/avatar.pipe';
+import {RouterLink} from '@angular/router';
 
 
 @Component({
@@ -15,7 +16,8 @@ import {AvatarPipe} from '../../../../utils/avatar.pipe';
     MatCard,
     MatCardContent,
     MatCardImage,
-    AvatarPipe
+    AvatarPipe,
+    RouterLink
   ],
   templateUrl: './liked-video-card.component.html',
   styleUrl: './liked-video-card.component.scss'

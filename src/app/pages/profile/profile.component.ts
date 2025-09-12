@@ -48,9 +48,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
   selectedIndex = 0;
   subscription: Subscription[] = [];
   readonly dialog = inject(MatDialog);
-  bio: string = 'No bio yet';
-  username: string = 'Username';
-  profileImageUrl: string = 'https://hoanghamobile.com/tin-tuc/wp-content/uploads/2024/08/anh-con-meo-cute-7.jpg';
 
   profileId: string = '';
   videoList$!: import("rxjs").Observable<import("../../models/video.model").VideoModel[]>;
@@ -59,6 +56,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   profile$!: Observable<ProfileModel | null>;
   likedVideoList$!: Observable<import("../../models/video.model").VideoModel[]>;
   isOwnProfile: boolean = false;
+  profile!: ProfileModel
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -66,14 +64,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private store: Store<{ profile: ProfileState }>,
     private authService: AuthService // Inject AuthService
   ) {
-    this.subscription.push(
-      this.router.events.pipe(filter(e => e instanceof NavigationEnd)).subscribe(() => {
-        const child = this.activatedRoute.firstChild;
-        const path = child?.snapshot.routeConfig?.path;
-        const idx = this.tabRoutes.indexOf(path || 'all');
-        this.selectedIndex = idx === -1 ? 0 : idx;
-      })
-    );
+
     this.profileId = this.activatedRoute.snapshot.params['profileId'];
     this.videoList$ = this.store.select('profile', 'userVideos');
     this.isLoading$ = this.store.select('profile', 'isLoading');
@@ -94,19 +85,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
   openDialog(): void {
     const dialogRef = this.dialog.open(ProfileDialogComponent, {
       data: {
-        bio: this.bio,
-        username: this.username,
-        profileImageUrl: this.profileImageUrl
+        bio: this.profile?.bio,
+        username: this.profile?.username,
+        profileImageUrl: this.profile?.avatarPath
       },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        if (result.bio !== undefined) this.bio = result.bio;
-        if (result.username !== undefined) this.username = result.username;
-        if (result.profileImageUrl !== undefined) this.profileImageUrl = result.profileImageUrl;
-      }
-    });
   }
 
 
@@ -178,6 +162,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+
+
     this.subscription.push(
       this.router.events.pipe(filter(e => e instanceof NavigationEnd)).subscribe(() => {
         const child = this.activatedRoute.firstChild;
@@ -206,6 +192,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
           this.authService.getCurrentUserId().then(currentUserId => {
             this.isOwnProfile = currentUserId === this.profileId;
           });
+        }
+      }),
+      this.store.select(state => state.profile.profile).subscribe(profile => {
+        if (profile) {
+          this.profile = profile;
         }
       })
     );

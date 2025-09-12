@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, inject, Input, OnDestroy, OnInit} from '@angular/core';
 import {AsyncPipe, DatePipe} from "@angular/common";
 import {MatButton} from "@angular/material/button";
 import {MatCard, MatCardContent, MatCardImage} from "@angular/material/card";
@@ -14,6 +14,8 @@ import {ProfileModel} from '../../../../models/profile.model';
 import * as SearchActions from '../../../../ngrx/actions/search.actions';
 import {convertToSupabaseUrl} from '../../../../utils/img-converter';
 import {AvatarPipe} from '../../../../utils/avatar.pipe';
+import {MatDialog} from '@angular/material/dialog';
+import {DetailDialogComponent} from '../../../../components/detail-dialog/detail-dialog.component';
 
 @Component({
   selector: 'app-search-page',
@@ -37,6 +39,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
   videos$!: Observable<VideoModel[]>;
   profiles$!: Observable<ProfileModel | null>;
   query: string = '';
+  readonly dialog = inject(MatDialog);
 
   constructor(
     private route: ActivatedRoute,
@@ -78,4 +81,21 @@ export class SearchPageComponent implements OnInit, OnDestroy {
   }
 
   protected readonly convertToSupabaseUrl = convertToSupabaseUrl;
+
+
+  openDialog(video: VideoModel) {
+    const dialogRef = this.dialog.open(DetailDialogComponent, {
+      width: '100vw',
+      height: '100vh',
+      maxWidth: '100%',
+      maxHeight: '100vh',
+      panelClass: 'full-screen-dialog',
+      data: {video: video}
+    });
+    console.log('Dialog opened');
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
 }
