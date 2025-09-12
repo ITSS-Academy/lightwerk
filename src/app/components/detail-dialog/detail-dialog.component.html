@@ -36,7 +36,7 @@
             <!-- Avatar -->
             <div class="info">
               <img class="avatar"
-                   [src]="this.userAvatar"
+                   [src]="this.userAvatar | avatar"
                    alt="avatar">
 
               <!-- Info -->
@@ -100,9 +100,12 @@
             <!-- Comment List with @for -->
             @for (c of comments; track c.id) {
               <div class="comment">
-                <div class="avatar">
-                  <img src="{{c.profile?.avatarUrl}}" alt="{{c.profile?.avatarUrl}}"/>
-                </div>
+                @if (c.profile && c.profile.avatarPath) {
+                  <div class="avatar">
+                    <img src="{{ (c.profile.avatarPath | avatar)}}"
+                         alt="{{c.profile?.avatarPath}}"/>
+                  </div>
+                }
                 <div class="comment-content">
                   <p><strong>{{ c.profile?.username }}</strong> {{ c.content }}</p>
                   <span class="date">{{ c.createdAt | date : "MMM dd, yyyy" }}</span>
@@ -119,11 +122,21 @@
       </div>
     </div>
     <div class="frame-comment">
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" class="comment-input">
         <mat-label>Thêm bình luận</mat-label>
-        <input matInput placeholder="Placeholder">
-        <mat-icon matSuffix>send</mat-icon>
-
+        <input
+          matInput
+          placeholder="Viết bình luận..."
+          [(ngModel)]="commentContent"
+          (keydown.enter)="createComment()"
+        />
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="createComment()"
+        >
+          <mat-icon>send</mat-icon>
+        </button>
       </mat-form-field>
     </div>
   </div>
