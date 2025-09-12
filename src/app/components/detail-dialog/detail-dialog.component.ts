@@ -9,11 +9,11 @@ import {
   ViewChild
 } from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
-import {MatButton, MatIconButton} from '@angular/material/button';
+import {MatButton, MatFabButton, MatIconButton} from '@angular/material/button';
 import {MatCard, MatCardAvatar, MatCardHeader, MatCardTitleGroup} from '@angular/material/card';
 import {MatIconModule} from '@angular/material/icon';
 import {MatFormField, MatHint, MatInput, MatLabel, MatSuffix} from '@angular/material/input';
-import {AsyncPipe, NgClass, NgStyle} from '@angular/common';
+import {AsyncPipe, DatePipe, NgClass, NgStyle} from '@angular/common';
 import {DialogVideoComponent} from '../dialog-video/dialog-video.component';
 import {convertToSupabaseUrl} from '../../utils/img-converter';
 import {Observable, Subscription} from 'rxjs';
@@ -24,10 +24,17 @@ import {VideoModel} from '../../models/video.model';
 import {VideoState} from '../../ngrx/states/video.state';
 import {VideoComponent} from '../video/video.component';
 import supabase from '../../utils/supabase';
+import {ProfileModel} from '../../models/profile.model';
+import {CommentState} from '../../ngrx/states/comment.state';
+import {CommentModel} from '../../models/comment.model';
+import * as CommentAction from '../../ngrx/actions/comment.actions';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import * as SearchActions from '../../ngrx/actions/search.actions';
+import {AvatarPipe} from '../../utils/avatar.pipe';
 
 @Component({
   selector: 'app-detail-dialog',
-  imports: [MatDialogModule, MatButton, MatCard, MatCardAvatar, MatCardHeader, MatCardTitleGroup, MatIconModule, MatFormField, MatFormField, MatInput, MatSuffix, MatFormField, MatLabel, MatHint, MatIconButton, NgClass, NgStyle, DialogVideoComponent, VideoComponent, AsyncPipe],
+  imports: [MatDialogModule, MatButton, MatIconModule, MatFormField, MatFormField, MatInput, MatSuffix, MatFormField, MatLabel, MatIconButton, NgClass, NgStyle, VideoComponent, AsyncPipe, DatePipe, ReactiveFormsModule, FormsModule, MatFabButton, AvatarPipe],
   templateUrl: './detail-dialog.component.html',
   styleUrl: './detail-dialog.component.scss'
 })
@@ -46,6 +53,10 @@ export class DetailDialogComponent implements AfterViewInit, OnInit, OnDestroy {
   description: string = ''
   username: string = ''
   userAvatar: string = ''
+  comments$!: Observable<CommentModel[]>;
+  comments!: CommentModel[];
+  commentContent: string = '';
+
 
   videoDetail$: Observable<VideoModel>
   isCurrentUserSignal = signal<boolean>(true);
@@ -58,11 +69,14 @@ export class DetailDialogComponent implements AfterViewInit, OnInit, OnDestroy {
               private cdr: ChangeDetectorRef,
               private store: Store<{
                 video: VideoState
+                comment: CommentState,
               }>
   ) {
-    this.videoDetail$ = this.store.select(state => state.video.videoDetail)
+    this.comments$ = this.store.select(state => state.comment.comments);
+    this.videoDetail$ = this.store.select(state => state.video.videoDetail);
     console.log('DetailDialogComponent loaded');
     this.store.dispatch(VideoActions.getVideoDetail({videoId: this.video().id}))
+    this.store.dispatch(CommentAction.getAllComments({videoId: this.video().id}));
   }
 
   ngOnInit() {
@@ -95,7 +109,11 @@ export class DetailDialogComponent implements AfterViewInit, OnInit, OnDestroy {
 
     console.log(this.video())
     this.store.dispatch(VideoActions.getVideoDetail({videoId: this.video().id}))
-
+    this.subscriptions.push(
+      this.comments$.subscribe(comments => {
+        this.comments = comments;
+      })
+    );
   }
 
   ngOnDestroy() {
@@ -155,156 +173,16 @@ export class DetailDialogComponent implements AfterViewInit, OnInit, OnDestroy {
     {videoSrc: 'video1.mp4', title: 'Video 1', aspectRatio: '9:16'}
   ;
 
-  comment = [
-    {
-      id: 1,
-      name: "Mạnh Mèo",
-      avatar: "https://i.pravatar.cc/40?img=1",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 28, 2022"
-    },
-    {
-      id: 2,
-      name: "Anh Bi",
-      avatar: "https://i.pravatar.cc/40?img=2",
-      text: "Simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
-      date: "July 28, 2022"
-    },
-    {
-      id: 3,
-      name: "Bé My",
-      avatar: "https://i.pravatar.cc/40?img=3",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 29, 2022"
-    },
-    {
-      id: 4,
-      name: "Chị Đen",
-      avatar: "https://i.pravatar.cc/40?img=4",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 30, 2022"
-    },
-    {
-      id: 5,
-      name: "Anh Lu Lu",
-      avatar: "https://i.pravatar.cc/40?img=5",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 28, 2022"
-    },
-    {
-      id: 6,
-      name: "Mạnh Mèo",
-      avatar: "https://i.pravatar.cc/40?img=1",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 28, 2022"
-    },
-    {
-      id: 7,
-      name: "Anh Bi",
-      avatar: "https://i.pravatar.cc/40?img=2",
-      text: "Simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
-      date: "July 28, 2022"
-    },
-    {
-      id: 8,
-      name: "Bé My",
-      avatar: "https://i.pravatar.cc/40?img=3",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 29, 2022"
-    },
-    {
-      id: 9,
-      name: "Chị Đen",
-      avatar: "https://i.pravatar.cc/40?img=4",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 30, 2022"
-    },
-    {
-      id: 10,
-      name: "Anh Lu Lu",
-      avatar: "https://i.pravatar.cc/40?img=5",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 28, 2022"
-    },
-    {
-      id: 11,
-      name: "Mạnh Mèo",
-      avatar: "https://i.pravatar.cc/40?img=1",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 28, 2022"
-    },
-    {
-      id: 12,
-      name: "Anh Bi",
-      avatar: "https://i.pravatar.cc/40?img=2",
-      text: "Simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
-      date: "July 28, 2022"
-    },
-    {
-      id: 13,
-      name: "Bé My",
-      avatar: "https://i.pravatar.cc/40?img=3",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 29, 2022"
-    },
-    {
-      id: 14,
-      name: "Chị Đen",
-      avatar: "https://i.pravatar.cc/40?img=4",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 30, 2022"
-    },
-    {
-      id: 15,
-      name: "Anh Lu Lu",
-      avatar: "https://i.pravatar.cc/40?img=5",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 28, 2022"
-    },
-    {
-      id: 16,
-      name: "Mạnh Mèo",
-      avatar: "https://i.pravatar.cc/40?img=1",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 28, 2022"
-    },
-    {
-      id: 17,
-      name: "Anh Bi",
-      avatar: "https://i.pravatar.cc/40?img=2",
-      text: "Simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
-      date: "July 28, 2022"
-    },
-    {
-      id: 18,
-      name: "Bé My",
-      avatar: "https://i.pravatar.cc/40?img=3",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 29, 2022"
-    },
-    {
-      id: 19,
-      name: "Chị Đen",
-      avatar: "https://i.pravatar.cc/40?img=4",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 30, 2022"
-    },
-    {
-      id: 20,
-      name: "Anh Lu Lu",
-      avatar: "https://i.pravatar.cc/40?img=5",
-      text: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at",
-      date: "July 28, 2022"
-    }
-  ];
 
   closeDialog() {
     this.dialogRef.close(); // Đóng dialog
   }
 
-  toggleFollow() {
-    this.isFollowing = !this.isFollowing;
+  toggleFollow(video: VideoModel, isFollowing: boolean) {
+    const userId = video.profileId;
+    this.store.dispatch(SearchActions.followUser({userId, shouldFollow: !isFollowing}));
   }
+
 
   toggleExpand() {
     this.isExpanded = !this.isExpanded;
@@ -316,6 +194,13 @@ export class DetailDialogComponent implements AfterViewInit, OnInit, OnDestroy {
 
   protected readonly convertToSupabaseUrl = convertToSupabaseUrl;
   videoReadyStates: boolean = false;
+
+  createComment() {
+    if (!this.commentContent.trim()) return;
+    const videoId = this.video().id;
+    this.store.dispatch(CommentAction.createComment({content: this.commentContent, videoId}));
+    this.commentContent = '';
+  }
 
 
 }

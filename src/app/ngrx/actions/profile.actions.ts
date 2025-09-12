@@ -48,32 +48,6 @@ export const resetEditProfileState = createAction(
   "[Profile] Reset edit profile state"
 );
 
-export const getFollowingList = createAction(
-  "[Profile] Get following list",
-  props<{
-    userId: string,
-  }>()
-);
-
-export const getFollowingListSuccess = createAction(
-  "[Profile] Get following list success", props<{ followingList: ProfileModel[] }>()
-);
-
-export const getFollowingListFailure = createAction(
-  "[Profile] Get following list failure", props<{ error: any }>()
-)
-export const getFollowersList = createAction(
-  "[Profile] Get followers list",
-  props<{
-    userId: string,
-  }>()
-);
-export const getFollowersListSuccess = createAction(
-  "[Profile] Get followers list success", props<{ followersList: ProfileModel[] }>()
-);
-export const getFollowersListFailure = createAction(
-  "[Profile] Get followers list failure", props<{ error: any }>()
-)
 
 export const clearProfileState = createAction(
   '[Profile] Clear profile state'
@@ -110,3 +84,50 @@ export const getLikedVideosSuccess = createAction(
 export const getLikedVideosFailure = createAction(
   "[LikedVideos] Get liked videos failure", props<{ error: any }>()
 );
+
+
+export const getFollowers = createAction(
+  "[Followers] Get followers",
+  props<{
+    profileId: string,
+    page: number,
+    orderBy: 'asc' | 'desc',
+  }>()
+);
+
+export const getFollowersSuccess = createAction(
+  "[Followers] Get followers success", props<{ followers: ProfileModel[], totalCount: number }>()
+);
+
+export const getFollowersFailure = createAction(
+  "[Followers] Get followers failure", props<{ error: any }>()
+);
+
+
+export const getFollowing = createAction(
+  "[Following] Get following",
+  props<{
+    profileId: string,
+    page: number,
+    orderBy: 'asc' | 'desc',
+  }>()
+);
+
+export const getFollowingSuccess = createAction(
+  "[Following] Get following success", props<{ following: ProfileModel[], totalCount: number }>()
+);
+
+export const getFollowingFailure = createAction(
+  "[Following] Get following failure", props<{ error: any }>()
+);
+
+export const followUser = createAction('[Search] Follow User', props<{
+  userId: string,
+  shouldFollow: boolean,
+}>());
+export const followUserSuccess = createAction('[Search] Follow User Success', props<{
+  isFollowing: boolean,
+}>());
+export const followUserFailure = createAction('[Search] Follow User Failure', props<{
+  error: any,
+}>());

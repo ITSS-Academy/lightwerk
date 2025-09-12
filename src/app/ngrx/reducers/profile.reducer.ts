@@ -3,7 +3,7 @@ import {VideoModel} from '../../models/video.model';
 import {createReducer, on} from '@ngrx/store';
 import * as ProfileActions from '../actions/profile.actions';
 import {ProfileModel} from '../../models/profile.model';
-import {clearProfileState, getProfile} from '../actions/profile.actions';
+
 
 export const initialState: ProfileState = {
   userVideos: <VideoModel[]>[],
@@ -19,15 +19,15 @@ export const initialState: ProfileState = {
   isGetProfileSuccess: false,
   isGetProfileError: null,
 
-  followingList: [],
+  followingList: <ProfileModel[]>[],
   isLoadingFollowingList: false,
-  errorLoadingFollowingList: undefined,
-  isGetSuccessFollowingList: false,
+  errorLoadingFollowingList: null,
 
-  followersList: [],
+
+  followersList: <ProfileModel[]>[],
   isLoadingFollowersList: false,
-  errorLoadingFollowersList: undefined,
-  isGetSuccessFollowersList: false,
+  errorLoadingFollowersList: null,
+
   canLoadMore: true,
   totalCount: 0,
 
@@ -36,6 +36,10 @@ export const initialState: ProfileState = {
   errorLoadingLikedVideos: null,
   canLoadMoreLikedVideos: true,
   totalCountLikedVideos: 0,
+
+  isFollowing: false,
+  isFollowSuccess: false,
+  isFollowError: null,
 }
 
 
@@ -112,62 +116,7 @@ export const profileReducer = createReducer(
       isEditError: null,
     }
   }),
-  on(ProfileActions.getFollowingList, (state, {type}) => {
-    console.log(type);
-    return {
-      ...state,
-      isLoadingFollowingList: true,
-      errorLoadingFollowingList: null,
-      isGetSuccessFollowingList: false,
-    }
-  }),
-  on(ProfileActions.getFollowingListSuccess, (state, {followingList, type}) => {
-    console.log(type);
-    return {
-      ...state,
-      followingList: followingList,
-      isLoadingFollowingList: false,
-      errorLoadingFollowingList: null,
-      isGetSuccessFollowingList: true,
-    }
-  }),
-  on(ProfileActions.getFollowingListFailure, (state, {error, type}) => {
-    console.log(type);
-    return {
-      ...state,
-      isLoadingFollowingList: false,
-      errorLoadingFollowingList: error,
-      isGetSuccessFollowingList: false,
-    }
-  }),
-  on(ProfileActions.getFollowersList, (state, {type}) => {
-    console.log(type);
-    return {
-      ...state,
-      isLoadingFollowersList: true,
-      errorLoadingFollowersList: null,
-      isGetSuccessFollowersList: false,
-    }
-  }),
-  on(ProfileActions.getFollowersListSuccess, (state, {followersList, type}) => {
-    console.log(type);
-    return {
-      ...state,
-      followersList: followersList,
-      isLoadingFollowersList: false,
-      errorLoadingFollowersList: null,
-      isGetSuccessFollowersList: true,
-    }
-  }),
-  on(ProfileActions.getFollowersListFailure, (state, {error, type}) => {
-    console.log(type);
-    return {
-      ...state,
-      isLoadingFollowersList: false,
-      errorLoadingFollowersList: error,
-      isGetSuccessFollowersList: false,
-    }
-  }),
+
   on(ProfileActions.SortUserVideos, (state, {sortOrder}) => {
     const sortedVideos = [...state.userVideos].sort((a, b) => {
       // Reverse mapping: 'desc' = ascending, 'asc' = descending
@@ -245,6 +194,106 @@ export const profileReducer = createReducer(
       ...state,
       isLoadingLikedVideos: false,
       errorLoadingLikedVideos: error,
+    }
+  }),
+
+  // Following List Actions
+  on(ProfileActions.getFollowing, (state, {type}) => {
+      console.log(type);
+      return {
+        ...state,
+        isLoadingFollowingList: true,
+        errorLoadingFollowingList: null,
+      }
+    }
+  ),
+  on(ProfileActions.getFollowingSuccess, (state, {following, totalCount, type}) => {
+    console.log(type);
+    const newFollowingList = [...state.followingList, ...following];
+    return <ProfileState>{
+      ...state,
+      followingList: newFollowingList,
+      isLoadingFollowingList: false,
+      errorLoadingFollowingList: null,
+      canLoadMore: newFollowingList.length < totalCount,
+      totalCount: totalCount,
+    }
+  }),
+  on(ProfileActions.getFollowingFailure, (state, {error, type}) => {
+    console.log(type);
+    return <ProfileState>{
+      ...state,
+      isLoadingFollowingList: false,
+      errorLoadingFollowingList: error,
+    }
+  }),
+
+  // Followers List Actions
+  on(ProfileActions.getFollowers, (state, {type}) => {
+      console.log(type);
+      return {
+        ...state,
+        isLoadingFollowersList: true,
+        errorLoadingFollowersList: null,
+      }
+    }
+  ),
+  on(ProfileActions.getFollowersSuccess, (state, {followers, totalCount, type}) => {
+    console.log(type);
+    const newFollowersList = [...state.followersList, ...followers];
+
+    return <ProfileState>{
+      ...state,
+      followersList: newFollowersList,
+      isLoadingFollowersList: false,
+      errorLoadingFollowersList: null,
+      canLoadMore: newFollowersList.length < totalCount,
+      totalCount: totalCount,
+    }
+  }),
+  on(ProfileActions.getFollowersFailure, (state, {error, type}) => {
+    console.log(type);
+    return <ProfileState>{
+      ...state,
+      isLoadingFollowersList: false,
+      errorLoadingFollowersList: error,
+    }
+  }),
+
+  on(ProfileActions.followUser, (state, {userId}) => {
+    console.log('Following user with ID:', userId);
+    return {
+      ...state,
+      isFollowing: false,
+      isFollowSuccess: false,
+      isFollowError: null,
+    }
+  }),
+
+  on(ProfileActions.followUserSuccess, (state, {isFollowing}) => {
+    console.log('Follow user success. Now following:', isFollowing);
+    return {
+      ...state,
+      profile: state.profile && {
+        ...state.profile,
+        isFollowing: isFollowing,
+        followersCount: state.profile.followersCount
+          ? state.profile.followersCount + (isFollowing ? 1 : -1)
+          : isFollowing ? 1 : 0,
+      },
+      isFollowing: true,
+      isFollowSuccess: true,
+      isFollowError: null,
+    }
+  }),
+
+  on(ProfileActions.followUserFailure, (state, {error}) => {
+    console.error('Follow user failure:', error);
+    return {
+      ...state,
+      isFollowing: false,
+      isFollowSuccess: false,
+      isFollowError: error,
     }
   }),
 )

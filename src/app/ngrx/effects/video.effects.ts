@@ -4,6 +4,8 @@ import {VideoService} from '../../services/video/video.service';
 import * as VideoActions from '../actions/video.actions';
 import {catchError, exhaustMap, from, map, of, switchMap} from 'rxjs';
 import {LikeVideoService} from '../../services/like-video/like-video.service';
+import {SearchService} from '../../services/search/search.service';
+import * as SearchActions from '../actions/search.actions';
 
 export const uploadVideo = createEffect(
   (actions$ = inject(Actions), videoService = inject(VideoService)) => {
@@ -107,7 +109,7 @@ export const getVideosByCategory = createEffect(
     return actions$.pipe(
       ofType(VideoActions.getVideosByCategory),
       exhaustMap((action) =>
-        from(videoService.getVideosByCategory(action.categoryId,action.page)).pipe(
+        from(videoService.getVideosByCategory(action.categoryId, action.page)).pipe(
           map((res) => VideoActions.getVideosByCategorySuccess({
             videos: res.videos,
             totalItems: res.pagination.totalCount
@@ -163,3 +165,25 @@ export const incrementViewCount = createEffect(
   }
   , {functional: true}
 );
+
+export const followUser = createEffect(
+  () => {
+    const actions$ = inject(Actions);
+    const searchService = inject(SearchService);
+    return actions$.pipe(
+      ofType(VideoActions.followUser),
+      exhaustMap((action) =>
+        searchService.toggleFollowUser(action.userId, action.shouldFollow).pipe(
+          map((response) => VideoActions.followUserSuccess({
+            isFollowing: response.isFollowing
+          })),
+          catchError((error: any) =>
+            of(VideoActions.followUserFailure({error: error}))
+          )
+        )
+      )
+    );
+  },
+  {functional: true}
+);
+

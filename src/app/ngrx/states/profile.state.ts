@@ -16,23 +16,25 @@ export interface ProfileState {
   isEditSuccess: boolean,
   isEditError: any,
 
-  followingList: ProfileModel[],
-  isLoadingFollowingList: boolean,
-  errorLoadingFollowingList: any,
-  isGetSuccessFollowingList: boolean,
+  followingList: ProfileModel[];
+  isLoadingFollowingList: boolean;
+  errorLoadingFollowingList: any;
 
-  followersList: ProfileModel[],
-  isLoadingFollowersList: boolean,
-  errorLoadingFollowersList: any,
-  isGetSuccessFollowersList: boolean,
-  canLoadMore: boolean;
+  followersList: ProfileModel[];
+  isLoadingFollowersList: boolean;
+  errorLoadingFollowersList: any;
   totalCount: number;
+  canLoadMore: boolean;
 
   likedVideos: VideoModel[];
   isLoadingLikedVideos: boolean;
   errorLoadingLikedVideos: any;
   canLoadMoreLikedVideos: boolean;
   totalCountLikedVideos: number;
+
+  isFollowing: boolean,
+  isFollowSuccess: boolean,
+  isFollowError: any,
 }
 
 

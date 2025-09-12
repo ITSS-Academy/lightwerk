@@ -1,3 +1,5 @@
+import {ProfileModel} from './profile.model';
+
 export interface VideoModel {
   id: string;
   profileId: string;
@@ -17,11 +19,7 @@ export interface VideoModel {
     id: string;
     name: string;
   },
-  profile?: {
-    id: string;
-    username: string;
-    avatarPath: string | null;
-  }
+  profile?: ProfileModel
   likeCount?: number;
   commentCount?: number;
   isLikedByCurrentUser?: boolean;
