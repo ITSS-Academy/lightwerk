@@ -93,3 +93,14 @@ export const getLikeCountFailure = createAction('[Video] Get Like Count Failure'
 
 export const setIsSaved = createAction('[Video] Set Is Saved')
 
+export const followUser = createAction('[Search] Follow User', props<{
+  userId: string,
+  shouldFollow: boolean,
+}>());
+export const followUserSuccess = createAction('[Search] Follow User Success', props<{
+  isFollowing: boolean,
+}>());
+export const followUserFailure = createAction('[Search] Follow User Failure', props<{
+  error: any,
+}>());
+

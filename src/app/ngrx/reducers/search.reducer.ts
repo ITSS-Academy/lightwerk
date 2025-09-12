@@ -13,6 +13,9 @@ const initialState: SearchState = {
   isSearchVideosError: null,
   isLoadingUser: false,
   isLoadingVideos: false,
+  isFollowing: false,
+  isFollowSuccess: false,
+  isFollowError: null,
 }
 
 
@@ -84,4 +87,43 @@ export const searchReducer = createReducer(
       isSearchVideosError: error,
     }
   }),
+
+  // Follow User
+  on(SearchActions.followUser, (state, {userId}) => {
+    console.log('Following user with ID:', userId);
+    return {
+      ...state,
+      isFollowing: false,
+      isFollowSuccess: false,
+      isFollowError: null,
+    }
+  }),
+
+  on(SearchActions.followUserSuccess, (state, {isFollowing}) => {
+    console.log('Follow user success. Now following:', isFollowing);
+    return {
+      ...state,
+      isSearchingUser: state.isSearchingUser && {
+        ...state.isSearchingUser,
+        isFollowing: isFollowing,
+        followersCount: state.isSearchingUser.followersCount
+          ? state.isSearchingUser.followersCount + (isFollowing ? 1 : -1)
+          : isFollowing ? 1 : 0,
+      },
+      isFollowing: true,
+      isFollowSuccess: true,
+      isFollowError: null,
+    }
+  }),
+
+  on(SearchActions.followUserFailure, (state, {error}) => {
+    console.error('Follow user failure:', error);
+    return {
+      ...state,
+      isFollowing: false,
+      isFollowSuccess: false,
+      isFollowError: error,
+    }
+  }),
 );
+

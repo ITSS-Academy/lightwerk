@@ -237,4 +237,48 @@ export class VideoService {
     }).toPromise();
     return res
   }
+
+  // src/app/services/video/video.service.ts
+  toggleFollowUser(userId: string, shouldFollow: boolean): Observable<{ isFollowing: boolean }> {
+    return from(
+      (async () => {
+        const {data, error} = await supabase.auth.getSession();
+        if (error) throw new Error(error.message);
+
+        const currentUserId = data.session?.user.id;
+        if (!currentUserId) throw new Error('User not authenticated');
+
+        if (shouldFollow) {
+          // Check if already following
+          const {data: existing, error: checkError} = await supabase
+            .from('profile_follows')
+            .select('id')
+            .eq('followerId', currentUserId)
+            .eq('followingId', userId)
+            .single();
+
+          // Only insert if not already following (no data and error is 406)
+          if (!existing && checkError && checkError.code === 'PGRST116') {
+            const {error: followError} = await supabase
+              .from('profile_follows')
+              .insert({
+                followerId: currentUserId,
+                followingId: userId
+              });
+            if (followError) throw new Error(followError.message);
+          }
+        } else {
+          // Unfollow
+          const {error: unfollowError} = await supabase
+            .from('profile_follows')
+            .delete()
+            .match({followerId: currentUserId, followingId: userId});
+          if (unfollowError) throw new Error(unfollowError.message);
+        }
+
+        return {isFollowing: shouldFollow};
+      })()
+    );
+  }
+
 }

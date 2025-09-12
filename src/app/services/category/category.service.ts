@@ -25,4 +25,6 @@ export class CategoryService {
       name: string
     }[]>(`${environment.api_base_url}/category/all`, {});
   }
+
+  
 }

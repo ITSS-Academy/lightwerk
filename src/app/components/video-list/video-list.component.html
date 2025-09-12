@@ -120,7 +120,7 @@
         @for (c of comments; track c.id) {
           <div class="comment">
             <div class="avatar">
-              <img src="{{c.profile?.avatarUrl}}" alt="{{c.profile?.avatarUrl}}"/>
+              <img src="{{c.profile?.avatarPath | avatar}}" alt="{{c.profile?.avatarPath}}"/>
             </div>
             <div class="comment-content">
               <p><strong>{{ c.profile?.username }}</strong> {{ c.content }}</p>

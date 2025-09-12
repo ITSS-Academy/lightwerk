@@ -1,4 +1,5 @@
 import {VideoModel} from '../../models/video.model';
+import {ProfileModel} from '../../models/profile.model';
 
 export interface VideoState {
   videoDetail: VideoModel,
@@ -40,4 +41,8 @@ export interface VideoState {
   isGettingCommented: boolean
   isGettingCommentedSuccess: boolean
   isGettingCommentedError: any,
+
+  isFollowing: boolean,
+  isFollowSuccess: boolean,
+  isFollowError: any,
 }

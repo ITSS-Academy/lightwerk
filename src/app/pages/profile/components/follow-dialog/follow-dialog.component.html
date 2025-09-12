@@ -1,8 +1,8 @@
 <mat-dialog-content class="follow-container">
   <mat-tab-group animationDuration="0ms" [selectedIndex]="selectedIndex">
-    <mat-tab label="Followers ({{ followersCount }})">
+    <mat-tab label="Followers ({{ (followersList$ | async)?.length }})">
       <div class="list-scroll">
-        @for (item of followers; track item.id) {
+        @for (item of (followersList$|async); track item.id) {
           <div class="user-container">
             <div class="user-detail">
               <img class="user-avatar" [src]="item.avatarPath | avatar"
@@ -16,7 +16,7 @@
                 mat-button
                 class="follow-btn"
                 [class.active]="item.isFollowing"
-                (click)="toggleFollow(item)">
+                (click)="toggleFollow(item,item.isFollowing ?? false)">
                 {{ item.isFollowing ? '✓ Following' : '+ Follow' }}
               </button>
             </div>
@@ -24,13 +24,13 @@
         }
       </div>
     </mat-tab>
-    <mat-tab label="Following ({{ followingCount }})">
+    <mat-tab label="Following ({{ (followingList$ | async)?.length }})">
       <div class="list-scroll">
-        @for (item of following; track item.id) {
+        @for (item of (followingList$|async); track item.id) {
           <div class="user-container">
             <div class="user-detail">
               <img class="user-avatar" [src]="item.avatarPath | avatar"
-                    referrerpolicy="no-referrer"
+                   referrerpolicy="no-referrer"
                    alt="User Avatar">
               <span class="user-name">{{ item.username }}</span>
             </div>
@@ -39,7 +39,7 @@
                 mat-button
                 class="follow-btn"
                 [class.active]="item.isFollowing"
-                (click)="toggleFollow(item)">
+                (click)="toggleFollow(item,item.isFollowing ?? false)">
                 {{ item.isFollowing ? '✓ Following' : '+ Follow' }}
               </button>
             </div>

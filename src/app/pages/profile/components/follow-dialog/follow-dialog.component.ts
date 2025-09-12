@@ -6,9 +6,11 @@ import {MatButton} from '@angular/material/button';
 import {Store} from '@ngrx/store';
 import {ProfileState} from '../../../../ngrx/states/profile.state';
 import {ProfileModel} from '../../../../models/profile.model';
-import {Observable, Subscription} from 'rxjs';
+import {Observable, Subscription, take} from 'rxjs';
 import * as ProfileActions from '../../../../ngrx/actions/profile.actions';
 import {AvatarPipe} from '../../../../utils/avatar.pipe';
+import {AsyncPipe} from '@angular/common';
+import * as SearchActions from '../../../../ngrx/actions/search.actions';
 
 
 @Component({
@@ -18,7 +20,8 @@ import {AvatarPipe} from '../../../../utils/avatar.pipe';
     MatTabGroup,
     MatTab,
     MatButton,
-    AvatarPipe
+    AvatarPipe,
+    AsyncPipe
   ],
   templateUrl: './follow-dialog.component.html',
   styleUrl: './follow-dialog.component.scss'
@@ -28,8 +31,6 @@ export class FollowDialogComponent implements OnInit, OnDestroy {
   followersList$!: Observable<ProfileModel[]>;
   followingList$!: Observable<ProfileModel[]>;
 
-  followers: ProfileModel[] = [];
-  following: ProfileModel[] = [];
 
   selectedIndex: number;
 
@@ -42,31 +43,36 @@ export class FollowDialogComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    const userId = "123";
-
-
-    this.store.dispatch(ProfileActions.getFollowersList({userId}));
-
-    this.store.dispatch(ProfileActions.getFollowingList({userId}));
-
-
     this.subscription.push(
-      this.followersList$.subscribe(list => {
-        this.followers = list.map(item => ({
-            ...item,
-            isFollowing: item.isFollowing
-          }),
-        )
-        console.log('Followers:', this.followers);
+      this.followersList$.pipe(take(1)).subscribe(followers => {
+        this.store.select(state => state.profile.profile)
+          .pipe(take(1))
+          .subscribe(profile => {
+            if (profile && profile.id && (!followers || followers.length === 0)) {
+              this.store.dispatch(
+                ProfileActions.getFollowers({
+                  profileId: profile.id,
+                  page: 0,
+                  orderBy: 'asc'
+                })
+              );
+            }
+          });
       }),
-
-      this.followingList$.subscribe(list => {
-        this.following = list.map(item => ({
-            ...item,
-            isFollowing: item.isFollowing
-          }),
-        )
-        console.log('Following:', this.following);
+      this.followingList$.pipe(take(1)).subscribe(following => {
+        this.store.select(state => state.profile.profile)
+          .pipe(take(1))
+          .subscribe(profile => {
+            if (profile && profile.id && (!following || following.length === 0)) {
+              this.store.dispatch(
+                ProfileActions.getFollowing({
+                  profileId: profile.id,
+                  page: 0,
+                  orderBy: 'asc'
+                })
+              );
+            }
+          });
       })
     );
   }
@@ -76,15 +82,29 @@ export class FollowDialogComponent implements OnInit, OnDestroy {
     this.subscription.forEach(sub => sub.unsubscribe());
   }
 
-  toggleFollow(item: ProfileModel) {
-    item.isFollowing = !item.isFollowing;
+  toggleFollow(profile: ProfileModel, isFollowing: boolean) {
+    if (isFollowing) {
+      this.store.dispatch(ProfileActions.followUser({userId: profile.id, shouldFollow: false}));
+    } else {
+      this.store.dispatch(ProfileActions.followUser({userId: profile.id, shouldFollow: true}));
+    }
+
+    this.store.select(state => state.profile.profile)
+      .pipe(take(1))
+      .subscribe(currentProfile => {
+        if (currentProfile && currentProfile.id) {
+          this.store.dispatch(ProfileActions.getFollowers({
+            profileId: currentProfile.id,
+            page: 0,
+            orderBy: 'asc'
+          }));
+          this.store.dispatch(ProfileActions.getFollowing({
+            profileId: currentProfile.id,
+            page: 0,
+            orderBy: 'asc'
+          }));
+        }
+      });
   }
 
-  get followersCount(): number {
-    return this.followers.length;
-  }
-
-  get followingCount(): number {
-    return this.following.length;
-  }
 }
