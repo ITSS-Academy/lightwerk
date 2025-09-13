@@ -50,7 +50,7 @@ import {ProfileState} from './ngrx/states/profile.state';
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
-  title = 'Relsvido';
+  title = 'Lightwerk';
 
   userId = signal<string | null>(null);
   collapsed = signal(false);
