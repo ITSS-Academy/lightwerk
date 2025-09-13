@@ -1,7 +1,10 @@
 <div class="sidebar-container">
   <div>
-    <div class="sidebar-logo" [ngClass]="{ 'collapsed': collapsed }">
-      <img [routerLink]="'/home'" src="logo.svg" alt="Logo"/>
+    <div class="sidebar-logo" [routerLink]="'/home'" [ngClass]="{ 'collapsed': collapsed }">
+      <img src="logo.svg" alt="Logo"/>
+      @if (!collapsed) {
+        <img src="logo2.svg" alt="" style="height: 32px; transform: translateY(6px)">
+      }
     </div>
 
     <mat-nav-list>
