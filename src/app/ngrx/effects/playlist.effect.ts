@@ -30,7 +30,7 @@ export const deletePlaylist = createEffect(
     return actions$.pipe(
       ofType(PlaylistActions.deletePlaylist),
       exhaustMap((action) =>
-        playlistService.deletePlaylist(action.playListID).pipe(
+        from(playlistService.deletePlaylist(action.playListID)).pipe(
           map(() => PlaylistActions.deletePlaylistSuccess({playListID: action.playListID})),
           catchError((error: any) =>
             of(PlaylistActions.deletePlaylistFailure({error: error}))
@@ -186,3 +186,44 @@ export const getVideoInPlaylist = createEffect(
   },
   {functional: true}
 )
+
+export const changeNameOfPlaylist = createEffect(
+  (actions$: Actions = inject(Actions), playlistService: PlaylistService = inject(PlaylistService)) => {
+    return actions$.pipe(
+      ofType(PlaylistActions.changeNameOfPlaylist),
+      exhaustMap((action) =>
+        from(playlistService.changeName(action.playlistID, action.newTitle)).pipe(
+          map(() => PlaylistActions.changeNameOfPlaylistSuccess({
+            newTitle: action.newTitle,
+            playlistID: action.playlistID
+          })),
+          catchError((error: any) =>
+            of(PlaylistActions.changeNameOfPlaylistFailure({error: error}))
+          )
+        )
+      )
+    );
+  },
+  {functional: true}
+)
+
+export const changeVisibilityOfPlaylist = createEffect(
+  (actions$: Actions = inject(Actions), playlistService: PlaylistService = inject(PlaylistService)) => {
+    return actions$.pipe(
+      ofType(PlaylistActions.changePrivacyOfPlaylist),
+      exhaustMap((action) =>
+        from(playlistService.changeVisibility(action.playlistID, action.isPublic)).pipe(
+          map(() => PlaylistActions.changePrivacyOfPlaylistSuccess({
+            isPublic: action.isPublic,
+            playlistID: action.playlistID
+          })),
+          catchError((error: any) =>
+            of(PlaylistActions.changePrivacyOfPlaylistFailure({error: error}))
+          )
+        )
+      )
+    );
+  },
+  {functional: true}
+)
+

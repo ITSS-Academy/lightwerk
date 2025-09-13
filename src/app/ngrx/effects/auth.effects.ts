@@ -22,3 +22,22 @@ export const loginEffect = createEffect(
   },
   {functional: true}
 );
+
+export const getCurrentUserEffect = createEffect(
+  (actions$ = inject(Actions), authService = inject(AuthService)) => {
+    return actions$.pipe(
+      ofType(authActions.getCurrentUser),
+      exhaustMap(() =>
+        from(authService.getCurrentProfile()).pipe(
+          map((profile) => {
+            return authActions.getCurrentUserSuccess({profile});
+          }),
+          catchError((error: any) =>
+            of(authActions.getCurrentUserFailure({error: error}))
+          )
+        )
+      )
+    );
+  },
+  {functional: true}
+);

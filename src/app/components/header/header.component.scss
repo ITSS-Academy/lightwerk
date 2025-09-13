@@ -69,3 +69,16 @@ mat-toolbar {
 .search-btn:hover {
   background: #f0f0f0 !important;
 }
+
+.login-btn {
+  background-color: var(--mat-sys-tertiary-container) !important;
+  color: var(--mat-sys-on-tertiary-container) !important;
+  box-shadow: none;
+  transition: background-color 0.2s;
+}
+
+.avatar {
+ 
+  border-radius: 50%;
+  object-fit: cover;
+}

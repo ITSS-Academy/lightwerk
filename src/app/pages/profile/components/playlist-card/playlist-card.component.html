@@ -1,6 +1,7 @@
 <mat-card class="playlist-card" appearance="outlined" (click)="navigateToPlaylistDetail(playlist.id)">
   @if (playlist.thumbnailPath) {
     <img [src]="convertToSupabaseUrl(playlist.thumbnailPath, 'thumbnail')" alt="{{playlist.title}}"
+         [ngStyle]="{'object-fit': playlist.title == 'see later' ? 'contain' : 'cover'}"
          class="thumbnail"/>
   } @else {
     <img src="https://coffective.com/wp-content/uploads/2018/06/default-featured-image.png.jpg"
@@ -9,11 +10,14 @@
 
   <mat-card-content>
     <div class="playlist-info">
-      <span class="playlist-title">{{ playlist.title }}</span>
-
-
+      <div style="display: flex">
+        <span class="playlist-title">{{ playlist.title }}</span>
+        <div class="playlist-details">
+          <span class="playlist-count">{{ playlist.videoCount }} videos</span>
+        </div>
+      </div>
+      <span class="playlist-date"
+            style="  font-size: 12px; color: #555;">{{ playlist.createdAt | date:'dd/MM/yyyy' }}</span>
     </div>
-
-
   </mat-card-content>
 </mat-card>

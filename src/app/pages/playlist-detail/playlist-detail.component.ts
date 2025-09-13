@@ -17,6 +17,8 @@ import * as PlaylistActions from '../../ngrx/actions/playlist.actions';
 import {convertToSupabaseUrl} from '../../utils/img-converter';
 import {AvatarPipe} from '../../utils/avatar.pipe';
 import {AuthService} from '../../services/auth/auth.service';
+import {Router} from '@angular/router';
+import {AuthState} from '../../ngrx/states/auth.state';
 
 @Component({
   selector: 'app-playlist-detail',
@@ -38,11 +40,13 @@ export class PlaylistDetailComponent implements OnInit, OnDestroy {
   readonly dialog = inject(MatDialog);
   isLoading$!: Observable<boolean>;
   isOwnProfile: boolean = false;
+  profileId = '';
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private authService: AuthService,
-    private store: Store<{ playlist: PlaylistState }>
+    private router: Router,
+    private store: Store<{ playlist: PlaylistState, auth: AuthState }>
   ) {
     this.isLoading$ = this.store.select(state => state.playlist.isLoadingPlaylistDetails);
     this.playlistId = this.activatedRoute.snapshot.params['playlistId'];
@@ -61,8 +65,17 @@ export class PlaylistDetailComponent implements OnInit, OnDestroy {
             this.isOwnProfile = this.playlistDetail?.profile?.id === currentUserId;
           });
         }
-      })
-    );
+      }),
+      this.store.select(state => state.auth.profile.id).subscribe(id => {
+        this.profileId = id;
+      }),
+      this.store.select(state => state.playlist.isDeleteSuccess).subscribe((isSuccess) => {
+          if (isSuccess) {
+            this.router.navigate([`/profile/${this.profileId}/playlists`]);
+          }
+        }
+      )
+    )
   }
 
   get backgroundImageStyle() {
@@ -76,6 +89,7 @@ export class PlaylistDetailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscriptions.forEach(sub => sub.unsubscribe());
+    this.store.dispatch(PlaylistActions.clearPlaylistSate())
   }
 
   openDialogmakePublic() {
@@ -92,7 +106,7 @@ export class PlaylistDetailComponent implements OnInit, OnDestroy {
     this.dialog.open(DeletePlaylistDialogComponent, {
       width: '400px',
       height: '200px',
-      data: {playlistId: this.playlistDetail.id}
+      data: {playlistId: this.playlistDetail.id, profileId: this.profileId}
     });
   }
 

@@ -105,23 +105,27 @@
     </mat-nav-list>
   </div>
 
-  <mat-nav-list>
-    <a
-      [ngClass]="{ 'collapsed': collapsed }"
-      mat-list-item
-      [routerLink]="['/profile', userId(), 'videos']"
-      [routerLinkActive]="'active'" #rla="routerLinkActive"
-      [activated]="rla.isActive"
-      (click)="removeFocus($event);notSearchClick.emit()"
-    >
-      <img matListItemIcon class="avatar" src="avatar.png" alt="">
-      @if (!collapsed) {
-        <span matListItemTitle
-              [style.display]="collapsed ? 'none' : ''"
-        > Name  </span>
-      }
-    </a>
-  </mat-nav-list>
+  @if (this.currentUser$ | async; as user) {
+    @if (user.id) {
+      <mat-nav-list>
+        <a
+          [ngClass]="{ 'collapsed': collapsed }"
+          mat-list-item
+          [routerLink]="['/profile', userId(), 'videos']"
+          [routerLinkActive]="'active'" #rla="routerLinkActive"
+          [activated]="rla.isActive"
+          (click)="removeFocus($event);notSearchClick.emit()"
+        >
+          <img matListItemIcon class="avatar" [src]="user.avatarPath | avatar" alt="">
+          @if (!collapsed) {
+            <span matListItemTitle
+                  [style.display]="collapsed ? 'none' : ''"
+            > {{ user.username }}  </span>
+          }
+        </a>
+      </mat-nav-list>
+    }
+  }
 </div>
 
 <!--@if (!route.path.includes('playlists')) {-->

@@ -83,28 +83,29 @@ export class FollowDialogComponent implements OnInit, OnDestroy {
   }
 
   toggleFollow(profile: ProfileModel, isFollowing: boolean) {
-    if (isFollowing) {
-      this.store.dispatch(ProfileActions.followUser({userId: profile.id, shouldFollow: false}));
-    } else {
-      this.store.dispatch(ProfileActions.followUser({userId: profile.id, shouldFollow: true}));
-    }
-
-    this.store.select(state => state.profile.profile)
-      .pipe(take(1))
-      .subscribe(currentProfile => {
-        if (currentProfile && currentProfile.id) {
-          this.store.dispatch(ProfileActions.getFollowers({
-            profileId: currentProfile.id,
-            page: 0,
-            orderBy: 'asc'
-          }));
-          this.store.dispatch(ProfileActions.getFollowing({
-            profileId: currentProfile.id,
-            page: 0,
-            orderBy: 'asc'
-          }));
-        }
-      });
+    // chua lam
+    // if (isFollowing) {
+    //   this.store.dispatch(ProfileActions.followUser({userId: profile.id, shouldFollow: false}));
+    // } else {
+    //   this.store.dispatch(ProfileActions.followUser({userId: profile.id, shouldFollow: true}));
+    // }
+    //
+    // this.store.select(state => state.profile.profile)
+    //   .pipe(take(1))
+    //   .subscribe(currentProfile => {
+    //     if (currentProfile && currentProfile.id) {
+    //       this.store.dispatch(ProfileActions.getFollowers({
+    //         profileId: currentProfile.id,
+    //         page: 0,
+    //         orderBy: 'asc'
+    //       }));
+    //       this.store.dispatch(ProfileActions.getFollowing({
+    //         profileId: currentProfile.id,
+    //         page: 0,
+    //         orderBy: 'asc'
+    //       }));
+    //     }
+    //   });
   }
 
 }

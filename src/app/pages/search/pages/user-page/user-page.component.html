@@ -1,35 +1,36 @@
-@if (profiles$ | async; as item) {
-  <div class="search-header">
+<div class="search-header" [routerLink]="['/search']" [queryParams]="{ q: this.query }">
+  <mat-icon>chevron_left</mat-icon>
+  <span>Search</span>
+</div>
 
-    <mat-icon [routerLink]="['/search']" [queryParams]="{ q: this.query }">chevron_left</mat-icon>
-    <span>Search</span>
-  </div>
+@for (profile of allProfiles$ | async; track profile.id) {
 
-  <div class="user-search">
+  <div class="user-search" (click)="$event.stopPropagation() ; navigateToProfile(profile.id)">
 
 
     <div class="user-search-detail">
       <div class="user-search-detail-container">
-        <img src="{{item.avatarPath | avatar}}"
-                referrerpolicy="no-referrer"
+        <img src="{{profile.avatarPath | avatar}}"
+             referrerpolicy="no-referrer"
              alt="User profile">
         <div class="user-search-detail-stats">
 
-          <span class="username">{{ item.username }}</span>
-          @if (item.followersCount == 1) {
-            <span class="username-detail">{{ item.followingCount }} follower</span>
+          <span class="username">{{ profile.username }}</span>
+          @if (profile.followersCount == 1) {
+            <span class="username-detail">{{ profile.followersCount }} follower</span>
           } @else {
-            <span class="username-detail">{{ item.followersCount }} followers</span>
+            <span class="username-detail">{{ profile.followersCount }} followers</span>
           }
 
-          <span class="username-detail">{{ item.bio }}</span>
+          <span class="username-detail">{{ profile.bio }}</span>
         </div>
       </div>
 
-      <div class="button">
-        <button mat-flat-button>Follow</button>
-      </div>
+      <!--      <div class="button">-->
+      <!--        <button mat-flat-button>Follow</button>-->
+      <!--      </div>-->
     </div>
 
   </div>
+
 }

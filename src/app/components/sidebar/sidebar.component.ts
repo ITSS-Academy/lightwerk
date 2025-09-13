@@ -1,16 +1,18 @@
 import {Component, Input, OnInit, signal, Output, EventEmitter, OnDestroy} from '@angular/core';
 import {MaterialAngularModule} from '../../modules/material-angular/material-angular.module';
 import {IsActiveMatchOptions, NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
-import {NgClass} from '@angular/common';
+import {AsyncPipe, NgClass} from '@angular/common';
 import supabase from '../../utils/supabase';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {filter} from 'rxjs/operators';
 import {Store} from '@ngrx/store';
 import {AuthState} from '../../ngrx/states/auth.state';
+import {ProfileModel} from '../../models/profile.model';
+import {AvatarPipe} from '../../utils/avatar.pipe';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [MaterialAngularModule, RouterOutlet, RouterLink, RouterLinkActive, NgClass],
+  imports: [MaterialAngularModule, RouterOutlet, RouterLink, RouterLinkActive, NgClass, AsyncPipe, AvatarPipe],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
@@ -22,6 +24,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   subscription: Subscription[] = [];
 
   userId = signal<string | null>(null)
+  currentUser$: Observable<ProfileModel>
   @Input() sections: any[] = [];
 
   @Output() searchClick = new EventEmitter<void>();
@@ -30,6 +33,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
   constructor(private router: Router, private store: Store<{
     auth: AuthState
   }>) {
+    this.currentUser$ = this.store.select(state => state.auth.profile);
+
   }
 
   ngOnInit() {

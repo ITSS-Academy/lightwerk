@@ -36,6 +36,7 @@ import {AllPlaylistComponent} from '../all-playlist/all-playlist.component';
 import * as PlaylistActions from '../../ngrx/actions/playlist.actions';
 import {PlaylistState} from '../../ngrx/states/playlist.state';
 import {AvatarPipe} from '../../utils/avatar.pipe';
+import {VideoService} from '../../services/video/video.service';
 
 @Component({
   selector: 'app-video-list',
@@ -152,6 +153,7 @@ export class VideoListComponent implements AfterViewInit, OnInit, OnDestroy {
                 comment: CommentState,
                 playlist: PlaylistState
               }>,
+              private videoService: VideoService,
               private dialog: MatDialog // Inject MatDialog
   ) {
 
@@ -179,6 +181,7 @@ export class VideoListComponent implements AfterViewInit, OnInit, OnDestroy {
 
   ngOnInit() {
     this.store.dispatch(CommentAction.getAllComments({videoId: this.cards[0]?.id!}));
+    this.videoService.saveToHistory(this.cards[0]?.id!);
 
     this.subscription.push(
       this.store.select(state => state.video.videoDetail).subscribe(video => {
@@ -307,6 +310,7 @@ export class VideoListComponent implements AfterViewInit, OnInit, OnDestroy {
             this.currentVideoIndex = index;
             this.store.dispatch(VideoActions.getLikedVideos({videoId: this.cards[this.currentVideoIndex].id}));
             this.store.dispatch(CommentAction.getAllComments({videoId: this.cards[this.currentVideoIndex]?.id!}));
+            this.videoService.saveToHistory(this.cards[this.currentVideoIndex]?.id!).then();
             this.turnoffSnackbar()
 
 

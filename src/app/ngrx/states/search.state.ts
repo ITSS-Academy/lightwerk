@@ -15,4 +15,9 @@ export interface SearchState {
   isFollowing: boolean,
   isFollowSuccess: boolean,
   isFollowError: any,
+
+  allUsers: ProfileModel[],
+  isLoadingAllUsers: boolean,
+  isSearchAllUsersSuccess: boolean,
+  isSearchAllUsersError: any,
 }

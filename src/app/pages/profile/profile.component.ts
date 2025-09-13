@@ -80,6 +80,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
       orderBy: 'desc',
       page: 0
     }));
+    this.store.dispatch(PlayListAction.loadAllPlaylists({profileID: this.profileId}));
+
   }
 
   openDialog(): void {
@@ -234,16 +236,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   onTabChange(idx: number) {
+    this.selectedIndex = idx;
     const route = this.tabRoutes[idx];
     this.router.navigate([route], {relativeTo: this.activatedRoute});
   }
 
   toggleFollow(profile: ProfileModel, isFollowing: boolean) {
-    if (isFollowing) {
-      this.store.dispatch(ProfileActions.followUser({userId: profile.id, shouldFollow: false}));
-    } else {
-      this.store.dispatch(ProfileActions.followUser({userId: profile.id, shouldFollow: true}));
-    }
+    this.store.dispatch(ProfileActions.toggleFollowUser({userId: profile.id}));
   }
 
 }

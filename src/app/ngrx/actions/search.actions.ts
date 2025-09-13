@@ -39,3 +39,12 @@ export const followUserFailure = createAction('[Search] Follow User Failure', pr
   error: any,
 }>());
 
+export const searchAllUsers = createAction('[Search] Search All Users', props<{
+  query: string,
+}>());
+export const searchAllUsersSuccess = createAction('[Search] Search All Users Success', props<{
+  users: ProfileModel[],
+}>());
+export const searchAllUsersFailure = createAction('[Search] Search All Users Failure', props<{
+  error: any,
+}>());

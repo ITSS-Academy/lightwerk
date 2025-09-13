@@ -183,7 +183,8 @@ export const videoReducer = createReducer(
       isGettingVideoDetailError: null,
     }
   }),
-  on(VideoActions.getVideoDetailFailure, (state, {error}) => {
+  on(VideoActions.getVideoDetailFailure, (state, {type, error}) => {
+    console.log(type, error);
     return {
       ...state,
       isGettingVideoDetail: false,
@@ -304,47 +305,57 @@ export const videoReducer = createReducer(
     }
   }),
 
-  on(VideoActions.followUser, (state, {userId}) => {
-    console.log('Following user with ID:', userId);
-    return {
-      ...state,
-      isFollowing: false,
-      isFollowSuccess: false,
-      isFollowError: null,
-    }
-  }),
+  // on(VideoActions.followUser, (state, {userId}) => {
+  //   console.log('Following user with ID:', userId);
+  //   return {
+  //     ...state,
+  //     isFollowing: false,
+  //     isFollowSuccess: false,
+  //     isFollowError: null,
+  //   }
+  // }),
+  //
+  // on(VideoActions.followUserSuccess, (state, {isFollowing}) => {
+  //   return {
+  //     ...state,
+  //     videoDetail: {
+  //       ...state.videoDetail,
+  //       profile: state.videoDetail.profile
+  //         ? {
+  //           ...state.videoDetail.profile,
+  //           isFollowing: isFollowing,
+  //           followersCount: state.videoDetail.profile.followersCount
+  //             ? state.videoDetail.profile.followersCount + (isFollowing ? 1 : -1)
+  //             : isFollowing ? 1 : 0,
+  //         }
+  //         : state.videoDetail.profile,
+  //     },
+  //     isFollowing: true,
+  //     isFollowSuccess: true,
+  //     isFollowError: null,
+  //   };
+  // }),
+  //
+  //
+  // on(VideoActions.followUserFailure, (state, {error}) => {
+  //   console.error('Follow user failure:', error);
+  //   return {
+  //     ...state,
+  //     isFollowing: false,
+  //     isFollowSuccess: false,
+  //     isFollowError: error,
+  //   }
+  // }),
 
-  on(VideoActions.followUserSuccess, (state, {isFollowing}) => {
+  on(VideoActions.getCommentCountAfterAddSuccess, state => {
     return {
       ...state,
       videoDetail: {
         ...state.videoDetail,
-        profile: state.videoDetail.profile
-          ? {
-            ...state.videoDetail.profile,
-            isFollowing: isFollowing,
-            followersCount: state.videoDetail.profile.followersCount
-              ? state.videoDetail.profile.followersCount + (isFollowing ? 1 : -1)
-              : isFollowing ? 1 : 0,
-          }
-          : state.videoDetail.profile,
-      },
-      isFollowing: true,
-      isFollowSuccess: true,
-      isFollowError: null,
-    };
-  }),
-
-
-  on(VideoActions.followUserFailure, (state, {error}) => {
-    console.error('Follow user failure:', error);
-    return {
-      ...state,
-      isFollowing: false,
-      isFollowSuccess: false,
-      isFollowError: error,
+        commentCount: state.videoDetail.commentCount ? state.videoDetail.commentCount + 1 : 1
+      }
     }
-  }),
+  })
 );
 
 

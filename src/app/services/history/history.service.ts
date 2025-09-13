@@ -11,6 +11,10 @@ export class HistoryService {
   constructor() {
   }
 
+  toVietnamTime(date: Date) {
+    return new Date(date.getTime() + 7 * 60 * 60 * 1000);
+  }
+
   async getHistory(startDate?: Date, endDate?: Date) {
     const user = await supabase.auth.getUser();
     if (!user.data.user) {
@@ -21,7 +25,7 @@ export class HistoryService {
 
     const {data, error} = await supabase
       .from('history_videos')
-      .select('*, video(*,like_video(count))')
+      .select('*, video(*,like_video(count),profile!FK_553f97d797c91d51556037b99e5(*))')
       .eq('profileId', userId)
       .order('createdAt', {ascending: false});
 
@@ -34,10 +38,11 @@ export class HistoryService {
     let filteredData = [...data]
 
     if (startDate && endDate) {
-      filteredData = data?.filter(item => {
-        const createdAt = new Date(item.createdAt);
+      filteredData = filteredData.filter(item => {
+        const createdAt = this.toVietnamTime(new Date(item.createdAt));
         return createdAt >= startDate && createdAt <= endDate;
       });
+
       console.log('11111111111', filteredData);
 
       return filteredData.map(item => {

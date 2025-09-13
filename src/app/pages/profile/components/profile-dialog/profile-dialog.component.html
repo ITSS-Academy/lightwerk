@@ -9,16 +9,8 @@
       <h3>Profile photo</h3>
       <div class="profile-photo-container">
         <div class="profile-photo">
-          @if (!profileImageUrl) {
-            <img
-              src=""
-              alt="username"
-              referrerpolicy="no-referrer"
-            >
-          }
           @if (profileImageUrl) {
-            <img [src]="profileImageUrl " alt="username">
-
+            <img [src]="builderProfileImageUrl() " alt="username">
           }
         </div>
         <div class="photo-edit-icon" (click)="onEditPhotoClick()">

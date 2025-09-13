@@ -44,21 +44,7 @@ export class PlaylistService {
 
 
   //delete playlist
-  deletePlaylist(playlistId: string) {
-    return from(this.getAccessToken()).pipe(
-      mergeMap((data) => {
-        let headers = {};
-        if (!data.error && data.data.session) {
-          headers = {
-            Authorization: `${data.data.session.access_token}`
-          }
-        }
-        return this.http.delete<{ message: string }>(`${environment.api_base_url}/playlist/delete/${playlistId}`, {
-          headers: headers
-        });
-      })
-    )
-  }
+
 
   //get all playlists
 
@@ -155,14 +141,25 @@ export class PlaylistService {
     try {
       let playlists;
       playlists = await this.getAllPlaylists(userId).toPromise();
-      let xemSauPlaylist = playlists!.find(p => p.title === 'Xem sau');
+      let xemSauPlaylist = playlists!.find(p => p.title === 'see later');
 
       // If not found, create it
       if (!xemSauPlaylist) {
-        const createRes: any = await this.createPlaylist('Xem sau', false).toPromise();
+        const createRes: any = await supabase.from('playlist').upsert({
+          title: 'see later',
+          isPublic: false,
+          profileId: userId,
+          thumbnailPath: 'https://zkeqdgfyxlmcrmfehjde.supabase.co/storage/v1/object/public/thumbnails/defaults/default.svg'
+        }).select().single();
+
+        if (createRes.error) {
+          console.error('Error creating "see later" playlist:', createRes.error);
+          throw new Error('Failed to create "see later" playlist');
+        }
+
         xemSauPlaylist = createRes?.playlist || createRes?.data || createRes;
         // If API returns playlist in a different property, adjust above
-        if (!xemSauPlaylist?.id) throw new Error('Failed to create "Xem sau" playlist');
+        if (!xemSauPlaylist?.id) throw new Error('Failed to create "see later" playlist');
       }
 
       // Add video to the playlist
@@ -234,5 +231,49 @@ export class PlaylistService {
       throw new Error('Failed to check video in playlists');
     }
     return data && data.length > 0;
+  }
+
+  async changeName(playlistId: string, newTitle: string) {
+    const {error} = await supabase
+      .from('playlist')
+      .update({title: newTitle})
+      .eq('id', playlistId);
+    if (error) {
+      console.error('Error updating playlist title:', error);
+      throw new Error('Failed to update playlist title');
+    }
+    return {
+      playlistId,
+      newTitle
+    }
+  }
+
+  async changeVisibility(playlistId: string, isPublic: boolean) {
+    const {error} = await supabase
+      .from('playlist')
+      .update({isPublic: isPublic})
+      .eq('id', playlistId);
+    if (error) {
+      console.error('Error updating playlist visibility:', error);
+      throw new Error('Failed to update playlist visibility');
+    }
+    return {
+      playlistId,
+      isPublic
+    }
+  }
+
+  async deletePlaylist(playlistId: string) {
+    const {error} = await supabase
+      .from('playlist')
+      .delete()
+      .eq('id', playlistId);
+    if (error) {
+      console.error('Error deleting playlist:', error);
+      throw new Error('Failed to delete playlist');
+    }
+    return {
+      playlistId
+    }
   }
 }

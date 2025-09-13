@@ -1,16 +1,16 @@
 <h2>Make public</h2>
 <div class=makePublic>
-  @if (!isPrivate) {
-    <p>Your playlist is public</p>
-
-  } @else {
-    <p>Your playlist is private</p>
+  @if (this.playlistDetail$ | async; as playlist) {
+    <p>
+      {{ playlist.isPublic ? 'Your playlist is public' : 'Your playlist is private' }}
+    </p>
+    <p>
+      <mat-slide-toggle
+        [checked]="playlist.isPublic"
+        (change)="togglePrivacy($event.checked)"
+      ></mat-slide-toggle>
+    </p>
   }
-  <p>
-    <mat-slide-toggle (click)="togglePrivacy()"></mat-slide-toggle>
-  </p>
+
 
 </div>
-
-
-

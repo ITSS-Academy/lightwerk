@@ -152,13 +152,14 @@ export class VideoService {
   getVideoDetail(videoId: string): Observable<VideoModel> {
     return from(this.getAccessToken()).pipe(
       mergeMap((data) => {
-        if (data.error || !data.data.session) {
-          return throwError(() => new Error('No access token'));
-        }
-        return this.http.get<VideoModel>(`${environment.api_base_url}/video/get-video/${videoId}`, {
-          headers: {
+        let headers = {};
+        if (!data.error && data.data.session) {
+          headers = {
             Authorization: `${data.data.session.access_token}`
           }
+        }
+        return this.http.get<VideoModel>(`${environment.api_base_url}/video/get-video/${videoId}`, {
+          headers: headers
         });
       })
     )
@@ -191,6 +192,7 @@ export class VideoService {
       .from('video')
       .select(`
         *,
+        profile!FK_553f97d797c91d51556037b99e5(*),
         like_video(count)
       `, {count: 'exact'})
       .eq('categoryId', categoryId)
@@ -279,6 +281,36 @@ export class VideoService {
         return {isFollowing: shouldFollow};
       })()
     );
+  }
+
+  async saveToHistory(videoId: string) {
+    const {data: sessionData, error: sessionError} = await supabase.auth.getSession();
+    if (sessionError || !sessionData?.session?.user?.id) {
+      return
+    }
+    const {data, error} = await supabase.from('history_videos')
+      .upsert({
+        profileId: sessionData.session.user.id,
+        videoId: videoId,
+        createdAt: new Date().toISOString(),
+      }).select()
+    console.log({data});
+    if (error) {
+      console.log('Error saving to history:', error);
+    }
+
+  }
+
+  async getCommentCount(videoId: string) {
+    const {data, error, count} = await supabase
+      .from('comment_video')
+      .select('id', {count: 'exact'})
+      .eq('videoId', videoId);
+    if (error) {
+      console.error('Error fetching comment count:', error);
+      throw new Error('Failed to fetch comment count');
+    }
+    return count || 0;
   }
 
 }

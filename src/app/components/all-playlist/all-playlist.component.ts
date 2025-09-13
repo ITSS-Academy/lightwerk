@@ -2,7 +2,7 @@ import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {PlaylistDialogComponent} from '../../pages/profile/components/playlist-dialog/playlist-dialog.component';
 import {MatIconModule} from '@angular/material/icon';
-import {AsyncPipe, NgClass} from '@angular/common';
+import {AsyncPipe, NgClass, NgStyle} from '@angular/common';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {FormsModule} from '@angular/forms';
@@ -20,7 +20,7 @@ interface DialogData {
 
 @Component({
   selector: 'app-all-playlist',
-  imports: [MatIconModule, NgClass, MatButtonModule, MatCheckboxModule, FormsModule, AsyncPipe],
+  imports: [MatIconModule, NgClass, MatButtonModule, MatCheckboxModule, FormsModule, AsyncPipe, NgStyle],
   templateUrl: './all-playlist.component.html',
   styleUrl: './all-playlist.component.scss'
 })

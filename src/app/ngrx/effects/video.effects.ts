@@ -166,24 +166,43 @@ export const incrementViewCount = createEffect(
   , {functional: true}
 );
 
-export const followUser = createEffect(
-  () => {
-    const actions$ = inject(Actions);
-    const searchService = inject(SearchService);
+// export const followUser = createEffect(
+//   () => {
+//     const actions$ = inject(Actions);
+//     const searchService = inject(SearchService);
+//     return actions$.pipe(
+//       ofType(VideoActions.followUser),
+//       exhaustMap((action) =>
+//         searchService.toggleFollowUser(action.userId, action.shouldFollow).pipe(
+//           map((response) => VideoActions.followUserSuccess({
+//             isFollowing: response.isFollowing
+//           })),
+//           catchError((error: any) =>
+//             of(VideoActions.followUserFailure({error: error}))
+//           )
+//         )
+//       )
+//     );
+//   },
+//   {functional: true}
+// );
+//
+
+export const getCommentsCountAfterAdd = createEffect(
+  (actions$ = inject(Actions), videoService = inject(VideoService)) => {
     return actions$.pipe(
-      ofType(VideoActions.followUser),
-      exhaustMap((action) =>
-        searchService.toggleFollowUser(action.userId, action.shouldFollow).pipe(
-          map((response) => VideoActions.followUserSuccess({
-            isFollowing: response.isFollowing
+      ofType(VideoActions.getCommentCountAfterAdd),
+      switchMap((action) =>
+        from(videoService.getCommentCount(action.videoId)).pipe(
+          map((res) => VideoActions.getCommentCountAfterAddSuccess({
+            commentsCount: res
           })),
           catchError((error: any) =>
-            of(VideoActions.followUserFailure({error: error}))
+            of(VideoActions.getLikedVideosFailure({error: error}))
           )
         )
       )
     );
-  },
-  {functional: true}
+  }
+  , {functional: true}
 );
-

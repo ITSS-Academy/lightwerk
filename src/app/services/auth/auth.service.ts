@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import supabase from '../../utils/supabase';
+import {ProfileModel} from '../../models/profile.model';
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +38,28 @@ export class AuthService {
     const {data, error} = await supabase.auth.getSession();
     if (error || !data?.session?.user?.id) return null;
     return data.session.user.id;
+  }
+
+  async getCurrentProfile(): Promise<ProfileModel> {
+    const {data: sessionData, error: sessionError} = await supabase.auth.getSession();
+    if (sessionError || !sessionData?.session?.user?.id) {
+      console.log(sessionError);
+      throw new Error('No access token');
+    }
+    const uid = sessionData.session.user.id;
+
+    const {data: profileData, error: profileError} = await supabase
+      .from('profile')
+      .select('*')
+      .eq('id', uid)
+      .single();
+
+    if (profileError || !profileData) {
+      console.log(profileError);
+      throw new Error('Failed to fetch profile');
+    }
+
+    return profileData as ProfileModel;
   }
 
 }

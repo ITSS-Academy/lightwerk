@@ -44,4 +44,12 @@ export interface PlaylistState {
   getVideoInPlaylistSuccess: boolean;
   getVideoInPlaylistError: any;
   isHaveVideoInPlaylist: boolean;
+
+  isChangingPlaylistPrivacy: boolean;
+  changePlaylistPrivacySuccess: boolean;
+  changePlaylistPrivacyError: any;
+
+  isChangingPlaylistTitle: boolean;
+  changePlaylistTitleSuccess: boolean;
+  changePlaylistTitleError: any;
 }

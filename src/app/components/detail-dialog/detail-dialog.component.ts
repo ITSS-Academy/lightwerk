@@ -8,7 +8,7 @@ import {
   OnInit, signal,
   ViewChild
 } from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatButton, MatFabButton, MatIconButton} from '@angular/material/button';
 import {MatCard, MatCardAvatar, MatCardHeader, MatCardTitleGroup} from '@angular/material/card';
 import {MatIconModule} from '@angular/material/icon';
@@ -16,7 +16,7 @@ import {MatFormField, MatHint, MatInput, MatLabel, MatSuffix} from '@angular/mat
 import {AsyncPipe, DatePipe, NgClass, NgStyle} from '@angular/common';
 import {DialogVideoComponent} from '../dialog-video/dialog-video.component';
 import {convertToSupabaseUrl} from '../../utils/img-converter';
-import {Observable, Subscription} from 'rxjs';
+import {combineLatest, Observable, Subscription} from 'rxjs';
 import {DIALOG_DATA} from '@angular/cdk/dialog';
 import {Store} from '@ngrx/store';
 import * as VideoActions from '../../ngrx/actions/video.actions';
@@ -32,6 +32,13 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import * as SearchActions from '../../ngrx/actions/search.actions';
 import {AvatarPipe} from '../../utils/avatar.pipe';
 import {RouterLink} from '@angular/router';
+import {map} from 'rxjs/operators';
+import {LikeVideoState} from '../../ngrx/states/like-video.state';
+import * as LikeVideoActions from '../../ngrx/actions/like-video.actions';
+import * as PlaylistActions from '../../ngrx/actions/playlist.actions';
+import {MatSnackBar, MatSnackBarRef} from '@angular/material/snack-bar';
+import {AllPlaylistComponent} from '../all-playlist/all-playlist.component';
+import {PlaylistState} from '../../ngrx/states/playlist.state';
 
 @Component({
   selector: 'app-detail-dialog',
@@ -95,31 +102,105 @@ export class DetailDialogComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild('pageContainer', {static: true}) pageContainerRef!: ElementRef;
   viewportWidth = 0;
   viewportHeight = 0;
+  protected isLiking$: Observable<boolean>;
+  isGettingLiked$: Observable<boolean>
+  isGettingLikeComment: boolean = true;
+  isProcessingPlaylist$: Observable<boolean>
 
   constructor(private dialogRef: MatDialogRef<DetailDialogComponent>,
               private cdr: ChangeDetectorRef,
               private store: Store<{
                 video: VideoState
                 comment: CommentState,
-              }>
+                likeVideo: LikeVideoState,
+                playlist: PlaylistState
+              }>,
+              private dialog: MatDialog
   ) {
+    this.isLiking$ = combineLatest([
+      this.store.select(state => state.likeVideo.isAdding),
+      this.store.select(state => state.likeVideo.isDeleting)
+    ]).pipe(
+      map(([isAdding, isDeleting]) => isAdding || isDeleting)
+    )
+    this.isProcessingPlaylist$ = combineLatest([
+      this.store.select(state => state.playlist.isAddingToPlaylist),
+      this.store.select(state => state.playlist.isRemovingFromPlaylist)
+    ]).pipe(
+      map(([isAdding, isRemoving]) => {
+        console.log('isAdding:', isAdding, 'isRemoving:', isRemoving);
+        return isAdding || isRemoving
+      })
+    );
     this.comments$ = this.store.select(state => state.comment.comments);
     this.videoDetail$ = this.store.select(state => state.video.videoDetail);
     console.log('DetailDialogComponent loaded');
     this.store.dispatch(VideoActions.getVideoDetail({videoId: this.video().id}))
     this.store.dispatch(CommentAction.getAllComments({videoId: this.video().id}));
+    this.store.dispatch(VideoActions.getLikedVideos({
+      videoId: this.video().id,
+    }))
+    this.isGettingLiked$ = this.store.select(state => state.video.isGettingLiked)
   }
 
   ngOnInit() {
     // Example subscription (replace with actual observables as needed)
+    this.videoId = this.data.video.id;
+
     this.subscriptions.push(
+      this.store.select(state => state.comment.isCreateSuccess).subscribe(comments => {
+        if (comments) {
+          this.store.dispatch(VideoActions.getCommentCountAfterAdd({videoId: this.video().id}))
+        }
+      }),
+      this.store.select(state => state.playlist.addToPlaylistSuccess).subscribe(isSuccess => {
+        if (isSuccess) {
+          this.snackbarRef = this._snackBar.open('Added to playlist', 'Manange', {
+            duration: 3000,
+          });
+          this.snackbarActionSub = this.snackbarRef.onAction().subscribe(() => {
+            const dialogRef = this.dialog.open(AllPlaylistComponent, {
+              width: '600px',
+              maxHeight: '80vh',
+              data:
+                {videoId: this.video().id}
+            });
+          });
+          this.store.dispatch(VideoActions.setIsSaved())
+        }
+      }),
+      this.store.select(state => state.playlist.removeFromPlaylistSuccess).subscribe(isSuccess => {
+        if (isSuccess) {
+          this.store.dispatch(VideoActions.setIsSaved())
+        }
+      }), this.store.select(state => state.likeVideo.isDeleteSuccess).subscribe(unlikeVideo => {
+        if (unlikeVideo) {
+          this.store.dispatch(VideoActions.getLikeCount({videoId: this.video().id}))
+        }
+      }), this.store.select(state => state.video.isGettingLikeComment).subscribe(isGetting => {
+        this.isGettingLikeComment = isGetting
+        // this.cdr.detectChanges();
+      }),
+      this.store.select(state => state.likeVideo.isAddSuccess).subscribe(likeVideo => {
+        if (likeVideo) {
+          this.store.dispatch(VideoActions.getLikeCount({videoId: this.video().id}))
+        }
+      }),
+      this.store.select(state => state.video.isGettingLikeComment).subscribe(isGetting => {
+        this.isGettingLikeComment = isGetting
+        // this.cdr.detectChanges();
+      }),
+      this.store.select(state => state.video.videoDetail).subscribe(video => {
+        this.store.select(state => state.video.videoDetail).subscribe(video => {
+          this.videoDetail = video
+        })
+      }),
       this.dialogRef.afterOpened().subscribe(() => {
         this.updateContainerSize()
       }),
       this.videoDetail$.subscribe(async detail => {
         if (detail.id) {
           console.log(detail.id)
-          this.videoId = detail.id;
           this.title = detail.title || '';
           this.description = detail.description || '';
           this.username = detail.profile?.username || '';
@@ -200,9 +281,7 @@ export class DetailDialogComponent implements AfterViewInit, OnInit, OnDestroy {
     this.updateContainerSize();
   }
 
-  videoDetail =
-    {videoSrc: 'video1.mp4', title: 'Video 1', aspectRatio: '9:16'}
-  ;
+  videoDetail!: VideoModel
 
 
   closeDialog() {
@@ -233,5 +312,43 @@ export class DetailDialogComponent implements AfterViewInit, OnInit, OnDestroy {
     this.commentContent = '';
   }
 
+  toggleLike() {
+    const videoId = this.video().id
+    this.store.dispatch(LikeVideoActions.createLikeVideo({videoId}));
+  }
+
+  unlikeVideo() {
+    const videoId = this.video().id
+    this.store.dispatch(LikeVideoActions.deleteLikeVideo({videoId}));
+  }
+
+  saveToPlaylist() {
+    this.store.dispatch(
+      PlaylistActions.addVideoToPlaylist({videoID: this.video().id})
+    )
+  }
+
+  removeFromPlaylist() {
+    this.turnoffSnackbar()
+    this.store.dispatch(
+      PlaylistActions.removeVideoFromPlaylist({videoID: this.video().id})
+    )
+  }
+
+  turnoffSnackbar() {
+    // Close snackbar if open
+    if (this.snackbarRef) {
+      this.snackbarRef.dismiss();
+      this.snackbarRef = null;
+    }
+    if (this.snackbarActionSub) {
+      this.snackbarActionSub.unsubscribe();
+      this.snackbarActionSub = null;
+    }
+  }
+
+  private _snackBar = inject(MatSnackBar);
+  private snackbarRef: MatSnackBarRef<any> | null = null;
+  private snackbarActionSub: Subscription | null = null;
 
 }

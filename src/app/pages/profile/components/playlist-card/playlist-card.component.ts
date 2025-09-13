@@ -2,7 +2,7 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {MatCard, MatCardContent, MatCardImage} from '@angular/material/card';
 import {MatIcon} from '@angular/material/icon';
 import {Router} from '@angular/router';
-import {DatePipe} from '@angular/common';
+import {DatePipe, NgStyle} from '@angular/common';
 import {PlaylistModel} from '../../../../models/playlist.model';
 import {convertToSupabaseUrl} from '../../../../utils/img-converter';
 import {Observable, Subscription} from 'rxjs';
@@ -19,6 +19,7 @@ import {filter} from 'rxjs/operators';
     MatCardImage,
     MatIcon,
     DatePipe,
+    NgStyle,
   ],
   templateUrl: './playlist-card.component.html',
   styleUrl: './playlist-card.component.scss'
@@ -28,7 +29,7 @@ export class PlaylistCardComponent {
   constructor(private router: Router,) {
 
   }
-  
+
 
   @Input() playlist!: PlaylistModel
 

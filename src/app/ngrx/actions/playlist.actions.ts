@@ -118,3 +118,28 @@ export const getVideoInPlaylistSuccess = createAction('[Playlist] Get Video In P
 export const getVideoInPlaylistFailure = createAction('[Playlist] Get Video In Playlist Failure', props<{
   error: any
 }>());
+
+export const changeNameOfPlaylist = createAction('[Playlist] Change Name Of Playlist', props<{
+  playlistID: string,
+  newTitle: string
+}>());
+export const changeNameOfPlaylistSuccess = createAction('[Playlist] Change Name Of Playlist Success', props<{
+  newTitle: string,
+  playlistID: string
+}>());
+export const changeNameOfPlaylistFailure = createAction('[Playlist] Change Name Of Playlist Failure', props<{
+  error: any
+}>());
+
+export const changePrivacyOfPlaylist = createAction('[Playlist] Change Privacy Of Playlist', props<{
+  playlistID: string,
+  isPublic: boolean
+}>());
+export const changePrivacyOfPlaylistSuccess = createAction('[Playlist] Change Privacy Of Playlist Success', props<{
+  isPublic: boolean
+  playlistID: string
+}>());
+export const changePrivacyOfPlaylistFailure = createAction('[Playlist] Change Privacy Of Playlist Failure', props<{
+  error: any
+}>());
+

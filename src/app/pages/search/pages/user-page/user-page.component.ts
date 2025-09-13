@@ -10,13 +10,6 @@ import * as SearchActions from '../../../../ngrx/actions/search.actions';
 import {AsyncPipe} from '@angular/common';
 import {AvatarPipe} from '../../../../utils/avatar.pipe';
 
-interface UserModel {
-  id: string;
-  username: string;
-  followers: number;
-  bio: string;
-  avatar: string;
-}
 
 @Component({
   selector: 'app-user-page',
@@ -33,7 +26,7 @@ interface UserModel {
 })
 export class UserPageComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
-  profiles$!: Observable<ProfileModel | null>;
+  allProfiles$!: Observable<ProfileModel[]>;
   query: string = '';
 
   constructor(
@@ -42,7 +35,7 @@ export class UserPageComponent implements OnInit, OnDestroy {
     private store: Store<{
       search: SearchState
     }>,) {
-    this.profiles$ = this.store.select(state => state.search.isSearchingUser);
+    this.allProfiles$ = this.store.select(state => state.search.allUsers);
   }
 
   ngOnInit() {
@@ -54,7 +47,7 @@ export class UserPageComponent implements OnInit, OnDestroy {
           return;
         }
         this.query = q;
-        this.store.dispatch(SearchActions.searchUsers({query: q}));
+        this.store.dispatch(SearchActions.searchAllUsers({query: q}));
       })
     );
   }
@@ -63,4 +56,7 @@ export class UserPageComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
+  navigateToProfile(id: string) {
+    this.router.navigate(['/profile/' + id + '/videos']);
+  }
 }

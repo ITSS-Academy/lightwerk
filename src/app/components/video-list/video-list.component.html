@@ -22,7 +22,7 @@
                     <img
                       [src]="convertToSupabaseUrl(card.thumbnailPath, 'thumbnail')"
                       [alt]="card.title || 'Video thumbnail'"
-                      style="width:100%;height:100%;object-fit:cover;"
+                      style="width:100%;height:100%;object-fit:contain;"
                       [ngStyle]="{display: videoReadyStates[currentVideoIndex] ? 'none' : 'block'}"/>
                     @if (Math.abs($index - currentVideoIndex) <= 2 && $index >= currentVideoIndex - 1) {
                       <app-video

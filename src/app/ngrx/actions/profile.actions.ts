@@ -121,13 +121,32 @@ export const getFollowingFailure = createAction(
   "[Following] Get following failure", props<{ error: any }>()
 );
 
-export const followUser = createAction('[Search] Follow User', props<{
-  userId: string,
-  shouldFollow: boolean,
-}>());
-export const followUserSuccess = createAction('[Search] Follow User Success', props<{
-  isFollowing: boolean,
-}>());
-export const followUserFailure = createAction('[Search] Follow User Failure', props<{
-  error: any,
-}>());
+// export const followUser = createAction('[Search] Follow User', props<{
+//   userId: string,
+//   shouldFollow: boolean,
+// }>());
+// export const followUserSuccess = createAction('[Search] Follow User Success', props<{
+//   isFollowing: boolean,
+// }>());
+// export const followUserFailure = createAction('[Search] Follow User Failure', props<{
+//   error: any,
+// }>());
+
+export const toggleFollowUser = createAction(
+  '[Profile] Toggle Follow User',
+  props<{
+    userId: string,
+  }>()
+);
+export const toggleFollowUserSuccess = createAction(
+  '[Profile] Toggle Follow User Success',
+  props<{
+    currentUserId: string,
+  }>()
+);
+export const toggleFollowUserFailure = createAction(
+  '[Profile] Toggle Follow User Failure',
+  props<{
+    error: any,
+  }>()
+);

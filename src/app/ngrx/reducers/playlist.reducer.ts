@@ -46,6 +46,14 @@ export const initialState: PlaylistState = {
   getVideoInPlaylistSuccess: false,
   getVideoInPlaylistError: null,
   isHaveVideoInPlaylist: false,
+
+  isChangingPlaylistPrivacy: false,
+  changePlaylistPrivacySuccess: false,
+  changePlaylistPrivacyError: null,
+
+  isChangingPlaylistTitle: false,
+  changePlaylistTitleSuccess: false,
+  changePlaylistTitleError: null,
 }
 
 export const playlistReducer = createReducer(
@@ -117,7 +125,8 @@ export const playlistReducer = createReducer(
   //get all playlists
 
 
-  on(PlaylistActions.loadAllPlaylists, (state) => {
+  on(PlaylistActions.loadAllPlaylists, (state, {type}) => {
+    console.log(type)
     return {
       ...state,
       isLoadingPlaylists: true,
@@ -134,7 +143,8 @@ export const playlistReducer = createReducer(
     }
   }),
 
-  on(PlaylistActions.loadAllPlaylistsFailure, (state, {error}) => {
+  on(PlaylistActions.loadAllPlaylistsFailure, (state, {type, error}) => {
+    console.log(type, error)
     return {
       ...state,
       isLoadingPlaylists: false,
@@ -341,5 +351,73 @@ export const playlistReducer = createReducer(
       getVideoInPlaylistSuccess: false,
       getVideoInPlaylistError: error
     })
-  )
+  ),
+  on(PlaylistActions.changeNameOfPlaylist, (state) => ({
+      ...state,
+      isChangingPlaylistTitle: true,
+      changePlaylistTitleSuccess: false,
+      changePlaylistTitleError: null
+    })
+  ),
+  on(PlaylistActions.changeNameOfPlaylistSuccess, (state, {newTitle, playlistID}) => {
+      const newPlaylists = state.playlists.map(playlist => {
+          if (playlistID === playlist.id) {
+            return {...playlist, title: newTitle};
+          }
+          return playlist;
+        }
+      )
+      return {
+        ...state,
+        playlists: newPlaylists,
+        playListDetail: {...state.playListDetail, title: newTitle},
+        isChangingPlaylistTitle: false,
+        changePlaylistTitleSuccess: true,
+        changePlaylistTitleError: null
+      }
+    }
+  ),
+  on(PlaylistActions.changeNameOfPlaylistFailure, (state, {error}) => ({
+      ...state,
+      isChangingPlaylistTitle: false,
+      changePlaylistTitleSuccess: false,
+      changePlaylistTitleError: error
+    })
+  ),
+  on(PlaylistActions.changePrivacyOfPlaylist, (state) => ({
+      ...state,
+      isChangingPlaylistPrivacy: true,
+      changePlaylistPrivacySuccess: false,
+      changePlaylistPrivacyError: null
+    })
+  ),
+  on(PlaylistActions.changePrivacyOfPlaylistSuccess, (state, {isPublic, playlistID}) => {
+      const newPlaylists = state.playlists.map(playlist => {
+          if (playlistID === playlist.id) {
+            return {...playlist, isPublic: isPublic};
+          }
+          return playlist;
+        }
+      )
+      return {
+        ...state,
+        playlists: newPlaylists,
+        playListDetail: {
+          ...state.playListDetail,
+          isPublic: !state.playListDetail.isPublic
+        },
+        isChangingPlaylistPrivacy: false,
+        changePlaylistPrivacySuccess: true,
+        changePlaylistPrivacyError: null
+      }
+    }
+  ),
+  on(PlaylistActions.changePrivacyOfPlaylistFailure, (state, {error}) => ({
+        ...state,
+        isChangingPlaylistPrivacy: false,
+        changePlaylistPrivacySuccess: false,
+        changePlaylistPrivacyError: error
+      }
+    ),
+  ),
 )

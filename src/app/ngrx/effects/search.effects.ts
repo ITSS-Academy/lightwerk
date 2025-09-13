@@ -2,7 +2,7 @@ import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {inject} from '@angular/core';
 import {SearchService} from '../../services/search/search.service';
 import * as SearchActions from '../actions/search.actions';
-import {catchError, exhaustMap, map, of} from 'rxjs';
+import {catchError, exhaustMap, from, map, of} from 'rxjs';
 
 export const searchUsers = createEffect(
   () => {
@@ -16,7 +16,7 @@ export const searchUsers = createEffect(
             console.log(user);
             return SearchActions.searchUsersSuccess({
               users: user,
-              totalItems: user ? 1 : 0
+              totalItems: user && user.id ? 1 : 0
             })
           }),
           catchError((error: any) =>
@@ -73,4 +73,24 @@ export const followUser = createEffect(
   {functional: true}
 );
 
+export const searchAllUsers = createEffect(
+  () => {
+    const actions$ = inject(Actions);
+    const searchService = inject(SearchService);
+    return actions$.pipe(
+      ofType(SearchActions.searchAllUsers),
+      exhaustMap((action) =>
+        from(searchService.searchUsers(action.query)).pipe(
+          map((response) => SearchActions.searchAllUsersSuccess({
+            users: response,
+          })),
+          catchError((error: any) =>
+            of(SearchActions.searchAllUsersFailure({error: error}))
+          )
+        )
+      )
+    );
+  },
+  {functional: true}
+);
 

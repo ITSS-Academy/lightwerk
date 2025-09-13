@@ -94,6 +94,34 @@ export class SearchService {
     );
   }
 
+  async searchUsers(query: string): Promise<ProfileModel[]> {
+    const {data, error, count} = await supabase
+      .from('profile')
+      .select('*,profile_follows!followingId(*)', {count: 'exact'})
+      .or(`username.ilike.%${query}%`);
+
+    if (error) throw new Error(error.message);
+
+    const {data: dataSession, error: errorSession} = await supabase.auth.getSession();
+    if (errorSession) throw new Error(errorSession.message);
+
+    const currentUserId = dataSession.session?.user.id;
+
+
+    const profiles = data.map(profile => {
+      const isFollowing = currentUserId ? profile.profile_follows.some((follow: any) => follow.followerId === currentUserId) : false;
+      return {
+        ...profile,
+        isFollowing,
+        followersCount: profile ? profile.profile_follows.length : 0
+      };
+    });
+
+    console.log({profiles, count});
+
+    return profiles;
+  }
+
 
 }
 

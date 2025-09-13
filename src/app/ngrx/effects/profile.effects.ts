@@ -146,19 +146,38 @@ export const getFollowersEffect = createEffect(
   {functional: true}
 )
 
-export const followUser = createEffect(
+// export const followUser = createEffect(
+//   () => {
+//     const actions$ = inject(Actions);
+//     const searchService = inject(SearchService);
+//     return actions$.pipe(
+//       ofType(SearchActions.followUser),
+//       exhaustMap((action) =>
+//         searchService.toggleFollowUser(action.userId, action.shouldFollow).pipe(
+//           map((response) => SearchActions.followUserSuccess({
+//             isFollowing: response.isFollowing
+//           })),
+//           catchError((error: any) =>
+//             of(SearchActions.followUserFailure({error: error}))
+//           )
+//         )
+//       )
+//     );
+//   },
+//   {functional: true}
+// );
+
+export const toggleFollowUser = createEffect(
   () => {
     const actions$ = inject(Actions);
-    const searchService = inject(SearchService);
+    const profileService = inject(ProfileService);
     return actions$.pipe(
-      ofType(SearchActions.followUser),
+      ofType(profileActions.toggleFollowUser),
       exhaustMap((action) =>
-        searchService.toggleFollowUser(action.userId, action.shouldFollow).pipe(
-          map((response) => SearchActions.followUserSuccess({
-            isFollowing: response.isFollowing
-          })),
+        from(profileService.toggleFollowUser(action.userId)).pipe(
+          map((c) => profileActions.toggleFollowUserSuccess({currentUserId: c})),
           catchError((error: any) =>
-            of(SearchActions.followUserFailure({error: error}))
+            of(profileActions.toggleFollowUserFailure({error: error}))
           )
         )
       )

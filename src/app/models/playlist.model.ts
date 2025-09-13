@@ -11,4 +11,5 @@ export interface PlaylistModel {
   videos?: VideoModel[];
   isHaveVideo?: boolean;
   profile?: ProfileModel;
+  videoCount?: number;
 }

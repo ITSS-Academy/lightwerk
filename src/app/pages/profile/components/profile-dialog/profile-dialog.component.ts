@@ -121,6 +121,13 @@ export class ProfileDialogComponent implements OnInit, OnDestroy {
     reader.readAsDataURL(file);
   }
 
+  builderProfileImageUrl(): string {
+    if (this.profileImageUrl && this.profileImageUrl.startsWith('data:image')) {
+      return this.profileImageUrl;
+    }
+    return this.data?.profileImageUrl ? `https://zkeqdgfyxlmcrmfehjde.supabase.co/storage/v1/object/public/avatars/${this.data?.profileImageUrl}` : 'https://zkeqdgfyxlmcrmfehjde.supabase.co/storage/v1/object/public/avatars/defaults/default.svg';
+  }
+
 
   updateBioCount(): void {
     this.bioCount = this.form.get('bio')?.value?.length || 0;

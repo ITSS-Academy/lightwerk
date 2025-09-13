@@ -16,6 +16,11 @@ const initialState: SearchState = {
   isFollowing: false,
   isFollowSuccess: false,
   isFollowError: null,
+
+  allUsers: [],
+  isLoadingAllUsers: false,
+  isSearchAllUsersSuccess: false,
+  isSearchAllUsersError: null,
 }
 
 
@@ -125,5 +130,37 @@ export const searchReducer = createReducer(
       isFollowError: error,
     }
   }),
+  on(SearchActions.searchAllUsers, (state, {query}) => {
+    console.log('Searching all users with query:', query);
+    return {
+      ...state,
+      allUsers: [],
+      isLoadingAllUsers: true,
+      isSearchAllUsersSuccess: false,
+      isSearchAllUsersError: null,
+    }
+  }),
+
+  on(SearchActions.searchAllUsersSuccess, (state, {users,}) => {
+    console.log('Search all users success:', users,);
+    return {
+      ...state,
+      allUsers: users,
+      isLoadingAllUsers: false,
+      isSearchAllUsersSuccess: true,
+      isSearchAllUsersError: null,
+    }
+  }),
+
+  on(SearchActions.searchAllUsersFailure, (state, {error}) => {
+    console.error('Search all users failure:', error);
+    return {
+      ...state,
+      allUsers: [],
+      isLoadingAllUsers: false,
+      isSearchAllUsersSuccess: false,
+      isSearchAllUsersError: error,
+    }
+  })
 );
 

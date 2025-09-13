@@ -6,60 +6,74 @@
 
 <div class="user-search">
   @if (profiles$ | async; as item) {
-    <div class="search-header">
-      <span>Users</span>
-      <mat-icon [routerLink]="['/search/user']" [queryParams]="{ q: this.query }">chevron_right</mat-icon>
-    </div>
-    <div class="user-search-detail">
-      <div class="user-search-detail-container">
-        <img class="avatar" [src]="item.avatarPath | avatar"
-             referrerpolicy="no-referrer"
-             alt="User profile">
-        <div class="user-search-detail-stats">
-          <span>{{ item.username }}</span>
-          <span>{{ item.followersCount }} followers</span>
-          <span>{{ item.bio }}</span>
-        </div>
+    @if (item?.id) {
+      <div class="search-header" [routerLink]="['/search/user']" [queryParams]="{ q: this.query }">
+        <span>Users</span>
+        <mat-icon>chevron_right</mat-icon>
       </div>
+      <div class="user-search-detail" [routerLink]="['/profile', item.id, 'videos']">
+        <div class="user-search-detail-container">
+          <img class="avatar" [src]="item.avatarPath | avatar"
+               referrerpolicy="no-referrer"
+               alt="User profile">
+          <div class="user-search-detail-stats">
+            <span>{{ item.username }}</span>
+            <span>{{ item.followersCount }} followers</span>
+            <span>{{ item.bio }}</span>
+          </div>
+        </div>
 
-      
-      <button mat-flat-button (click)="toggleFollow(item,item.isFollowing ?? false)">
-        {{ item.isFollowing ? 'Unfollow' : 'Follow' }}
-      </button>
-    </div>
+
+        <button mat-flat-button (click)="$event.stopPropagation() ;toggleFollow(item,item.isFollowing ?? false)">
+          {{ item.isFollowing ? 'Unfollow' : 'Follow' }}
+        </button>
+      </div>
+    } @else {
+      <div class="no-user-message">No user found.</div>
+    }
   } @else {
-
+    <div class="no-user-message">No user found.</div>
   }
 </div>
 
 <div class="video-search">
-  <div class="search-header">
-    <span>Videos</span>
-    <mat-icon [routerLink]="['/search/video']" [queryParams]="{ q: this.query }">chevron_right</mat-icon>
-  </div>
+
   <div class="video-container">
-    <div class="video-grid">
-      @for (item of (videos$ | async); track item.profileId) {
-        <mat-card class="video-card" appearance="outlined" (click)="openDialog(item)">
-          <img mat-card-image class="thumbnail"
-               src="{{convertToSupabaseUrl(item.thumbnailPath,'thumbnail')}}"
-               alt="Video Placeholder Image">
-          <mat-card-content>
-            <div class="video-info">
-              <span class="title">{{ item.title }}</span>
-              <div class="video-details">
-                <div class="user" [routerLink]="['/profile', item.profile?.id, 'videos'] "
-                     (click)="$event.stopPropagation()">
-                  <img class="user-avatar" src="{{item.profile?.avatarPath | avatar}}" alt="Username">
-                  <span class="user-name">{{ item.profile?.username }}</span>
+    @if (videos$ | async; as videos) {
+      @if (videos && videos.length > 0) {
+        <div style="width: 100%">
+          <div class="search-header" [routerLink]="['/search/video']" [queryParams]="{ q: this.query }">
+            <span>Videos</span>
+            <mat-icon>chevron_right</mat-icon>
+          </div>
+        </div>
+        <div class="video-grid">
+          @for (item of videos; track item.profileId) {
+            <mat-card class="video-card" appearance="outlined" (click)="openDialog(item)">
+              <img mat-card-image class="thumbnail"
+                   src="{{convertToSupabaseUrl(item.thumbnailPath,'thumbnail')}}"
+                   alt="Video Placeholder Image">
+              <mat-card-content>
+                <div class="video-info">
+                  <span class="title">{{ item.title }}</span>
+                  <div class="video-details">
+                    <div class="user" [routerLink]="['/profile', item.profile?.id, 'videos'] "
+                         (click)="$event.stopPropagation()">
+                      <img class="user-avatar" src="{{item.profile?.avatarPath | avatar}}" alt="Username">
+                      <span class="user-name">{{ item.profile?.username }}</span>
+                    </div>
+                    <span class="date">{{ item.createdAt | date }}</span>
+                  </div>
                 </div>
-                <span class="date">{{ item.createdAt | date }}</span>
-              </div>
-            </div>
-          </mat-card-content>
-        </mat-card>
+              </mat-card-content>
+            </mat-card>
+          }
+        </div>
+      } @else {
+        <div class="no-video-message">No videos found.</div>
       }
-    </div>
+    } @else {
+      <div class="no-video-message">No videos found.</div>
+    }
   </div>
 </div>
-

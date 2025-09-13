@@ -21,17 +21,18 @@ export class ProfileService {
   getUserVideo(uid: string, page: number, orderBy: 'asc' | 'desc') {
     return from(supabase.auth.getSession()).pipe(
       mergeMap((data) => {
-        if (data.error || !data.data.session) {
-          return throwError(() => new Error('No access token'));
+        let headers = {};
+        if (!data.error && data.data.session) {
+          headers = {
+            Authorization: `${data.data.session.access_token}`
+          };
         }
         console.log(data.data.session);
         return this.http.get<{
           videos: VideoModel[];
           totalCount: number;
         }>(`${environment.api_base_url}/video/user-videos/${uid}?page=${page}&orderBy=${orderBy}&limit=10`, {
-          headers: {
-            Authorization: `${data.data.session.access_token}`
-          }
+          headers: headers
         });
       })
     )
@@ -91,12 +92,17 @@ export class ProfileService {
 
 
   async getProfile(userId: string) {
+    const currentSession = await supabase.auth.getSession();
+    let currentUserId = null;
+    if (!currentSession.error && currentSession.data.session) {
+      currentUserId = currentSession.data.session.user.id;
+    }
     const {data, error} = await supabase
       .from('profile')
       .select(`
     *,
-    following: profile_follows!FK_f5a23cae4f853a80601d52b4cd4(followerId),
-    followers:profile_follows!FK_01be95fab8cc9e6da1fb9dfe36a(followingId)
+    following: profile_follows!FK_f5a23cae4f853a80601d52b4cd4(followingId),
+    followers:profile_follows!FK_01be95fab8cc9e6da1fb9dfe36a(followerId)
   `)
       .eq('id', userId)
       .single();
@@ -106,10 +112,12 @@ export class ProfileService {
       console.log(error);
       return throwError(() => new Error(error.message));
     }
+    console.log(data);
     return {
       ...data,
       followersCount: data.followers ? data.followers.length : 0,
       followingCount: data.following ? data.following.length : 0,
+      isFollowing: currentUserId ? data.followers?.some((f: any) => f.followerId === currentUserId) : false,
     } as ProfileModel;
 
   }
@@ -299,39 +307,46 @@ export class ProfileService {
       })
     );
   }
-  
-  toggleFollowUser(userId: string, shouldFollow: boolean): Observable<{ isFollowing: boolean }> {
-    return from(
-      (async () => {
-        const {data, error} = await supabase.auth.getSession();
-        if (error) throw new Error(error.message);
 
-        const currentUserId = data.session?.user.id;
-        if (!currentUserId) throw new Error('User not authenticated');
+  async toggleFollowUser(userId: string) {
+    const {data, error} = await supabase.auth.getSession();
+    if (error) throw new Error(error.message);
 
-        if (shouldFollow) {
-          // Follow: current user là followerId, target user là followingId
-          const {error: followError} = await supabase
-            .from('profile_follows')
-            .insert({
-              followerId: currentUserId,
-              followingId: userId
-            });
+    const currentUserId = data.session?.user.id;
+    if (!currentUserId) throw new Error('User not authenticated');
 
-          if (followError) throw new Error(followError.message);
-        } else {
-          // Unfollow
-          const {error: unfollowError} = await supabase
-            .from('profile_follows')
-            .delete()
-            .match({followerId: currentUserId, followingId: userId});
+    // Check if already following
+    const {data: existing, error: checkError} = await supabase
+      .from('profile_follows')
+      .select('*')
+      .eq('followerId', currentUserId)
+      .eq('followingId', userId)
+      .maybeSingle()
 
-          if (unfollowError) throw new Error(unfollowError.message);
-        }
+    if (checkError && checkError.code !== 'PGRST116') {
+      throw new Error(checkError.message);
+    }
 
-        return {isFollowing: shouldFollow};
-      })()
-    );
+    if (existing) {
+      // Unfollow
+      const {error: unfollowError} = await supabase
+        .from('profile_follows')
+        .delete()
+        .match({followerId: currentUserId, followingId: userId});
+
+      if (unfollowError) throw new Error(unfollowError.message);
+    } else {
+      // Follow
+      const {error: followError} = await supabase
+        .from('profile_follows')
+        .insert({
+          followerId: currentUserId,
+          followingId: userId,
+        });
+
+      if (followError) throw new Error(followError.message);
+    }
+    return currentUserId
   }
 
 }

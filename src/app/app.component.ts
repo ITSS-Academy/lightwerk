@@ -1,4 +1,4 @@
-import {Component, computed, OnInit, signal, ViewChild} from '@angular/core';
+import {Component, computed, inject, OnInit, signal, ViewChild} from '@angular/core';
 import {BreakpointObserver} from '@angular/cdk/layout';
 import {
   ActivatedRoute,
@@ -16,13 +16,22 @@ import supabase from './utils/supabase';
 import {Store} from '@ngrx/store';
 import {AuthState} from './ngrx/states/auth.state';
 import {Observable, Subscription} from 'rxjs';
-import {logout, storeAuth} from './ngrx/actions/auth.actions';
+import {getCurrentUser, logout, storeAuth} from './ngrx/actions/auth.actions';
 import {AuthModel} from './models/auth.model';
 import {AsyncPipe, NgClass} from '@angular/common';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {filter} from 'rxjs/operators';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatDialog} from '@angular/material/dialog';
+import {LoginDialogComponent} from './components/login-dialog/login-dialog.component';
+import {LikeVideoState} from './ngrx/states/like-video.state';
+import {CommentState} from './ngrx/states/comment.state';
+import {PlaylistState} from './ngrx/states/playlist.state';
+import {SearchState} from './ngrx/states/search.state';
+import {ProfileModel} from './models/profile.model';
+import {ProfileState} from './ngrx/states/profile.state';
 
 @Component({
   selector: 'app-root',
@@ -55,9 +64,23 @@ export class AppComponent implements OnInit {
   isSearchActive = false;
   sections: any[] = [];
 
+  currentUser$: Observable<ProfileModel>;
+
   @ViewChild('searchSidenav') searchSidenav!: any;
 
-  constructor(private breakpointObserver: BreakpointObserver, private store: Store<{ auth: AuthState }>,
+  //inject snackbar
+  private _snackBar = inject(MatSnackBar);
+
+
+  constructor(private breakpointObserver: BreakpointObserver, private store: Store<{
+                auth: AuthState,
+                likeVideo: LikeVideoState,
+                comment: CommentState,
+                playlist: PlaylistState,
+                search: SearchState,
+                profile: ProfileState
+              }>,
+              private dialog: MatDialog,
               private router: Router, private activatedRoute: ActivatedRoute,) {
     this.router.events.subscribe(() => {
       const child = this.activatedRoute.firstChild;
@@ -72,12 +95,14 @@ export class AppComponent implements OnInit {
     });
 
     this.isLoggingIn$ = this.store.select(state => state.auth.isAuthenticating);
+    this.currentUser$ = this.store.select(state => state.auth.profile);
 
     const {data} = supabase.auth.onAuthStateChange((event, session) => {
       console.log(event, session)
       if (event === 'SIGNED_IN') {
         console.log(session?.user)
         this.store.dispatch(storeAuth({auth: session as AuthModel}));
+        this.store.dispatch(getCurrentUser());
 
       } else if (event === 'SIGNED_OUT') {
         this.store.dispatch(logout());
@@ -134,7 +159,47 @@ export class AppComponent implements OnInit {
           this.updateSections();
         }
       }),
-    )
+      this.store.select(state => state.likeVideo.isAddError).subscribe(isError => {
+        if (isError) {
+          this.openLoginSnackBar();
+        }
+      }),
+      this.store.select(state => state.comment.isCreateError).subscribe(isError => {
+        if (isError) {
+          this.openLoginSnackBar();
+        }
+      }),
+      this.store.select(state => state.playlist.addToPlaylistError).subscribe(isError => {
+          if (isError) {
+            this.openLoginSnackBar();
+          }
+        }
+      ),
+      this.store.select(state => state.search.isFollowError).subscribe(isError => {
+        if (isError) {
+          this.openLoginSnackBar();
+        }
+      }),
+      this.store.select(state => state.profile.isFollowError).subscribe(error => {
+        if (error) {
+          this.openLoginSnackBar();
+        }
+      }),
+    );
+  }
+
+  openLoginSnackBar() {
+    const snackBarRef = this._snackBar.open('Please log in to use this feature', 'Login', {
+      duration: 5000,
+    });
+
+    snackBarRef.onAction().subscribe(() => {
+      this.dialog.open(LoginDialogComponent);
+    });
+  }
+
+  ngOnDestroy() {
+    this.subscription.forEach(sub => sub.unsubscribe());
   }
 
   checkInStudioRoute(matchOptions: IsActiveMatchOptions) {

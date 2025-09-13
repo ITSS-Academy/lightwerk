@@ -8,7 +8,7 @@
     }
   </mat-form-field>
 </form>
-<div class ="button">
-  <button mat-button (click)="onNoClick()" class ="cancel">Cancel</button>
-  <button mat-flat-button (click)="onYesClick()">Ok</button>
+<div class="button">
+  <button mat-button (click)="onNoClick()" class="cancel">Cancel</button>
+  <button mat-flat-button (click)="onYesClick()" [disabled]="!nameFormControl.valid">Ok</button>
 </div>

@@ -1,3 +1,4 @@
+<script src="../video-list/video-list.component.ts"></script>
 <div class="container">
 
 
@@ -11,7 +12,11 @@
       @if (videoId && videoId != '') {
         <!--        <app-dialog-video [aspectRatio]="'9:16'"-->
           <!--                          videoSrc="{{convertToSupabaseUrl(`${videoId}/master.m3u8`,'video')}}"></app-dialog-video>-->
-
+        <img
+          [src]="convertToSupabaseUrl(data.video.thumbnailPath, 'thumbnail')"
+          [alt]="data.video.title || 'Video thumbnail'"
+          style="width:100%;height:100%;object-fit:contain;"
+          [ngStyle]="{display: videoReadyStates ? 'none' : 'block'}"/>
         <app-video
           style="width: 100%; height: 100%;"
           [videoId]="videoId"
@@ -48,13 +53,13 @@
             </div>
 
             <!-- Button -->
-            @if (!isCurrentUserSignal()) {
-              @if (videoDetail$ | async; as video) {
-                <button mat-flat-button (click)="toggleFollow(video, video.profile?.isFollowing ?? false)">
-                  {{ video.profile?.isFollowing ? '✓ Following' : '+ Follow' }}
-                </button>
-              }
-            }
+            <!--            @if (!isCurrentUserSignal()) {-->
+            <!--              @if (videoDetail$ | async; as video) {-->
+            <!--                <button mat-flat-button (click)="toggleFollow(video, video.profile?.isFollowing ?? false)">-->
+            <!--                  {{ video.profile?.isFollowing ? '✓ Following' : '+ Follow' }}-->
+            <!--                </button>-->
+            <!--              }-->
+            <!--            }-->
 
 
           </div>
@@ -69,28 +74,43 @@
           {{ isExpanded ? 'Thu gọn' : 'Xem thêm' }}
         </button>
         <div class="actions-bar">
-          <button mat-button class="heart" [class.active]="isFavoriteActive"
-                  (click)="isFavoriteActive = !isFavoriteActive">
-            @if (isFavoriteActive) {
+          <button
+            [disabled]="isGettingLikeComment || (isLiking$ | async) || (isGettingLiked$ | async)"
+            [class.active]="videoDetail?.isLikedByCurrentUser && !isGettingLikeComment "
+            (click)="videoDetail?.isLikedByCurrentUser ? unlikeVideo() : toggleLike()"
+            mat-button class="heart">
+            @if (videoDetail?.isLikedByCurrentUser) {
               <mat-icon>favorite</mat-icon>
             } @else {
               <mat-icon>favorite_border</mat-icon>
             }
-            <span>10N</span>
+            <span
+              [class.is-getting-like-comment]="isGettingLikeComment || (isLiking$ | async) || (isGettingLiked$ | async)">
+                    {{ isGettingLikeComment ? '0' : videoDetail.likeCount }}
+            </span>
           </button>
-          <button mat-button class="action" [class.active]="isSavetagActive"
-                  (click)="isSavetagActive = !isSavetagActive">
-            @if (isSavetagActive) {
+
+          <button mat-button class="action" [disabled]="isGettingLikeComment && !(isLiking$ | async)">
+            <mat-icon>chat_bubble_outline</mat-icon>
+            <span [class.is-getting-like-comment]="isGettingLikeComment">
+                    {{ isGettingLikeComment ? '0' : videoDetail.commentCount }}
+                  </span>
+          </button>
+
+          <button [disabled]="(isGettingLikeComment && !(isLiking$ | async)) || (this.isProcessingPlaylist$ | async)"
+                  mat-icon-button
+                  aria-label="Example icon button with a delete icon"
+                  class="bookmark"
+                  [class.active]="videoDetail.isSavedByCurrentUser"
+                  (click)="!videoDetail.isSavedByCurrentUser? saveToPlaylist() : removeFromPlaylist()">
+            @if (videoDetail.isSavedByCurrentUser) {
               <mat-icon>bookmark</mat-icon>
             } @else {
               <mat-icon>bookmark_border</mat-icon>
             }
-            <span>10N</span>
           </button>
-          <button mat-button class="comment">
-            <mat-icon>chat_bubble_outline</mat-icon>
-            <span>10N</span>
-          </button>
+
+
         </div>
         <div class="comment-section">
           <!-- Header -->

@@ -16,6 +16,7 @@
       @for (playlist of playlists; track playlist.id) {
         <div class="playlist-card" (click)="onCardClick(playlist)">
           <img class="playlist-thumbnail" [src]="convertToSupabaseUrl(playlist.thumbnailPath,'thumbnail')"
+               [ngStyle]="{'object-fit': playlist.title == 'see later' ? 'contain' : 'cover'}"
                alt="Playlist Thumbnail">
           <div class="playlist-info">
             <div class="playlist-title">{{ playlist.title }}</div>

@@ -29,9 +29,12 @@
         </div>
         @if (isOwnProfile) {
           <div class="button">
-            <button mat-button (click)="openDialogmakePublic()">Make public</button>
-            <button mat-button (click)="openDialogDeletePlaylist()">Delete Playlist</button>
-            <button mat-button (click)="openDialogChangeName()">Change Name</button>
+            @if (!(playlist.title == 'see later')) {
+              <button mat-button (click)="openDialogmakePublic()">Make public</button>
+              <button mat-button (click)="openDialogChangeName()">Change Name</button>
+              <button mat-button (click)="openDialogDeletePlaylist()">Delete Playlist</button>
+            }
+
           </div>
         }
       </div>

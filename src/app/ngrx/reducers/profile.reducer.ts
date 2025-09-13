@@ -260,8 +260,45 @@ export const profileReducer = createReducer(
     }
   }),
 
-  on(ProfileActions.followUser, (state, {userId}) => {
-    console.log('Following user with ID:', userId);
+  // on(ProfileActions.followUser, (state, {userId}) => {
+  //   console.log('Following user with ID:', userId);
+  //   return {
+  //     ...state,
+  //     isFollowing: false,
+  //     isFollowSuccess: false,
+  //     isFollowError: null,
+  //   }
+  // }),
+  //
+  // on(ProfileActions.followUserSuccess, (state, {isFollowing}) => {
+  //   console.log('Follow user success. Now following:', isFollowing);
+  //   return {
+  //     ...state,
+  //     profile: state.profile && {
+  //       ...state.profile,
+  //       isFollowing: isFollowing,
+  //       followersCount: state.profile.followersCount
+  //         ? state.profile.followersCount + (isFollowing ? 1 : -1)
+  //         : isFollowing ? 1 : 0,
+  //     },
+  //     isFollowing: true,
+  //     isFollowSuccess: true,
+  //     isFollowError: null,
+  //   }
+  // }),
+  //
+  // on(ProfileActions.followUserFailure, (state, {error}) => {
+  //   console.error('Follow user failure:', error);
+  //   return {
+  //     ...state,
+  //     isFollowing: false,
+  //     isFollowSuccess: false,
+  //     isFollowError: error,
+  //   }
+  // }),
+
+  on(ProfileActions.toggleFollowUser, (state, {type}) => {
+    console.log(type);
     return {
       ...state,
       isFollowing: false,
@@ -269,26 +306,27 @@ export const profileReducer = createReducer(
       isFollowError: null,
     }
   }),
-
-  on(ProfileActions.followUserSuccess, (state, {isFollowing}) => {
-    console.log('Follow user success. Now following:', isFollowing);
+  on(ProfileActions.toggleFollowUserSuccess, (state, {type, currentUserId}) => {
+    console.log(type);
+    // Toggle the isFollowing status
+    const newIsFollowing = !state.profile.isFollowing;
     return {
       ...state,
       profile: state.profile && {
         ...state.profile,
-        isFollowing: isFollowing,
+        isFollowing: newIsFollowing,
         followersCount: state.profile.followersCount
-          ? state.profile.followersCount + (isFollowing ? 1 : -1)
-          : isFollowing ? 1 : 0,
+          ? state.profile.followersCount + (newIsFollowing ? 1 : -1)
+          : newIsFollowing ? 1 : 0,
       },
+      followersList: !newIsFollowing ? state.followersList.filter(f => f.id !== currentUserId) : state.followersList,
       isFollowing: true,
       isFollowSuccess: true,
       isFollowError: null,
     }
   }),
-
-  on(ProfileActions.followUserFailure, (state, {error}) => {
-    console.error('Follow user failure:', error);
+  on(ProfileActions.toggleFollowUserFailure, (state, {error, type}) => {
+    console.log(type);
     return {
       ...state,
       isFollowing: false,

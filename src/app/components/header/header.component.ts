@@ -10,6 +10,12 @@ import {AuthService} from '../../services/auth/auth.service';
 import supabase from '../../utils/supabase';
 import {FormsModule} from '@angular/forms';
 import {Title} from '@angular/platform-browser';
+import {Observable} from 'rxjs';
+import {ProfileModel} from '../../models/profile.model';
+import {Store} from '@ngrx/store';
+import {AuthState} from '../../ngrx/states/auth.state';
+import {AsyncPipe} from '@angular/common';
+import {AvatarPipe} from '../../utils/avatar.pipe';
 
 
 @Component({
@@ -26,6 +32,8 @@ import {Title} from '@angular/platform-browser';
     MatMenuModule,
     RouterLink,
     FormsModule,
+    AsyncPipe,
+    AvatarPipe,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
@@ -38,13 +46,18 @@ export class HeaderComponent {
   headerTitle: string = '';
   canOpenCreateMenu = false;
   @ViewChild('createMenuTrigger', {static: false}) createMenuTrigger?: MatMenuTrigger;
+  currentUser$: Observable<ProfileModel>;
 
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private dialog: MatDialog,
     private authService: AuthService,
+    private store: Store<{
+      auth: AuthState
+    }>
   ) {
+    this.currentUser$ = this.store.select(state => state.auth.profile);
     this.router.events.subscribe(() => {
       const child = this.activatedRoute.firstChild;
       this.headerTitle = child?.snapshot.data['headerTitle'];
@@ -88,5 +101,9 @@ export class HeaderComponent {
       return;
     }
     this.router.navigate(['/search'], {queryParams: {q: this.searchQuery.trim()}});
+  }
+
+  openLoginDialog() {
+    this.dialog.open(LoginDialogComponent,);
   }
 }
